@@ -1,0 +1,45 @@
+version: '3'
+services:
+  client:
+    build:
+      context: ./client
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client:/app
+    command: npm start
+    depends_on:
+      - flask-server
+
+  flask-server:
+    build:
+      context: ./flask-server
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./flask-server:/app
+    command: python server.py
+  
+  db:
+    container_name: db
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: MYSQL_DATABASE
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    ports:
+      - "9906:3306"
+      
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
