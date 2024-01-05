@@ -111,7 +111,7 @@ export default function WebcamCapture() {
         ) : (
           <div style={{ width: '500px', height: '500px', backgroundColor: 'black' }}></div>
         )}
-        <button onClick={showImage}>Capture photo</button>
+        <button onClick={showImage}>Capture photo VOLK</button>
         <button onClick={toggleCamera}>
           {isCameraOn ? 'Turn Off Camera' : 'Turn On Camera'}
         </button>
