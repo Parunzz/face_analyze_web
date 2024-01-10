@@ -13,6 +13,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import Nav from './Nav';
 
 function Copyright(props) {
   return (
@@ -39,7 +41,7 @@ export default function SignIn() {
     const username = data.get('Username'); // Use the correct field name
     const password = data.get('password');
     console.log({
-      username: data.get('username'),
+      username: data.get('Username'),
       password: data.get('password'),
     });
 
@@ -57,6 +59,13 @@ export default function SignIn() {
 
       if (response.ok) {
         console.log('Login successful');
+        const data = await response.json();
+        console.log(data)
+        const token = data.token;
+
+        // Set the cookie with HttpOnly, Secure, and SameSite attributes
+        Cookies.set('token', token, { expires: 7, path: '' })
+
         navigate('/');
         // Redirect or perform other actions upon successful login
       } else {
@@ -74,6 +83,7 @@ export default function SignIn() {
   };
 //--------------------------api------------------------------
   return (
+    // <Nav/>
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />

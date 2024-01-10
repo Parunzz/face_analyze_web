@@ -13,6 +13,7 @@ import uuid
 import matplotlib.image as mpimg
 from werkzeug.security import check_password_hash
 from datetime import timedelta
+import jwt
 
 
 
@@ -76,9 +77,8 @@ def Register():
         error_message = str(e)
         # print("Error: ",{error_message})
         return make_response(jsonify({'error': str(e)}), 500)
-    
-app.secret_key = "zen"
-app.permanent_session_lifetime = timedelta(days=1)
+
+SECRET_KEY = 'zen'
 @app.route('/login', methods=['POST'])
 def signin():
 
@@ -93,36 +93,13 @@ def signin():
     user = mycursor.fetchone()
 
     if user:
-        # Authentication successful
-        session.permanent = True
-        session['username'] = username
-        print("Session after login:", session)
-        return jsonify({'message': 'Sign-in successful'}), 200
+        token = jwt.encode({'username': username}, SECRET_KEY, algorithm='HS256')
+        print(token)
+        return jsonify({'token': token}), 200
     else:
         # Authentication failed
         return jsonify({'error': 'Invalid credentials'}), 401
 
-
-@app.route('/check_login/')
-def check_login():
-    print("check : ", session)
-    if 'username' in session:
-        return jsonify({'message': 'User is logged in'}), 200
-    else:
-        return jsonify({'message': 'User is not logged in'}), 401
-    
-@app.route('/logout/')
-def logout():
-    try:
-        session.clear()
-        print("clear",session)
-        response = make_response(jsonify({'message': 'Logout successful'}), 200)
-        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
-        response.set_cookie('session', '', expires=0)
-        return response
-    except Exception as e:
-        print(f"Error during logout: {e}")
-        return jsonify({'error': 'Logout failed'}), 500
 
 #--------------------- Machine learning ----------------------------------------------------------------
 @app.route('/api/save_fullImg', methods=['POST'])

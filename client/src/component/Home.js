@@ -7,18 +7,6 @@ import Nav from './Nav';
 import SignIn from './SignIn';
 
 function Home() {
-  //--------------------------------------------------session
-  const [isLoggedIn, setLoggedIn] = useState(false);
-  const handleLogin = () => {
-    // Update login state
-    setLoggedIn(true);
-  };
-  
-  const handleLogout = () => {
-    // Clear login state
-    setLoggedIn(false);
-  };
-  //--------------------------------------------------session
 
   const webRef = useRef(null);
   const showImage = () => {
