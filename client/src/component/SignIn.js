@@ -14,7 +14,6 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import Nav from './Nav';
 
 function Copyright(props) {
   return (
@@ -83,7 +82,6 @@ export default function SignIn() {
   };
 //--------------------------api------------------------------
   return (
-    // <Nav/>
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -136,8 +134,8 @@ export default function SignIn() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
+                <Link href="/" variant="body2">
+                  Go Back
                 </Link>
               </Grid>
               <Grid item>

@@ -36,15 +36,6 @@ mycursor = mydb.cursor(dictionary=True)
 def index():
     return "Server"
 #-------------------------------------database--------------------------------------
-@app.route("/user")
-def show():
-    # mydb = mysql.connector.connect(host=host,user=user,password=password,db=db)
-    # mycursor = mydb.cursor(dictionary=True)
-    mycursor.execute("SELECT * FROM user")
-    myresult = mycursor.fetchall()
-
-    return make_response(jsonify(myresult),200)
-
 @app.route('/register', methods=['POST'])
 def Register():
     try:
