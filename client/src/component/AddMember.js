@@ -1,10 +1,8 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -13,6 +11,9 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import GenderInput from './GenderInput';
+import MyDatePicker from './MyDatePicker';
+import ImageUpload from './ImageUpload';
 
 function Copyright(props) {
     return (
@@ -31,17 +32,19 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-export default function SignUp() {
+export default function AddMember() {
     const navigate = useNavigate();
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
         const formData = new FormData(event.currentTarget);
+        formData.append('imgUpload', event.target.imgUpload.files[0]);
+
         console.log({
-            firstname: data.get('firstName'),
-            lastname: data.get('lastName'),
-            username: data.get('username'),
-            password: data.get('password'),
+          firstname: formData.get('firstName'),
+          lastname: formData.get('lastName'),
+          gender: formData.get('gender'),
+          DateOfBirth: formData.get('mydate'),
+          imgUpload: formData.get('imgUpload'),
         });
         //---------------------------------api -------------------------------------------
         
@@ -50,7 +53,7 @@ export default function SignUp() {
             jsonData[key] = value;
         });
         try {
-            const response = await fetch('http://127.0.0.1:5000/register', {
+            const response = await fetch('http://127.0.0.1:5000/AddMember', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -94,7 +97,7 @@ export default function SignUp() {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Sign up
+                        Add Member
                     </Typography>
                     <Box component="form" noValidate={false} onSubmit={handleSubmit} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
@@ -119,32 +122,14 @@ export default function SignUp() {
                                     autoComplete="family-name"
                                 />
                             </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    id="username"
-                                    label="Username"
-                                    name="username"
-                                    autoComplete="username"
-                                />
+                            <Grid item xs={12} sm={6}>
+                                <GenderInput/>
                             </Grid>
                             <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    name="password"
-                                    label="Password"
-                                    type="password"
-                                    id="password"
-                                    autoComplete="new-password"
-                                />
+                                <MyDatePicker/>
                             </Grid>
                             <Grid item xs={12}>
-                                <FormControlLabel
-                                    control={<Checkbox value="allowExtraEmails" color="primary" />}
-                                    label="I want to receive inspiration, marketing promotions and updates via email."
-                                />
+                                <ImageUpload/>
                             </Grid>
                         </Grid>
                         <Button
@@ -153,12 +138,12 @@ export default function SignUp() {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Sign Up
+                            Add Member
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="SignIn" variant="body2">
-                                    Already have an account? Sign in
+                                <Link href="Member" variant="body2">
+                                    Back
                                 </Link>
                             </Grid>
                         </Grid>
