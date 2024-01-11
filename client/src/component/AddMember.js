@@ -34,10 +34,28 @@ const defaultTheme = createTheme();
 
 export default function AddMember() {
     const navigate = useNavigate();
+
+    const readFileAsBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result.split(',')[1]);
+          reader.onerror = (error) => reject(error);
+          reader.readAsDataURL(file);
+        });
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        formData.append('imgUpload', event.target.imgUpload.files[0]);
+        // formData.append('imgUpload', event.target.imgUpload.files[0]);
+        const selectedFile = event.target.imgUpload.files[0];
+        if (selectedFile) {
+            // Read the selected file as a base64-encoded string
+            const base64String = await readFileAsBase64(selectedFile);
+      
+            // Set the base64 string in FormData
+            formData.set('imgUpload', base64String);
+        }
 
         console.log({
           firstname: formData.get('firstName'),

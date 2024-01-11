@@ -14,6 +14,7 @@ import matplotlib.image as mpimg
 from werkzeug.security import check_password_hash
 from datetime import timedelta
 import jwt
+from datetime import datetime
 
 
 
@@ -67,6 +68,52 @@ def Register():
     except Exception as e:
         error_message = str(e)
         # print("Error: ",{error_message})
+        return make_response(jsonify({'error': str(e)}), 500)
+@app.route('/AddMember', methods=['POST'])
+def AddMember():
+    try:
+        data = request.json
+        # print(data)
+        AddfirstName = data.get('firstName')
+        AddlastName = data.get('lastName')
+        Addgender = data.get('gender')
+        Addmydate = data.get('mydate')
+        AddimgUpload = data.get('imgUpload')
+
+        date_object = datetime.strptime(Addmydate, '%m/%d/%Y')
+        formatted_date = date_object.strftime('%Y-%m-%d')
+        
+        #-----------------------img-------------------------------
+        image_data = data.get('imgUpload')
+        
+        # Decode the base64-encoded string
+        bytes_decoded = base64.b64decode(image_data)
+
+        # Create an image from the decoded bytes
+        img = Image.open(BytesIO(bytes_decoded))
+        
+        unique_filename = str(uuid.uuid4()) + '.jpg'
+        member_path = './database/member/' + unique_filename
+        out_jpg = img.convert('RGB')
+        out_jpg.save(member_path)
+        #-----------------------img-------------------------------
+        # Check if the user already exists
+        mycursor.execute("SELECT * FROM person_info WHERE FirstName = %s AND LastName = %s", (AddfirstName, AddlastName))
+        existing_user = mycursor.fetchone()
+
+
+        if existing_user:
+            return make_response(jsonify({'message': 'User already exists'}), 400)
+
+        # Insert the new user into the database
+        mycursor.execute("INSERT INTO person_info (FirstName, LastName , gender , DateOfBirth, img_path) VALUES (%s, %s, %s, %s, %s)", (AddfirstName, AddlastName , Addgender ,formatted_date, member_path))
+        mydb.commit()
+
+        return make_response(jsonify({'message': 'User registered successfully'}), 200)
+
+    except Exception as e:
+        error_message = str(e)
+        print("Error: ",{error_message})
         return make_response(jsonify({'error': str(e)}), 500)
 
 SECRET_KEY = 'zen'
