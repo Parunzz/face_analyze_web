@@ -1,31 +1,25 @@
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-
-const options = ['Male', 'Female', 'Other'];
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 
 export default function GenderInput() {
-  const [value, setValue] = React.useState(null);
-  const [inputValue, setInputValue] = React.useState('');
-
   return (
-    <div>
-      <Autocomplete
-        value={value}
-        onChange={(event, newValue) => {
-          setValue(newValue);
-        }}
-        inputValue={inputValue}
-        onInputChange={(event, newInputValue) => {
-          setInputValue(newInputValue);
-        }}
-        id="gender"
+    <FormControl>
+      <FormLabel id="gender">Gender</FormLabel>
+      <RadioGroup
+        row
+        aria-labelledby="demo-row-radio-buttons-group-label"
         name="gender"
-        required
-        options={options}
-        sx={{ width: 300 }}
-        renderInput={(params) => <TextField {...params} label="Gender" />}
-      />
-    </div>
+        sx={{ width: 400 }}
+
+      >
+        <FormControlLabel required value="male" control={<Radio />} label="Male" />
+        <FormControlLabel value="female" control={<Radio />} label="Female" />
+        <FormControlLabel value="other" control={<Radio />} label="Other" />
+      </RadioGroup>
+    </FormControl>
   );
 }
