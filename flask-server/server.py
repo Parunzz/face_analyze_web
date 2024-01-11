@@ -78,13 +78,20 @@ def AddMember():
         AddlastName = data.get('lastName')
         Addgender = data.get('gender')
         Addmydate = data.get('mydate')
-        AddimgUpload = data.get('imgUpload')
+        image_data = data.get('imgUpload')
 
+        # Check if the user already exists
+        mycursor.execute("SELECT * FROM person_info WHERE FirstName = %s AND LastName = %s", (AddfirstName, AddlastName))
+        existing_user = mycursor.fetchone()
+
+        if existing_user:
+            return make_response(jsonify({'message': 'Member already exists'}), 400)
+        
         date_object = datetime.strptime(Addmydate, '%m/%d/%Y')
         formatted_date = date_object.strftime('%Y-%m-%d')
         
         #-----------------------img-------------------------------
-        image_data = data.get('imgUpload')
+        
         
         # Decode the base64-encoded string
         bytes_decoded = base64.b64decode(image_data)
@@ -93,23 +100,19 @@ def AddMember():
         img = Image.open(BytesIO(bytes_decoded))
         
         unique_filename = str(uuid.uuid4()) + '.jpg'
-        member_path = './database/member/' + unique_filename
+        folder_path = f'./database/member/{AddfirstName}/'
+        os.makedirs(folder_path)
+        member_path = os.path.join(folder_path, unique_filename)
         out_jpg = img.convert('RGB')
         out_jpg.save(member_path)
         #-----------------------img-------------------------------
-        # Check if the user already exists
-        mycursor.execute("SELECT * FROM person_info WHERE FirstName = %s AND LastName = %s", (AddfirstName, AddlastName))
-        existing_user = mycursor.fetchone()
 
-
-        if existing_user:
-            return make_response(jsonify({'message': 'User already exists'}), 400)
 
         # Insert the new user into the database
         mycursor.execute("INSERT INTO person_info (FirstName, LastName , gender , DateOfBirth, img_path) VALUES (%s, %s, %s, %s, %s)", (AddfirstName, AddlastName , Addgender ,formatted_date, member_path))
         mydb.commit()
 
-        return make_response(jsonify({'message': 'User registered successfully'}), 200)
+        return make_response(jsonify({'message': 'Add Member successfully'}), 200)
 
     except Exception as e:
         error_message = str(e)

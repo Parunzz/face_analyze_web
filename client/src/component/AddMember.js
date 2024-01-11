@@ -80,20 +80,22 @@ export default function AddMember() {
             });
       
             if (response.ok) {
-              console.log('User registered successfully');
-              window.alert(`Register complete`);
-              navigate('/signin');
+              console.log('Add member successfully');
+              window.alert(`Add member successfully`);
+              navigate('/Member');
               // Handle success, e.g., redirect to a different page
             } else {
               const errorData = await response.json();
-              console.error('Failed to register user:', response.status, response.statusText);
-              window.alert(`Failed to register user: ${errorData.error}`);
-              // Handle error
+              console.error('Failed to add member:', response);
+              if (response.status === 400){
+                window.alert('Member already exists');
+              }
+              window.alert('Error during add member');
             }
           } catch (error) {
               // Handle error
-            console.error('Error during registration:', error);
-            window.alert('Error during registration. Please try again.');
+            console.error('Error during add member:', error);
+            window.alert('Error during add member. Please try again.');
 
           }
         //---------------------------------api -------------------------------------------
