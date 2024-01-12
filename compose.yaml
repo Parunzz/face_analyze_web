@@ -25,14 +25,12 @@ services:
     image: mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: deepface
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin
     ports:
       - "9906:3306"
-    volumes:
-      - "./databaseimport/:/docker-entrypoint-initdb.d"
       
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -40,8 +38,11 @@ services:
     restart: always
     environment:
       PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
+      MYSQL_ROOT_PASSWORD: root
     ports:
       - "8080:80"
     depends_on:
       - db
+
+volumes:
+  db_data:

@@ -1,62 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import '../css/Nav.css';
+import UseAuth from './UseAuth';
+import Cookies from 'js-cookie';
 
 function Nav() {
-  const [isLoggedIn, setLoggedIn] = useState(false);
+  const { authenticated } = UseAuth();
 
-  useEffect(() => {
-    // Fetch the login status from your Flask API
-    const checkLoginStatus = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/check_login/', {
-          method: 'GET',
-          credentials: 'include', // Include credentials (cookies) in the request
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (response.ok) {
-          setLoggedIn(true);
-        } else {
-          setLoggedIn(false);
-        }
-      } catch (error) {
-        console.error('Error checking login status:', error);
-        setLoggedIn(false);
-      }
-    };
-
-    checkLoginStatus();
-  }, []);
-  const handleLogout = async () => {
-    try {
-      const response = await fetch('http://localhost:5000/logout', {
-        method: 'GET',
-        credentials: 'include', // Include credentials (cookies) in the request
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (response.ok) {
-        // Logout successful
-        setLoggedIn(false);
-      } else {
-        // Handle logout failure
-        console.error('Logout failed');
-      }
-    } catch (error) {
-      console.error('Error during logout:', error);
-    }
+  //------------logout------------------
+  const handleLogout = () => {
+    Cookies.remove('token');
+    // Redirect or perform other actions upon logout
   };
+  //------------logout------------------
 
   return (
     <nav>
       <a href='/'>Home</a>
-      {isLoggedIn && <a href='Display'>Display</a>}
-      {isLoggedIn && <a href='/'>DashBoard</a>}
-      {isLoggedIn ? (<a href='/' onClick={handleLogout}>Logout</a>) : (<a href='SignIn'>Login</a>)}
+      {authenticated && <a href='History'>History</a>}
+      {authenticated && <a href='Camera'>Camera</a>}
+      {authenticated && <a href='Member'>Member</a>}
+      {authenticated && <a href='Map'>Map</a>}
+      {authenticated && <a href='DashBoard'>DashBoard</a>}
+      {authenticated ? (<a href='/' onClick={handleLogout}>Logout</a>) : (<a href='SignIn'>Login</a>)}
     </nav>
   );
 }

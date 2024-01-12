@@ -13,6 +13,8 @@ import uuid
 import matplotlib.image as mpimg
 from werkzeug.security import check_password_hash
 from datetime import timedelta
+import jwt
+from datetime import datetime
 
 
 
@@ -26,7 +28,7 @@ CORS(app, supports_credentials=True)
 
 host = "db"
 user = "root"
-password = "MYSQL_ROOT_PASSWORD"
+password = "root"
 db = "deepface"
 mydb = mysql.connector.connect(host=host,user=user,password=password,db=db)
 mycursor = mydb.cursor(dictionary=True)
@@ -35,15 +37,6 @@ mycursor = mydb.cursor(dictionary=True)
 def index():
     return "Server"
 #-------------------------------------database--------------------------------------
-@app.route("/user")
-def show():
-    # mydb = mysql.connector.connect(host=host,user=user,password=password,db=db)
-    # mycursor = mydb.cursor(dictionary=True)
-    mycursor.execute("SELECT * FROM user")
-    myresult = mycursor.fetchall()
-
-    return make_response(jsonify(myresult),200)
-
 @app.route('/register', methods=['POST'])
 def Register():
     try:
@@ -76,9 +69,57 @@ def Register():
         error_message = str(e)
         # print("Error: ",{error_message})
         return make_response(jsonify({'error': str(e)}), 500)
-    
-app.secret_key = "zen"
-app.permanent_session_lifetime = timedelta(days=1)
+@app.route('/AddMember', methods=['POST'])
+def AddMember():
+    try:
+        data = request.json
+        # print(data)
+        AddfirstName = data.get('firstName')
+        AddlastName = data.get('lastName')
+        Addgender = data.get('gender')
+        Addmydate = data.get('mydate')
+        image_data = data.get('imgUpload')
+
+        # Check if the user already exists
+        mycursor.execute("SELECT * FROM person_info WHERE FirstName = %s AND LastName = %s", (AddfirstName, AddlastName))
+        existing_user = mycursor.fetchone()
+
+        if existing_user:
+            return make_response(jsonify({'message': 'Member already exists'}), 400)
+        
+        date_object = datetime.strptime(Addmydate, '%m/%d/%Y')
+        formatted_date = date_object.strftime('%Y-%m-%d')
+        
+        #-----------------------img-------------------------------
+        
+        
+        # Decode the base64-encoded string
+        bytes_decoded = base64.b64decode(image_data)
+
+        # Create an image from the decoded bytes
+        img = Image.open(BytesIO(bytes_decoded))
+        
+        unique_filename = str(uuid.uuid4()) + '.jpg'
+        folder_path = f'./database/member/{AddfirstName}/'
+        os.makedirs(folder_path)
+        member_path = os.path.join(folder_path, unique_filename)
+        out_jpg = img.convert('RGB')
+        out_jpg.save(member_path)
+        #-----------------------img-------------------------------
+
+
+        # Insert the new user into the database
+        mycursor.execute("INSERT INTO person_info (FirstName, LastName , gender , DateOfBirth, img_path) VALUES (%s, %s, %s, %s, %s)", (AddfirstName, AddlastName , Addgender ,formatted_date, member_path))
+        mydb.commit()
+
+        return make_response(jsonify({'message': 'Add Member successfully'}), 200)
+
+    except Exception as e:
+        error_message = str(e)
+        print("Error: ",{error_message})
+        return make_response(jsonify({'error': str(e)}), 500)
+
+SECRET_KEY = 'zen'
 @app.route('/login', methods=['POST'])
 def signin():
 
@@ -93,36 +134,13 @@ def signin():
     user = mycursor.fetchone()
 
     if user:
-        # Authentication successful
-        session.permanent = True
-        session['username'] = username
-        print("Session after login:", session)
-        return jsonify({'message': 'Sign-in successful'}), 200
+        token = jwt.encode({'username': username}, SECRET_KEY, algorithm='HS256')
+        print(token)
+        return jsonify({'token': token}), 200
     else:
         # Authentication failed
         return jsonify({'error': 'Invalid credentials'}), 401
 
-
-@app.route('/check_login/')
-def check_login():
-    print("check : ", session)
-    if 'username' in session:
-        return jsonify({'message': 'User is logged in'}), 200
-    else:
-        return jsonify({'message': 'User is not logged in'}), 401
-    
-@app.route('/logout/')
-def logout():
-    try:
-        session.clear()
-        print("clear",session)
-        response = make_response(jsonify({'message': 'Logout successful'}), 200)
-        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
-        response.set_cookie('session', '', expires=0)
-        return response
-    except Exception as e:
-        print(f"Error during logout: {e}")
-        return jsonify({'error': 'Logout failed'}), 500
 
 #--------------------- Machine learning ----------------------------------------------------------------
 @app.route('/api/save_fullImg', methods=['POST'])

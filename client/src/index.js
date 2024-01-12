@@ -2,10 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './css/index.css';
 import Home from './component/Home';
-import { createBrowserRouter,RouterProvider,Route,Link} from "react-router-dom";
+import { createBrowserRouter,RouterProvider} from "react-router-dom";
 import SignIn from './component/SignIn';
 import SignUp from './component/SignUp';
-import CheckLogin from './component/Display'
+import Camera from './component/Carmera';
+import Member from './component/Member';
+import AddMember from './component/AddMember';
 
 const router = createBrowserRouter([
   {
@@ -21,8 +23,16 @@ const router = createBrowserRouter([
     element: <SignUp/>
   },
   {
-    path: "Display",
-    element: <CheckLogin/>
+    path: "Camera",
+    element: <Camera/>
+  },
+  {
+    path: "Member",
+    element: <Member/>
+  },
+  {
+    path: "AddMember",
+    element: <AddMember/>
   },
 ])
 const root = ReactDOM.createRoot(document.getElementById('root'));

@@ -1,9 +1,8 @@
-import '../css/Home.css';
 import { useState, useRef } from 'react';
 import WebcamCapture from './WebcamCapture';
 import Nav from './Nav';
 
-function Home() {
+function Camera() {
 
   const webRef = useRef(null);
   const showImage = () => {
@@ -13,9 +12,9 @@ function Home() {
   return (
     <div>
       <Nav/>
-      <h1>HOME</h1>
+      <WebcamCapture/>
     </div>
   );
 }
 
-export default Home;
+export default Camera;
