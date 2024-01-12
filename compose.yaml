@@ -1,28 +1,21 @@
 version: '3'
 services:
   client:
-    build:
-      context: ./client
+    build: ./Client
     ports:
-      - "3000:3000"
-    volumes:
-      - ./client:/app
-    command: npm start
+      - "5173:5173"
     depends_on:
       - flask-server
-
+      - db
   flask-server:
-    build:
-      context: ./flask-server
+    build: ./Server
     ports:
-      - "5000:5000"
-    volumes:
-      - ./flask-server:/app
-    command: python server.py
-  
+      - "3001:3001"
+    depends_on:
+      - db
   db:
     container_name: db
-    image: mysql
+    image: mysql:latest
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -32,8 +25,7 @@ services:
     ports:
       - "9906:3306"
     volumes:
-      - db_data:/var/lib/mysql
-
+      - "./DB:/docker-entrypoint-initdb.d"
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin
@@ -45,6 +37,3 @@ services:
       - "8080:80"
     depends_on:
       - db
-
-volumes:
-  db_data:

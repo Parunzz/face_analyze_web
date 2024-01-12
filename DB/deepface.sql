@@ -20,7 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `deepface`
 --
-
+CREATE DATABASE IF NOT EXISTS deepface;
+USE deepface;
 -- --------------------------------------------------------
 
 --
@@ -35,7 +36,7 @@ CREATE TABLE `Data_info` (
   `Full_path` varchar(255) NOT NULL,
   `Cut_path` varchar(255) NOT NULL,
   `place` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -47,7 +48,7 @@ CREATE TABLE `emotion_data` (
   `emotion_id` int NOT NULL,
   `emotion_data` varchar(255) NOT NULL,
   `response_text_id` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -57,12 +58,12 @@ CREATE TABLE `emotion_data` (
 
 CREATE TABLE `person_info` (
   `pid` int NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `surname` varchar(255) NOT NULL,
+  `FirstName` varchar(255) NOT NULL,
+  `LastName` varchar(255) NOT NULL,
   `img_path` varchar(255) NOT NULL,
   `gender` varchar(255) NOT NULL,
   `DateOfBirth` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -73,7 +74,7 @@ CREATE TABLE `person_info` (
 CREATE TABLE `response_text` (
   `response_text_id` int NOT NULL,
   `response_text` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -87,7 +88,7 @@ CREATE TABLE `user` (
   `uid` int NOT NULL,
   `Firstname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `Lastname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `user`
