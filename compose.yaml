@@ -19,6 +19,8 @@ services:
     volumes:
       - ./flask-server:/app
     command: python server.py
+    depends_on:
+      - db
   
   db:
     container_name: db
