@@ -27,8 +27,10 @@ CORS(app, supports_credentials=True)
 
 
 host = "db"
-user = "root"
-password = "root"
+# host = "localhost"
+user = "admin"
+password = "admin"
+# password = ""
 db = "deepface"
 mydb = mysql.connector.connect(host=host,user=user,password=password,db=db)
 mycursor = mydb.cursor(dictionary=True)
@@ -60,7 +62,7 @@ def Register():
             return make_response(jsonify({'message': 'User already exists'}), 400)
 
         # Insert the new user into the database
-        mycursor.execute("INSERT INTO user (Username, Password , Firstname , Lastname) VALUES (%s, %s, %s, %s)", (Regusername, Regpassword , Regfirstname ,Reglastname))
+        mycursor.execute("INSERT INTO user (Username, Password , FirstName , LastName) VALUES (%s, %s, %s, %s)", (Regusername, Regpassword , Regfirstname ,Reglastname))
         mydb.commit()
 
         return make_response(jsonify({'message': 'User registered successfully'}), 200)
@@ -263,5 +265,5 @@ def process_image():
 
 if __name__ == "__main__":
     # app.run(debug=True)
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=3001)
     

@@ -71,7 +71,7 @@ export default function AddMember() {
             jsonData[key] = value;
         });
         try {
-            const response = await fetch('http://127.0.0.1:5000/AddMember', {
+            const response = await fetch('http://localhost:3001/AddMember', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ export default function AddMember() {
           } catch (error) {
               // Handle error
             console.error('Error during add member:', error);
-            window.alert('Error during add member. Please try again.');
+          
 
           }
         //---------------------------------api -------------------------------------------

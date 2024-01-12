@@ -40,7 +40,7 @@ export default function WebcamCapture() {
 
           setCapturedImage(imageSrc); // Update state to display the captured image
 
-          const response = await fetch('http://127.0.0.1:5000/api/save_fullImg', {
+          const response = await fetch('http://localhost:3001/api/save_fullImg', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ export default function WebcamCapture() {
             body: JSON.stringify({ image: imageSrc }),
           });
           // Log the request details
-          console.log('Request URL:', 'http://127.0.0.1:5000/api/save_fullImg');
+          console.log('Request URL:', 'http://localhost:3001/api/save_fullImg');
           console.log('Request Method:', 'POST');
           console.log('Request Headers:', { 'Content-Type': 'application/json' });
           console.log('Request Body:', JSON.stringify({ image: imageSrc }));
