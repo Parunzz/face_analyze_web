@@ -29,6 +29,7 @@ CORS(app, supports_credentials=True)
 host = "db"
 # host = "localhost"
 user = "admin"
+# user = "root"
 password = "admin"
 # password = ""
 db = "deepface"
@@ -144,6 +145,29 @@ def signin():
         return jsonify({'error': 'Invalid credentials'}), 401
 
 
+@app.route('/getimg', methods=['GET'])
+def getimg():
+    try:
+        mycursor.execute('SELECT img_path FROM person_info')
+        img_paths = mycursor.fetchall()
+        # print(img_paths)
+        # return make_response(jsonify(img_paths), 200)
+        img_data = []
+        for path in img_paths:
+            # print(path)
+            image_path = path.get('img_path')
+            if os.path.exists(image_path):
+                with open(image_path, "rb") as image_file:
+                    encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
+                    img_data.append({'img_path': image_path, 'base64': encoded_image})
+            else:
+                img_data.append({'img_path': image_path, 'base64': None})
+
+        return make_response(jsonify({'images': img_data}), 200)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)})
+
 #--------------------- Machine learning ----------------------------------------------------------------
 @app.route('/api/save_fullImg', methods=['POST'])
 def process_image():
@@ -217,51 +241,7 @@ def process_image():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
-# @app.route("/api/extract_faces", methods=['POST'])
-# def extract_faces():
-#     try:
-#         data = request.get_json()
-#         # img_path = data.get('img_path', '')
-#         # print(data)
-#         # result = save_base64_as_jpg(data,'database/cut_img/c.jpg')
-#         return data
-#         # if img_path:
-#         #     result = DeepFace.extract_faces(img_path=img_path, target_size=(224, 224), detector_backend='opencv')
-#         # elif img_base64:
-#         #     save_base64_as_image(img_base64, 'database/full_img/img.jpg')  # Save the base64 image
-#         #     img = convert_base64_to_numpy(img_base64)
-#         #     result = DeepFace.detectFace(img, detector_backend='opencv')
-#         # else:
-#         #     return jsonify({'error': 'Either img_path or img_base64 must be provided.'})
 
-#         # if result and 'face' in result[0]:
-#         #     face_image = result[0]['face']
-#         #     cv2.imwrite(os.path.join('./database/cut_img/', 'face_image.jpg'), face_image)
-#         #     return jsonify({'result': result})
-#         # else:
-#         #     return jsonify({'error': 'No face found in the image or missing face key in the result.'})
-
-#     except Exception as e:
-#         print("error")
-#         return jsonify({'error': str(e)})
-
-# @app.route("/api/find", methods=['POST'])
-# def find_faces():
-#     try:
-#         data = request.get_json()
-#         img_path = data.get('img_path', '')
-#         result = DeepFace.find(img_path, db_path='./database/', enforce_detection=False, model_name='Facenet')
-
-#         print(result)
-
-#         if result and 'identity' in result[0]:
-#             return jsonify(result[0]['identity'][0].split('/')[2])
-#         else:
-#             return jsonify({'error': 'No face found in the image or missing face key in the result.'})
-#     except Exception as e:
-#         print("error")
-#         return jsonify({'error': str(e)})
- 
 
 if __name__ == "__main__":
     # app.run(debug=True)
