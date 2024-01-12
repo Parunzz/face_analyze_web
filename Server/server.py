@@ -26,12 +26,12 @@ CORS(app, supports_credentials=True)
 
 
 
-# host = "db"
-host = "localhost"
-# user = "admin"
-user = "root"
-# password = "admin"
-password = ""
+host = "db"
+# host = "localhost"
+user = "admin"
+# user = "root"
+password = "admin"
+# password = ""
 db = "deepface"
 mydb = mysql.connector.connect(host=host,user=user,password=password,db=db)
 mycursor = mydb.cursor(dictionary=True)
