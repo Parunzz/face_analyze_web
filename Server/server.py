@@ -144,11 +144,11 @@ def signin():
         # Authentication failed
         return jsonify({'error': 'Invalid credentials'}), 401
 
-
+# Sent Member IMG
 @app.route('/getimg', methods=['GET'])
 def getimg():
     try:
-        mycursor.execute('SELECT img_path FROM person_info')
+        mycursor.execute('SELECT img_path,FirstName,LastName,pid FROM person_info')
         img_paths = mycursor.fetchall()
         # print(img_paths)
         # return make_response(jsonify(img_paths), 200)
@@ -156,18 +156,38 @@ def getimg():
         for path in img_paths:
             # print(path)
             image_path = path.get('img_path')
+            Fname = path.get('FirstName')
+            Lname = path.get('LastName')
+            Pid = path.get('pid')
             if os.path.exists(image_path):
                 with open(image_path, "rb") as image_file:
                     encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
-                    img_data.append({'img_path': image_path, 'base64': encoded_image})
+                    img_data.append({'img_path': image_path, 'base64': encoded_image , 'fname': Fname, 'lname':Lname,'pid':Pid})
             else:
                 img_data.append({'img_path': image_path, 'base64': None})
 
-        return make_response(jsonify({'images': img_data}), 200)
+        return make_response(jsonify({'images': img_data }), 200)
     except Exception as e:
         print(f"Error: {str(e)}")
         return jsonify({'error': str(e)})
-
+    
+#Remove Member 
+@app.route('/rmimg', methods=['POST'])
+def rmimg():
+    try:
+        data = request.json
+        pid = data.get('pid')
+        mycursor.execute('SELECT * FROM person_info WHERE `person_info`.`pid` = %s', (pid,))
+        person = mycursor.fetchone()
+        if not person:
+            return jsonify({'error': f'Person with PID {pid} not found'})
+        mycursor.execute('DELETE FROM person_info WHERE `person_info`.`pid` = %s',(pid))
+        mydb.commit()
+        return jsonify({'message': f'Successfully deleted person with PID {pid}'})
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)})
+    
 #--------------------- Machine learning ----------------------------------------------------------------
 @app.route('/api/save_fullImg', methods=['POST'])
 def process_image():
