@@ -144,11 +144,11 @@ def signin():
         # Authentication failed
         return jsonify({'error': 'Invalid credentials'}), 401
 
-
+# Sent Member IMG
 @app.route('/getimg', methods=['GET'])
 def getimg():
     try:
-        mycursor.execute('SELECT img_path FROM person_info')
+        mycursor.execute('SELECT img_path,FirstName,LastName,pid FROM person_info')
         img_paths = mycursor.fetchall()
         # print(img_paths)
         # return make_response(jsonify(img_paths), 200)
@@ -156,18 +156,64 @@ def getimg():
         for path in img_paths:
             # print(path)
             image_path = path.get('img_path')
+            Fname = path.get('FirstName')
+            Lname = path.get('LastName')
+            Pid = path.get('pid')
             if os.path.exists(image_path):
                 with open(image_path, "rb") as image_file:
                     encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
-                    img_data.append({'img_path': image_path, 'base64': encoded_image})
+                    img_data.append({'img_path': image_path, 'base64': encoded_image , 'fname': Fname, 'lname':Lname, 'pid':Pid})
             else:
                 img_data.append({'img_path': image_path, 'base64': None})
 
-        return make_response(jsonify({'images': img_data}), 200)
+        return make_response(jsonify({'images': img_data }), 200)
     except Exception as e:
         print(f"Error: {str(e)}")
         return jsonify({'error': str(e)})
+    
+#Remove Member #
+def remove_image_file(folder_path):
+    try:
+        for item in os.listdir(folder_path):
+            item_path = os.path.join(folder_path, item)
+            if os.path.isfile(item_path):
+                os.remove(item_path)
+            elif os.path.isdir(item_path):
+                remove_image_file(item_path)
+        # Remove the empty folder
+        os.rmdir(folder_path)
+        print(f'Removed folder: {folder_path}')
+    except Exception as e:
+        print(f"Error removing folder: {str(e)}")  
+@app.route('/rmimg', methods=['POST'])
+def rmimg():
+    try:
+        data = request.json
+        pid = data.get('pid')
 
+        # Check if the person with the given PID exists before deleting
+        mycursor.execute('SELECT * FROM person_info WHERE pid = %s', (pid,))
+        person = mycursor.fetchone()
+
+        if not person:
+            return jsonify({'error': f'Person with PID {pid} not found'})
+
+        # Get the filename or path of the associated image
+        image_filename = person['img_path'] 
+        folder_path = f'./database/member/{person["FirstName"]}/'
+        # Perform deletion from the database
+        mycursor.execute('DELETE FROM person_info WHERE `person_info`.`pid` = %s', (pid,))
+        mydb.commit()
+
+        # Remove the associated image file from the server file system
+        if image_filename:
+            remove_image_file(folder_path)
+
+        return jsonify({'message': f'Successfully deleted person with PID {pid}'})
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)})
+    
 #--------------------- Machine learning ----------------------------------------------------------------
 @app.route('/api/save_fullImg', methods=['POST'])
 def process_image():
