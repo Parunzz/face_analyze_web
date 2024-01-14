@@ -1,120 +1,62 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 
 const TestAutocap = () => {
-  const [responseMessage, setResponseMessage] = useState('');
-  const [capturedImage, setCapturedImage] = useState(null);
   const webcamRef = useRef(null);
-  const intervalRef = useRef(null);
+  const [autoCaptureInterval, setAutoCaptureInterval] = useState(null);
+  const [capturedImage, setCapturedImage] = useState(null);
 
-  const startAutoCapture = async () => {
+  const startAutoCapture = () => {
+    const interval = setInterval(captureImage, 5000); // Auto-capture every 5 seconds
+    setAutoCaptureInterval(interval);
+  };
+
+  const stopAutoCapture = () => {
+    clearInterval(autoCaptureInterval);
+    setAutoCaptureInterval(null);
+  };
+
+  const captureImage = async () => {
+    // Capture an image from the webcam
+    const base64Image = webcamRef.current.getScreenshot();
+
     try {
-      const response = await fetch('http://localhost:3001/api/auto_capture', {
+      // Send the captured image to the Flask API using fetch
+      await fetch('http://localhost:3001/capture', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ start: true }),
-        credentials: 'include',
+        body: JSON.stringify({
+          imageData: base64Image.split(',')[1],
+        }),
       });
 
-      if (!response.ok) {
-        throw new Error(`Failed with status ${response.status}`);
-      }
-
-      const responseData = await response.json();
-      setResponseMessage(responseData.message || '');
-
-      // Start capturing frames every second
-      intervalRef.current = setInterval(capture, 1000);
+      // Update the captured image state to display it
+      setCapturedImage(base64Image);
+      console.log('Image captured successfully!');
     } catch (error) {
-      console.error('Error starting auto-capture:', error);
-      setResponseMessage(`Error starting auto-capture: ${error.message}`);
+      console.error('Error capturing image:', error);
     }
   };
-
-  const stopAutoCapture = async () => {
-    clearInterval(intervalRef.current);
-
-    try {
-      const response = await fetch('http://localhost:3001/api/auto_capture', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ stop: true }),
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed with status ${response.status}`);
-      }
-
-      const responseData = await response.json();
-      setResponseMessage(responseData.message || '');
-    } catch (error) {
-      console.error('Error stopping auto-capture:', error);
-      setResponseMessage(`Error stopping auto-capture: ${error.message}`);
-    }
-  };
-
-  const capture = async () => {
-    if (webcamRef && webcamRef.current) {
-      const imageSrc = webcamRef.current.getScreenshot();
-      if (imageSrc) {
-        setCapturedImage(imageSrc);
-
-        // Send the captured image to the server for further processing
-        await sendFrameToServer(imageSrc);
-      }
-    }
-  };
-
-  const sendFrameToServer = async (imageSrc) => {
-    try {
-      const response = await fetch('http://localhost:3001/api/capture_frame', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ frame: imageSrc }),
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed with status ${response.status}`);
-      }
-
-      const responseData = await response.json();
-      console.log(responseData);
-    } catch (error) {
-      console.error('Error sending frame to server:', error);
-    }
-  };
-
-  useEffect(() => {
-    // Cleanup function: Stop auto-capture when the component unmounts
-    return () => {
-      clearInterval(intervalRef.current);
-      stopAutoCapture();
-    };
-  }, []);
 
   return (
-    <div>
-      <p>Response: {responseMessage}</p>
+    <div className="App">
       <Webcam
         audio={false}
         ref={webcamRef}
         screenshotFormat="image/jpeg"
-        videoConstraints={{ facingMode: 'user' }}
+        width={640}
+        height={480}
       />
+      <button onClick={captureImage}>Capture Image</button>
       <button onClick={startAutoCapture}>Start Auto-Capture</button>
       <button onClick={stopAutoCapture}>Stop Auto-Capture</button>
+
       {capturedImage && (
         <div>
-          <p>Captured Image:</p>
-          <img src={capturedImage} alt="Captured Face" />
+          <h2>Captured Image</h2>
+          <img src={capturedImage} alt="Captured" style={{ width: '100%' }} />
         </div>
       )}
     </div>
