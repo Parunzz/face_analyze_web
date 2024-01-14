@@ -26,12 +26,12 @@ CORS(app, supports_credentials=True)
 
 
 
-host = "db"
-# host = "localhost"
-user = "admin"
-# user = "root"
-password = "admin"
-# password = ""
+# host = "db"
+host = "localhost"
+# user = "admin"
+user = "root"
+# password = "admin"
+password = ""
 db = "deepface"
 mydb = mysql.connector.connect(host=host,user=user,password=password,db=db)
 mycursor = mydb.cursor(dictionary=True)
@@ -240,10 +240,8 @@ def process_image():
 
        # Generate a unique filename using UUID
         unique_filename = str(uuid.uuid4()) + '.jpg'
-
         # Save the processed image with the unique filename
         FullImg_save_path = './database/full_img/' + unique_filename
-        
         out_jpg = img.convert('RGB')
         out_jpg.save(FullImg_save_path)
 
@@ -286,41 +284,6 @@ def process_image():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
-###### Test Auto capture #####
-# Initialize the face cascade classifier and video capture
-CAPTURED_IMAGES_DIR = "./database/captured_images"
-os.makedirs(CAPTURED_IMAGES_DIR, exist_ok=True)
-
-@app.route('/capture', methods=['POST'])
-def capture_image():
-    try:
-        # Receive base64-encoded image data from the request
-        image_data = request.json['imageData']
-
-        # Decode the base64 image data
-        decoded_data = np.frombuffer(
-            np.fromstring(image_data, dtype=np.uint8), dtype=np.uint8)
-        img = cv2.imdecode(decoded_data, cv2.IMREAD_COLOR)
-
-        # Generate a unique filename
-        filename = f"captured_{hash(image_data)}.jpg"
-        filepath = os.path.join(CAPTURED_IMAGES_DIR, filename)
-
-        # Save the image
-        cv2.imwrite(filepath, img)
-
-        # Return the captured image URL in the response
-        image_url = f"/captured_images/{filename}"
-        return jsonify({"message": "Image captured successfully!", "imageUrl": image_url}), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-# Serve captured images
-@app.route('/captured_images/<filename>')
-def get_captured_image(filename):
-    return send_from_directory(CAPTURED_IMAGES_DIR, filename)
 
 
 
