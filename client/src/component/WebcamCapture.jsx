@@ -20,7 +20,7 @@ export default function WebcamCapture() {
     setIsCameraOn((prev) => !prev);
   };
   const startAutoCapture = () => {
-    const interval = setInterval(showImage, 3000); // Auto-capture every 3 seconds
+    const interval = setInterval(showImage, 2000); // Auto-capture every 2 seconds
     setAutoCaptureInterval(interval);
   };
 

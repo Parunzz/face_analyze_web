@@ -25,13 +25,17 @@ CORS(app, supports_credentials=True)
 # CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})  # Update the origin
 
 
+## FOR DEV ENV ###
+# host = "localhost"
+# user = "root"
+# password = ""
 
-# host = "db"
-host = "localhost"
-# user = "admin"
-user = "root"
-# password = "admin"
-password = ""
+### FOR Docker ###
+host = "db"
+user = "admin"
+password = "admin"
+
+
 db = "deepface"
 mydb = mysql.connector.connect(host=host,user=user,password=password,db=db)
 mycursor = mydb.cursor(dictionary=True)
