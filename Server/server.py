@@ -220,7 +220,7 @@ def process_image():
     try:
         # Get the JSON payload from the request
         json_data = request.get_json()
-        # print('Received JSON:', json_data)
+        #print('Received JSON:', json_data)
 
         # Extract the base64-encoded string from the 'data' field
         image_data = json_data.get('image', '')

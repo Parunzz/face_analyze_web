@@ -15,12 +15,12 @@ export default function WebcamCapture() {
   const [dominantEmotion, setDominantEmotion] = useState(null);
   const [isCameraOn, setIsCameraOn] = useState(true);
   const [autoCaptureInterval, setAutoCaptureInterval] = useState(null);
-  
+
   const toggleCamera = () => {
     setIsCameraOn((prev) => !prev);
   };
   const startAutoCapture = () => {
-    const interval = setInterval(showImage, 5000); // Auto-capture every 5 seconds
+    const interval = setInterval(showImage, 3000); // Auto-capture every 3 seconds
     setAutoCaptureInterval(interval);
   };
 
