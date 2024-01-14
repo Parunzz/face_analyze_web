@@ -7,6 +7,7 @@ const videoConstraints = {
   width: 500,
   height: 500,
   facingMode: 'user',
+  mirrored: true,
 };
 
 export default function WebcamCapture() {
@@ -39,16 +40,6 @@ export default function WebcamCapture() {
       try {
         // Check if the image source is not null or empty
         if (imageSrc) {
-          const cachedResponse = localStorage.getItem(imageSrc);
-
-          if (cachedResponse) {
-            // Use the cached response
-            const data = JSON.parse(cachedResponse);
-            setDominantEmotion(data.dominant_emotion);
-          }
-          // Log the JSON payload before sending the request
-          console.log('JSON Payload:', JSON.stringify({ image: imageSrc }));
-
           setCapturedImage(imageSrc); // Update state to display the captured image
 
           const response = await fetch('http://localhost:3001/api/save_fullImg', {
@@ -89,15 +80,16 @@ export default function WebcamCapture() {
         <h1>Face Detect</h1>
         {isCameraOn ? (
           <Webcam
-          ref={webRef}
-          audio={false}
-          screenshotFormat="image/jpeg"
-          height={500}
-          width={500}
-          videoConstraints={videoConstraints}
+            ref={webRef}
+            audio={false}
+            screenshotFormat="image/jpeg"
+            height={500}
+            width={500}
+            mirrored= {true}
+            videoConstraints={videoConstraints}
+            style={{ width: '500px', height: '500px' }}
           />
-          )
-           : (
+          ) : (
           <div style={{ width: '500px', height: '500px', backgroundColor: 'black' }}></div>
         )}
         <button onClick={showImage}>Capture photo</button>

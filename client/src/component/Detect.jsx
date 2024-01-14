@@ -10,7 +10,12 @@ function Detect() {
     const canvasRef = useRef(null);
     const [responseText, setResponseText] = useState('');
     const [screenshotCounter, setScreenshotCounter] = useState(0);
+    const [isVideoRunning, setIsVideoRunning] = useState(true);
+    const [isCameraOn, setIsCameraOn] = useState(true);
 
+    const toggleCamera = () => {
+        setIsCameraOn((prev) => !prev);
+      };
     // Main function
     const runCoco = async () => {
         const net = await cocossd.load();
@@ -28,6 +33,14 @@ function Detect() {
         const ctx = canvas.getContext('2d');
         ctx.drawImage(video, 0, 0, width, height);
         return canvas.toDataURL(); // returns a base64-encoded data URL
+    };
+    const stopVideo = () => {
+        // Stop the video stream
+        if (webcamRef.current && webcamRef.current.video) {
+            const tracks = webcamRef.current.video.srcObject.getTracks();
+            tracks.forEach(track => track.stop());
+            setIsVideoRunning(false);
+        }
     };
 
     const detect = async (net) => {
@@ -94,10 +107,12 @@ function Detect() {
     return (
         <div className="">
             <header className="">
+                {isCameraOn ? (
                 <Webcam
                     ref={webcamRef}
                     muted={true}
                     screenshotFormat="image/jpeg"
+                    mirrored={true}
                     style={{
                         position: "absolute",
                         marginLeft: "auto",
@@ -109,8 +124,21 @@ function Detect() {
                         width: 640,
                         height: 480,
                     }}
-                />
-
+                    />
+                ) : (
+                    <div style={{
+                        position: "absolute",
+                        marginLeft: "auto",
+                        marginRight: "auto",
+                        left: 0,
+                        right: 0,
+                        textAlign: "center",
+                        zindex: 9,
+                        width: 640,
+                        height: 480, 
+                         backgroundColor: 'black' 
+                        }}></div>
+                  )}
                 <canvas
                     ref={canvasRef}
                     style={{
@@ -124,9 +152,12 @@ function Detect() {
                         width: 640,
                         height: 480,
                     }}
-                />
+                    />
             </header>
             <p>Response Text: {responseText}</p>
+            <button onClick={toggleCamera}>
+                {isCameraOn ? 'Turn Off Camera' : 'Turn On Camera'}
+            </button>
         </div>
     );
 }

@@ -113,8 +113,12 @@ def AddMember():
         out_jpg = img.convert('RGB')
         out_jpg.save(member_path)
         #-----------------------img-------------------------------
-
-
+        # remove model
+        file_path = "./database/member/representations_facenet.pkl"
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            print(f"The file '{file_path}' has been successfully removed.")
+        
         # Insert the new user into the database
         mycursor.execute("INSERT INTO person_info (FirstName, LastName , gender , DateOfBirth, img_path) VALUES (%s, %s, %s, %s, %s)", (AddfirstName, AddlastName , Addgender ,formatted_date, member_path))
         mydb.commit()
@@ -187,6 +191,12 @@ def remove_image_file(folder_path):
         # Remove the empty folder
         os.rmdir(folder_path)
         print(f'Removed folder: {folder_path}')
+        # remove model
+        file_path = "./database/member/representations_facenet.pkl"
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            print(f"The file '{file_path}' has been successfully removed.")
+
     except Exception as e:
         print(f"Error removing folder: {str(e)}")  
 @app.route('/rmimg', methods=['POST'])
