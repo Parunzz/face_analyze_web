@@ -15,6 +15,8 @@ export default function WebcamCapture() {
   const [dominantEmotion, setDominantEmotion] = useState(null);
   const [isCameraOn, setIsCameraOn] = useState(true);
   const [autoCaptureInterval, setAutoCaptureInterval] = useState(null);
+  const [responseTextemo, setResponseTextemo] = useState('');
+  const [responseTextName, setResponseTextName] = useState('');
 
   const toggleCamera = () => {
     setIsCameraOn((prev) => !prev);
@@ -56,42 +58,19 @@ export default function WebcamCapture() {
             },
             body: JSON.stringify({ image: imageSrc }),
           });
-          // Log the request details
-          console.log('Request URL:', 'http://localhost:3001/api/save_fullImg');
-          console.log('Request Method:', 'POST');
-          console.log('Request Headers:', { 'Content-Type': 'application/json' });
-          console.log('Request Body:', JSON.stringify({ image: imageSrc }));
+          
 
           // Log the response details
-          console.log('Response Status:', response.status);
-          console.log('Response Headers:', response.headers);
-          console.log('Response Body:', await response.text());
-
-
-          // Inside the showImage function after fetching the API
-          // Inside the showImage function after fetching the API
-          if (response.ok) {
-            try {
-              const data = await response.json();
-              console.log('Emotion Analysis Result:', data);
-
-              // Check if 'dominant_emotion' is present in the correct location
-              if (data && 'dominant_emotion' in data) {
-                setDominantEmotion(data.dominant_emotion);
-              } else {
-                console.error('Dominant emotion not found in the response.');
-              }
-            } catch (error) {
-              console.error('Error parsing JSON from the response:', error);
-              // Handle error (optional)
-            }
-          } else {
-            console.error('Failed to analyze emotion:', response.status, response.statusText);
-            // Handle error (optional)
+          const responseData = await response.json();
+          console.log('API response:', responseData);
+          if(responseData){
+            setResponseTextemo(responseData.dominant_emotion);
+            setResponseTextName(responseData.person_name);
           }
-
-
-
+            else{
+              setResponseTextemo(responseData.error)
+              setResponseTextName(responseData.person_name);
+          }
 
         } else {
           console.error('Image source is empty or null');
@@ -110,14 +89,15 @@ export default function WebcamCapture() {
         <h1>Face Detect</h1>
         {isCameraOn ? (
           <Webcam
-            ref={webRef}
-            audio={false}
-            screenshotFormat="image/jpeg"
-            height={500}
-            width={500}
-            videoConstraints={videoConstraints}
+          ref={webRef}
+          audio={false}
+          screenshotFormat="image/jpeg"
+          height={500}
+          width={500}
+          videoConstraints={videoConstraints}
           />
-        ) : (
+          )
+           : (
           <div style={{ width: '500px', height: '500px', backgroundColor: 'black' }}></div>
         )}
         <button onClick={showImage}>Capture photo</button>
@@ -128,9 +108,9 @@ export default function WebcamCapture() {
         </button>
 
         {/* Display the captured image at the bottom */}
-        {capturedImage && <img src={capturedImage} alt="Captured" style={{ marginTop: '20px' }} />}
-        <h1>Emotion</h1>
-        {dominantEmotion && <p>Dominant Emotion: {dominantEmotion}</p>}
+        {/* {capturedImage && <img src={capturedImage} alt="Captured" style={{ marginTop: '20px' }} />} */}
+        <h1>Emotion : {responseTextemo}</h1>
+        <h1>Person name : {responseTextName}</h1>
       </Container>
     </React.Fragment>
   );

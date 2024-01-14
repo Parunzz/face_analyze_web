@@ -26,14 +26,14 @@ CORS(app, supports_credentials=True)
 
 
 ## FOR DEV ENV ###
-# host = "localhost"
-# user = "root"
-# password = ""
+host = "localhost"
+user = "root"
+password = ""
 
 ### FOR Docker ###
-host = "db"
-user = "admin"
-password = "admin"
+# host = "db"
+# user = "admin"
+# password = "admin"
 
 
 db = "deepface"
@@ -281,17 +281,16 @@ def process_image():
             return jsonify({'error': 'Emotion analysis result not found or missing dominant_emotion.'})
             #----------------------face emotion detect --------------
         emo_result = DeepFace.analyze(img_path = SmallImg_save_path,detector_backend = 'opencv',actions=("emotion"))
+        person_name = DeepFace.find(img_path=SmallImg_save_path,db_path='./database/member/',enforce_detection=False,model_name='Facenet')
         if emo_result and 'emotion' in emo_result[0]:
             dominant_emotion = emo_result[0]['dominant_emotion']
             print(dominant_emotion)
-            # print(small_face)
-            return jsonify({'dominant_emotion': dominant_emotion})
-
+            print(person_name[0]['identity'][0].split('/')[3])
+            return jsonify({'dominant_emotion': dominant_emotion,'person_name': person_name[0]['identity'][0].split('/')[3]})
+            # if(person_name and 'identity' in person_name[0]):
+            
         else:
-            return jsonify({'error': 'Emotion analysis result not found or missing dominant_emotion.'})
-        #------------------------------------------
-
-        # return jsonify({'message': 'Image processed successfully'})
+            return jsonify({'dominant_emotion': "Face not found"})
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
