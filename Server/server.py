@@ -241,7 +241,11 @@ def process_image():
        # Generate a unique filename using UUID
         unique_filename = str(uuid.uuid4()) + '.jpg'
         # Save the processed image with the unique filename
-        FullImg_save_path = './database/full_img/' + unique_filename
+        folder_path = './database/full_img/'
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+        
+        FullImg_save_path = os.path.join(folder_path, unique_filename)
         out_jpg = img.convert('RGB')
         out_jpg.save(FullImg_save_path)
 
@@ -260,7 +264,10 @@ def process_image():
                 # Crop the face from the image
                 face_image = img_array[y:y+h, x:x+w]
                 unique_filename = str(uuid.uuid4()) + '.jpg'
-                SmallImg_save_path = './database/cut_img/' + unique_filename
+                folder_path = './database/cut_img/'
+                if not os.path.exists(folder_path):
+                    os.makedirs(folder_path)
+                SmallImg_save_path = os.path.join(folder_path, unique_filename)
                 mpimg.imsave(SmallImg_save_path, face_image, format='jpg')
 
             print(f"{len(faces)} face(s) detected and saved.")
