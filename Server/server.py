@@ -15,7 +15,7 @@ from werkzeug.security import check_password_hash
 from datetime import timedelta
 import jwt
 from datetime import datetime
-
+import threading
 
 
 
@@ -286,9 +286,109 @@ def process_image():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-    
 
+###### Test Auto capture #####
+# Initialize the face cascade classifier and video capture
+face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+cap = None 
+is_capturing = False
+capture_cooldown = 10
+last_capture_time = 0
+def initialize_camera():
+    global cap
+    try:
+        cap = cv2.VideoCapture(0)
+        if not cap.isOpened():
+            raise Exception("Could not open video device")
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+    except Exception as e:
+        print(f"Error initializing camera: {str(e)}")
 
+def release_camera():
+    global cap
+    if cap is not None and cap.isOpened():
+        cap.release()
+
+def auto_capture_loop():
+    global is_capturing
+
+    while is_capturing:
+        # Read a frame from the webcam
+        ret, frame = cap.read()
+        print(f"Retrieved frame: {ret}")
+        if not ret or frame is None:
+            print("Empty frame")
+            continue
+        # Convert the frame to grayscale for face detection
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        # Detect faces in the frame
+        faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+        print(f"Number of faces detected: {len(faces)}")
+        # Check if faces are detected
+        if len(faces) > 0:
+            # Generate a unique filename using UUID for the captured image
+            unique_filename = str(uuid.uuid4()) + '.jpg'
+            capture_img_save_path = './database/captured_img/' + unique_filename
+
+            # Save the captured image with the unique filename
+            cv2.imwrite(capture_img_save_path, frame)
+            print("Face detected and image captured.")
+
+            # Additional logic for auto-capture if needed
+
+@app.route('/api/auto_capture', methods=['POST'])
+def auto_capture():
+    global is_capturing
+
+    data = request.get_json()
+
+    if not data or ('start' not in data and 'stop' not in data):
+        return jsonify({'error': 'Invalid request data'}), 400
+
+    if 'start' in data:
+        if not is_capturing:
+            initialize_camera()
+            is_capturing = True
+            threading.Thread(target=auto_capture_loop).start()
+            return jsonify({'message': 'Auto-capture started'}), 200
+        else:
+            return jsonify({'message': 'Auto-capture already in progress'}), 400
+    elif 'stop' in data:
+        if is_capturing:
+            is_capturing = False
+            release_camera()
+            return jsonify({'message': 'Auto-capture stopped'}), 200
+        else:
+            return jsonify({'message': 'No auto-capture in progress'}), 400
+    else:
+        return jsonify({'error': 'Invalid request data'}), 400
+@app.route('/api/capture_frame', methods=['POST'])
+def capture_frame():
+    data = request.get_json()
+
+    if not data or 'frame' not in data:
+        return jsonify({'error': 'Invalid request data'}), 400
+
+    try:
+        # Generate a unique filename using UUID for the captured frame
+        unique_filename = str(uuid.uuid4()) + '.jpg'
+        frame_save_path = './database/captured_frames/' + unique_filename
+
+        # Decode and save the captured frame
+        frame_data = data['frame'].split(',')[1]
+        with open(frame_save_path, 'wb') as f:
+            f.write(base64.b64decode(frame_data))
+
+        print("Frame captured and saved.")
+        return jsonify({'message': 'Frame captured and saved', 'framePath': frame_save_path}), 200
+
+    except Exception as e:
+        print(f"Error capturing frame: {str(e)}")
+        return jsonify({'error': f'Error capturing frame: {str(e)}'}), 500    
+
+## MAIN ##
 if __name__ == "__main__":
     # app.run(debug=True)
     app.run(host="0.0.0.0", port=3001)

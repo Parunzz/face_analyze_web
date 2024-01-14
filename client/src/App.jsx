@@ -6,6 +6,7 @@ import SignUp from './component/SignUp';
 import Camera from './component/Carmera';
 import Member from './component/Member';
 import AddMember from './component/AddMember';
+import TestAutocap from './component/TestAutocap';
 function App() {
 
   
@@ -18,7 +19,7 @@ function App() {
           <Route path='/Camera' element={<Camera />} />
           <Route path='/Member' element={<Member />} />
           <Route path='/AddMember' element={<AddMember />} />
-          
+          <Route path='/TestAutocap' element={<TestAutocap />} />
       </Routes>
     </BrowserRouter>
   )
