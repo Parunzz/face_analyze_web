@@ -14,11 +14,20 @@ export default function WebcamCapture() {
   const [capturedImage, setCapturedImage] = useState(null);
   const [dominantEmotion, setDominantEmotion] = useState(null);
   const [isCameraOn, setIsCameraOn] = useState(true);
+  const [autoCaptureInterval, setAutoCaptureInterval] = useState(null);
 
   const toggleCamera = () => {
     setIsCameraOn((prev) => !prev);
   };
+  const startAutoCapture = () => {
+    const interval = setInterval(showImage, 2000); // Auto-capture every 2 seconds
+    setAutoCaptureInterval(interval);
+  };
 
+  const stopAutoCapture = () => {
+    clearInterval(autoCaptureInterval);
+    setAutoCaptureInterval(null);
+  };
   const showImage = async () => {
 
     if (webRef.current) {
@@ -112,6 +121,8 @@ export default function WebcamCapture() {
           <div style={{ width: '500px', height: '500px', backgroundColor: 'black' }}></div>
         )}
         <button onClick={showImage}>Capture photo</button>
+        <button onClick={startAutoCapture}>Start Auto-Capture</button>
+        <button onClick={stopAutoCapture}>Stop Auto-Capture</button>
         <button onClick={toggleCamera}>
           {isCameraOn ? 'Turn Off Camera' : 'Turn On Camera'}
         </button>

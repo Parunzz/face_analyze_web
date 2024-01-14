@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, make_response, session, redirect, url_for
+from flask import Flask, request, jsonify, make_response, session, redirect, url_for,send_from_directory, url_for
 from flask_cors import CORS
 import json
 import mysql.connector
@@ -15,7 +15,7 @@ from werkzeug.security import check_password_hash
 from datetime import timedelta
 import jwt
 from datetime import datetime
-
+import threading
 
 
 
@@ -25,13 +25,17 @@ CORS(app, supports_credentials=True)
 # CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})  # Update the origin
 
 
-
-host = "db"
+## FOR DEV ENV ###
 # host = "localhost"
-user = "admin"
 # user = "root"
-password = "admin"
 # password = ""
+
+### FOR Docker ###
+host = "db"
+user = "admin"
+password = "admin"
+
+
 db = "deepface"
 mydb = mysql.connector.connect(host=host,user=user,password=password,db=db)
 mycursor = mydb.cursor(dictionary=True)
@@ -220,7 +224,7 @@ def process_image():
     try:
         # Get the JSON payload from the request
         json_data = request.get_json()
-        # print('Received JSON:', json_data)
+        #print('Received JSON:', json_data)
 
         # Extract the base64-encoded string from the 'data' field
         image_data = json_data.get('image', '')
@@ -240,12 +244,12 @@ def process_image():
 
        # Generate a unique filename using UUID
         unique_filename = str(uuid.uuid4()) + '.jpg'
+        # Save the processed image with the unique filename
         folder_path = './database/full_img/'
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
-        # Save the processed image with the unique filename
-        FullImg_save_path = os.path.join(folder_path, unique_filename)
         
+        FullImg_save_path = os.path.join(folder_path, unique_filename)
         out_jpg = img.convert('RGB')
         out_jpg.save(FullImg_save_path)
 
@@ -291,10 +295,11 @@ def process_image():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-    
 
 
+
+## MAIN ##
 if __name__ == "__main__":
-    # app.run(debug=True)
-    app.run(host="0.0.0.0", port=3001)
+    #app.run(debug=True)
+    app.run(host="0.0.0.0", port=3001,debug=True)
     
