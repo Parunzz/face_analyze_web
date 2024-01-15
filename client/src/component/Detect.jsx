@@ -72,7 +72,7 @@ function Detect() {
             // Check if 'person' is detected
             const personDetected = obj.some((prediction) => prediction.class === 'person');
 
-            if (personDetected && screenshotCounter < 3) {
+            if (personDetected) {
                 // Take a screenshot
                 const screenshot = getScreenshot(video, videoWidth, videoHeight);
 
@@ -93,7 +93,7 @@ function Detect() {
                 setResponseText(responseData.dominant_emotion);
                 console.log(screenshotCounter);
                 // Increment the counter
-                setScreenshotCounter(screenshotCounter + 1);
+                // setScreenshotCounter(screenshotCounter + 1);
             }else {
                 // If 'person' is not detected, reset the counter
                 // setScreenshotCounter(0);
@@ -112,7 +112,7 @@ function Detect() {
                     ref={webcamRef}
                     muted={true}
                     screenshotFormat="image/jpeg"
-                    mirrored={true}
+                    // mirrored={true}
                     style={{
                         position: "absolute",
                         marginLeft: "auto",

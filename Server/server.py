@@ -288,10 +288,12 @@ def process_image():
 
         else:
             print("No faces detected.")
-            return jsonify({'error': 'Emotion analysis result not found or missing dominant_emotion.'})
+            return jsonify({'error': 'Emotion analysis result not found or missing dominant_emotion.', 'dominant_emotion': "Face not found",'person_name': 'unknow'})
             #----------------------face emotion detect --------------
         emo_result = DeepFace.analyze(img_path = SmallImg_save_path,detector_backend = 'opencv',actions=("emotion"))
         person_name = DeepFace.find(img_path=SmallImg_save_path,db_path='./database/member/',enforce_detection=False,model_name='Facenet')
+        print(emo_result)
+        print(person_name)
         if emo_result and 'emotion' in emo_result[0]:
             dominant_emotion = emo_result[0]['dominant_emotion']
             print(dominant_emotion)
@@ -300,10 +302,10 @@ def process_image():
             # if(person_name and 'identity' in person_name[0]):
             
         else:
-            return jsonify({'dominant_emotion': "Face not found"})
+            return jsonify({'dominant_emotion': "Face not found",'person_name': 'unknow'})
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': str(e) , 'dominant_emotion': "Face not found",'person_name': 'unknow'}), 500
 
 
 
