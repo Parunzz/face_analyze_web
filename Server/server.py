@@ -26,14 +26,14 @@ CORS(app, supports_credentials=True)
 
 
 ## FOR DEV ENV ###
-# host = "localhost"
-# user = "root"
-# password = ""
+host = "localhost"
+user = "root"
+password = ""
 
 ### FOR Docker ###
-host = "db"
-user = "admin"
-password = "admin"
+# host = "db"
+# user = "admin"
+# password = "admin"
 
 
 db = "deepface"
@@ -113,8 +113,12 @@ def AddMember():
         out_jpg = img.convert('RGB')
         out_jpg.save(member_path)
         #-----------------------img-------------------------------
-
-
+        # remove model
+        file_path = "./database/member/representations_facenet.pkl"
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            print(f"The file '{file_path}' has been successfully removed.")
+        
         # Insert the new user into the database
         mycursor.execute("INSERT INTO person_info (FirstName, LastName , gender , DateOfBirth, img_path) VALUES (%s, %s, %s, %s, %s)", (AddfirstName, AddlastName , Addgender ,formatted_date, member_path))
         mydb.commit()
@@ -187,6 +191,12 @@ def remove_image_file(folder_path):
         # Remove the empty folder
         os.rmdir(folder_path)
         print(f'Removed folder: {folder_path}')
+        # remove model
+        file_path = "./database/member/representations_facenet.pkl"
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            print(f"The file '{file_path}' has been successfully removed.")
+
     except Exception as e:
         print(f"Error removing folder: {str(e)}")  
 @app.route('/rmimg', methods=['POST'])
@@ -278,23 +288,24 @@ def process_image():
 
         else:
             print("No faces detected.")
-            return jsonify({'error': 'Emotion analysis result not found or missing dominant_emotion.'})
+            return jsonify({'error': 'Emotion analysis result not found or missing dominant_emotion.', 'dominant_emotion': "Face not found",'person_name': 'unknow'})
             #----------------------face emotion detect --------------
         emo_result = DeepFace.analyze(img_path = SmallImg_save_path,detector_backend = 'opencv',actions=("emotion"))
+        person_name = DeepFace.find(img_path=SmallImg_save_path,db_path='./database/member/',enforce_detection=False,model_name='Facenet')
+        print(emo_result)
+        print(person_name)
         if emo_result and 'emotion' in emo_result[0]:
             dominant_emotion = emo_result[0]['dominant_emotion']
             print(dominant_emotion)
-            # print(small_face)
-            return jsonify({'dominant_emotion': dominant_emotion})
-
+            print(person_name[0]['identity'][0].split('/')[3])
+            return jsonify({'dominant_emotion': dominant_emotion,'person_name': person_name[0]['identity'][0].split('/')[3]})
+            # if(person_name and 'identity' in person_name[0]):
+            
         else:
-            return jsonify({'error': 'Emotion analysis result not found or missing dominant_emotion.'})
-        #------------------------------------------
-
-        # return jsonify({'message': 'Image processed successfully'})
+            return jsonify({'dominant_emotion': "Face not found",'person_name': 'unknow'})
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': str(e) , 'dominant_emotion': "Face not found",'person_name': 'unknow'}), 500
 
 
 
