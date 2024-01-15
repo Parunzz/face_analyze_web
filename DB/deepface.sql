@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: db
--- Generation Time: Jan 10, 2024 at 11:07 AM
--- Server version: 8.2.0
--- PHP Version: 8.2.8
+-- Host: 127.0.0.1
+-- Generation Time: Jan 15, 2024 at 07:26 PM
+-- Server version: 10.4.24-MariaDB
+-- PHP Version: 8.1.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,18 +20,19 @@ SET time_zone = "+00:00";
 --
 -- Database: `deepface`
 --
-CREATE DATABASE IF NOT EXISTS deepface;
-USE deepface;
+CREATE DATABASE IF NOT EXISTS `deepface` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `deepface`;
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Data_info`
+-- Table structure for table `data_info`
 --
 
-CREATE TABLE `Data_info` (
-  `Data_id` int NOT NULL,
-  `pid` int NOT NULL,
-  `emotion_id` int NOT NULL,
+CREATE TABLE `data_info` (
+  `Data_id` int(11) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `emotion_id` int(11) NOT NULL,
   `DateTime` datetime NOT NULL,
   `Full_path` varchar(255) NOT NULL,
   `Cut_path` varchar(255) NOT NULL,
@@ -45,10 +46,23 @@ CREATE TABLE `Data_info` (
 --
 
 CREATE TABLE `emotion_data` (
-  `emotion_id` int NOT NULL,
+  `emotion_id` int(11) NOT NULL,
   `emotion_data` varchar(255) NOT NULL,
-  `response_text_id` int NOT NULL
+  `response_text_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `emotion_data`
+--
+
+INSERT INTO `emotion_data` (`emotion_id`, `emotion_data`, `response_text_id`) VALUES
+(5, 'angry', 1),
+(6, 'disgust', 2),
+(7, 'fear', 3),
+(8, 'happy', 4),
+(9, 'sad', 6),
+(10, 'surprise', 6),
+(11, 'neutral', 7);
 
 -- --------------------------------------------------------
 
@@ -57,7 +71,7 @@ CREATE TABLE `emotion_data` (
 --
 
 CREATE TABLE `person_info` (
-  `pid` int NOT NULL,
+  `pid` int(11) NOT NULL,
   `FirstName` varchar(255) NOT NULL,
   `LastName` varchar(255) NOT NULL,
   `img_path` varchar(255) NOT NULL,
@@ -72,9 +86,22 @@ CREATE TABLE `person_info` (
 --
 
 CREATE TABLE `response_text` (
-  `response_text_id` int NOT NULL,
+  `response_text_id` int(11) NOT NULL,
   `response_text` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `response_text`
+--
+
+INSERT INTO `response_text` (`response_text_id`, `response_text`) VALUES
+(1, 'ทำไมโกรธจัง'),
+(2, 'รังเกียจกันทำไม'),
+(3, 'กลัวอะไรอะ'),
+(4, 'ดีใจเรื่องอะไร'),
+(5, 'เสียใจทำไมอะ'),
+(6, 'ตกใจไรเนี่ย'),
+(7, 'ปกติดีหนิ');
 
 -- --------------------------------------------------------
 
@@ -83,11 +110,11 @@ CREATE TABLE `response_text` (
 --
 
 CREATE TABLE `user` (
-  `Username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `Password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `uid` int NOT NULL,
-  `Firstname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `Lastname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
+  `Username` varchar(255) NOT NULL,
+  `Password` varchar(255) NOT NULL,
+  `uid` int(11) NOT NULL,
+  `Firstname` varchar(255) NOT NULL,
+  `Lastname` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -102,9 +129,9 @@ INSERT INTO `user` (`Username`, `Password`, `uid`, `Firstname`, `Lastname`) VALU
 --
 
 --
--- Indexes for table `Data_info`
+-- Indexes for table `data_info`
 --
-ALTER TABLE `Data_info`
+ALTER TABLE `data_info`
   ADD PRIMARY KEY (`Data_id`),
   ADD KEY `emotion` (`emotion_id`),
   ADD KEY `person` (`pid`);
@@ -140,51 +167,51 @@ ALTER TABLE `user`
 --
 
 --
--- AUTO_INCREMENT for table `Data_info`
+-- AUTO_INCREMENT for table `data_info`
 --
-ALTER TABLE `Data_info`
-  MODIFY `Data_id` int NOT NULL AUTO_INCREMENT;
+ALTER TABLE `data_info`
+  MODIFY `Data_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `emotion_data`
 --
 ALTER TABLE `emotion_data`
-  MODIFY `emotion_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `emotion_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `person_info`
 --
 ALTER TABLE `person_info`
-  MODIFY `pid` int NOT NULL AUTO_INCREMENT;
+  MODIFY `pid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `response_text`
 --
 ALTER TABLE `response_text`
-  MODIFY `response_text_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `response_text_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `uid` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `uid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `Data_info`
+-- Constraints for table `data_info`
 --
-ALTER TABLE `Data_info`
-  ADD CONSTRAINT `emotion` FOREIGN KEY (`emotion_id`) REFERENCES `emotion_data` (`emotion_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `person` FOREIGN KEY (`pid`) REFERENCES `person_info` (`pid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `data_info`
+  ADD CONSTRAINT `emotion` FOREIGN KEY (`emotion_id`) REFERENCES `emotion_data` (`emotion_id`),
+  ADD CONSTRAINT `person` FOREIGN KEY (`pid`) REFERENCES `person_info` (`pid`);
 
 --
 -- Constraints for table `emotion_data`
 --
 ALTER TABLE `emotion_data`
-  ADD CONSTRAINT `response_id` FOREIGN KEY (`response_text_id`) REFERENCES `response_text` (`response_text_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `response_id` FOREIGN KEY (`response_text_id`) REFERENCES `response_text` (`response_text_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
