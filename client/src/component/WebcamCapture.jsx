@@ -35,7 +35,7 @@ export default function WebcamCapture() {
 
     if (webRef.current) {
       const imageSrc = webRef.current.getScreenshot();
-      console.log(imageSrc);
+      // console.log(imageSrc);
 
       try {
         // Check if the image source is not null or empty
