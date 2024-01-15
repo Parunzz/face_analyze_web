@@ -9,6 +9,7 @@ function Detect() {
     const webcamRef = useRef(null);
     const canvasRef = useRef(null);
     const [responseText, setResponseText] = useState('');
+    const [responseName, setResponseName] = useState('');
     const [screenshotCounter, setScreenshotCounter] = useState(0);
     const [isVideoRunning, setIsVideoRunning] = useState(true);
     const [isCameraOn, setIsCameraOn] = useState(true);
@@ -23,7 +24,7 @@ function Detect() {
         //  Loop and detect hands
         setInterval(() => {
             detect(net);
-        }, 10);
+        }, 1000);
     };
 
     const getScreenshot = (video, width, height) => {
@@ -92,6 +93,7 @@ function Detect() {
                 console.log('API response:', responseData);
                 setResponseText(responseData.dominant_emotion);
                 console.log(screenshotCounter);
+                setResponseName(responseData.person_name)
                 // Increment the counter
                 // setScreenshotCounter(screenshotCounter + 1);
             }else {
@@ -154,7 +156,8 @@ function Detect() {
                     }}
                     />
             </header>
-            <p>Response Text: {responseText}</p>
+            <h1>Name : {responseName}</h1>
+            <h1>Response Text: {responseText}</h1>
             <button onClick={toggleCamera}>
                 {isCameraOn ? 'Turn Off Camera' : 'Turn On Camera'}
             </button>

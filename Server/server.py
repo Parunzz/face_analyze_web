@@ -292,14 +292,34 @@ def process_image():
             #----------------------face emotion detect --------------
         emo_result = DeepFace.analyze(img_path = SmallImg_save_path,detector_backend = 'opencv',actions=("emotion"))
         person_name = DeepFace.find(img_path=SmallImg_save_path,db_path='./database/member/',enforce_detection=False,model_name='Facenet')
-        print(emo_result)
-        print(person_name)
+        # print(emo_result)
+        # print(person_name)
         if emo_result and 'emotion' in emo_result[0]:
             dominant_emotion = emo_result[0]['dominant_emotion']
             print(dominant_emotion)
             print(person_name[0]['identity'][0].split('/')[3])
-            return jsonify({'dominant_emotion': dominant_emotion,'person_name': person_name[0]['identity'][0].split('/')[3]})
-            # if(person_name and 'identity' in person_name[0]):
+            print(person_name[0]['identity'][0])
+            img_path = person_name[0]['identity'][0]
+
+            # Find person from img_path 
+            mycursor.execute('SELECT FirstName FROM person_info WHERE img_path = %s', (img_path,))
+            person_name = mycursor.fetchone()
+            
+            # Find person from img_path 
+            mycursor.execute('SELECT pid FROM person_info WHERE img_path = %s', (img_path,))
+            person_pid = mycursor.fetchone()
+            
+            # Find person from img_path 
+            mycursor.execute('SELECT emotion_id FROM emotion_data WHERE emotion_data = %s', (dominant_emotion,))
+            emotion_id = mycursor.fetchone()
+            
+            current_datetime = datetime.now()
+            date_mysql_format = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
+            
+            # Insert the new user into the database
+            mycursor.execute("INSERT INTO data_info (pid, emotion_id , DateTime , Full_path, Cut_path) VALUES (%s, %s, %s, %s, %s, %s)", (person_pid, emotion_id , date_mysql_format ,FullImg_save_path, SmallImg_save_path))
+            mydb.commit()
+            return jsonify({'dominant_emotion': dominant_emotion,'person_name': person_name[0]['identity'][0]})
             
         else:
             return jsonify({'dominant_emotion': "Face not found",'person_name': 'unknow'})
