@@ -18,6 +18,7 @@ export default function WebcamCapture() {
   const [autoCaptureInterval, setAutoCaptureInterval] = useState(null);
   const [responseTextemo, setResponseTextemo] = useState('');
   const [responseTextName, setResponseTextName] = useState('');
+  const [responseTextHello, setResponseTextHello] = useState('');
 
   const toggleCamera = () => {
     setIsCameraOn((prev) => !prev);
@@ -57,10 +58,12 @@ export default function WebcamCapture() {
           if(responseData){
             setResponseTextemo(responseData.dominant_emotion);
             setResponseTextName(responseData.person_name);
+            setResponseTextHello(responseData.response_text)
           }
-            else{
-              setResponseTextemo(responseData.error)
-              setResponseTextName(responseData.person_name);
+          else{
+            setResponseTextemo(responseData.error)
+            setResponseTextName(responseData.person_name);
+            setResponseTextHello("T_T")
           }
 
         } else {
@@ -103,6 +106,7 @@ export default function WebcamCapture() {
         {/* {capturedImage && <img src={capturedImage} alt="Captured" style={{ marginTop: '20px' }} />} */}
         <h1>Emotion : {responseTextemo}</h1>
         <h1>Person name : {responseTextName}</h1>
+        <h1>{responseTextHello}</h1>
       </Container>
     </React.Fragment>
   );

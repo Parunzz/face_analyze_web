@@ -309,11 +309,14 @@ def process_image():
                     person_name = person_info['FirstName']
 
                     # Retrieve emotion_id from the emotion_data table
-                    mycursor.execute('SELECT emotion_id FROM emotion_data WHERE emotion_data = %s', (dominant_emotion,))
+                    mycursor.execute('SELECT emotion_id,response_text_id FROM emotion_data WHERE emotion_data = %s', (dominant_emotion,))
                     emotion_data_result = mycursor.fetchone()
 
                     if emotion_data_result is not None:
                         emotion_id = emotion_data_result['emotion_id']
+                        response_text_id = emotion_data_result['response_text_id']
+                        mycursor.execute('SELECT response_text FROM response_text WHERE response_text_id = %s', (response_text_id,))
+                        response_text = mycursor.fetchone()
 
                         current_datetime = datetime.now()
                         date_mysql_format = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
@@ -323,20 +326,20 @@ def process_image():
                                         (person_pid, emotion_id, date_mysql_format, FullImg_save_path, SmallImg_save_path))
                         mydb.commit()
 
-                        return jsonify({'dominant_emotion': dominant_emotion, 'person_name': person_name})
+                        return jsonify({'dominant_emotion': dominant_emotion, 'person_name': person_name , 'response_text': response_text['response_text']})
 
-            return jsonify({'dominant_emotion': "Person not found", 'person_name': 'unknown'})
+            return jsonify({'dominant_emotion': "Person not found", 'person_name': 'unknown', 'response_text': 'หาไม่เจอ T_T'})
 
         else:
             person_name_result = DeepFace.find(img_path=SmallImg_save_path, db_path='./database/member/', enforce_detection=False, model_name='Facenet')
             if person_name_result:
                 person_name = person_name_result[0]['identity'][0].split('/')[3]
-                return jsonify({'person_name': person_name})
+                return jsonify({'person_name': person_name,'response_text': 'หาไม่เจอ T_T'})
 
-            return jsonify({'dominant_emotion': "Not found emotion", 'person_name': 'unknown'})
+            return jsonify({'dominant_emotion': "Not found emotion", 'person_name': 'unknown','response_text': 'หาไม่เจอ T_T'})
 
     except Exception as e:
-        return jsonify({'error': str(e), 'dominant_emotion': "Error", 'person_name': 'unknown'}), 500
+        return jsonify({'error': str(e), 'dominant_emotion': "Error", 'person_name': 'unknown','response_text': 'หาไม่เจอ T_T'}), 500
 
 
 
