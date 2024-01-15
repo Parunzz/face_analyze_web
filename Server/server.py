@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, make_response, session, redirect, url_for
+from flask import Flask, request, jsonify, make_response, session, redirect, url_for,send_from_directory, url_for
 from flask_cors import CORS
 import json
 import mysql.connector
@@ -15,7 +15,7 @@ from werkzeug.security import check_password_hash
 from datetime import timedelta
 import jwt
 from datetime import datetime
-
+import threading
 
 
 
@@ -25,13 +25,17 @@ CORS(app, supports_credentials=True)
 # CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})  # Update the origin
 
 
+## FOR DEV ENV ###
+host = "localhost"
+user = "root"
+password = ""
 
-host = "db"
-# host = "localhost"
-user = "admin"
-# user = "root"
-password = "admin"
-# password = ""
+### FOR Docker ###
+# host = "db"
+# user = "admin"
+# password = "admin"
+
+
 db = "deepface"
 mydb = mysql.connector.connect(host=host,user=user,password=password,db=db)
 mycursor = mydb.cursor(dictionary=True)
@@ -109,8 +113,12 @@ def AddMember():
         out_jpg = img.convert('RGB')
         out_jpg.save(member_path)
         #-----------------------img-------------------------------
-
-
+        # remove model
+        file_path = "./database/member/representations_facenet.pkl"
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            print(f"The file '{file_path}' has been successfully removed.")
+        
         # Insert the new user into the database
         mycursor.execute("INSERT INTO person_info (FirstName, LastName , gender , DateOfBirth, img_path) VALUES (%s, %s, %s, %s, %s)", (AddfirstName, AddlastName , Addgender ,formatted_date, member_path))
         mydb.commit()
@@ -183,6 +191,12 @@ def remove_image_file(folder_path):
         # Remove the empty folder
         os.rmdir(folder_path)
         print(f'Removed folder: {folder_path}')
+        # remove model
+        file_path = "./database/member/representations_facenet.pkl"
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            print(f"The file '{file_path}' has been successfully removed.")
+
     except Exception as e:
         print(f"Error removing folder: {str(e)}")  
 @app.route('/rmimg', methods=['POST'])
@@ -220,7 +234,7 @@ def process_image():
     try:
         # Get the JSON payload from the request
         json_data = request.get_json()
-        # print('Received JSON:', json_data)
+        #print('Received JSON:', json_data)
 
         # Extract the base64-encoded string from the 'data' field
         image_data = json_data.get('image', '')
@@ -240,10 +254,12 @@ def process_image():
 
        # Generate a unique filename using UUID
         unique_filename = str(uuid.uuid4()) + '.jpg'
-
         # Save the processed image with the unique filename
-        FullImg_save_path = './database/full_img/' + unique_filename
+        folder_path = './database/full_img/'
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
         
+        FullImg_save_path = os.path.join(folder_path, unique_filename)
         out_jpg = img.convert('RGB')
         out_jpg.save(FullImg_save_path)
 
@@ -262,34 +278,39 @@ def process_image():
                 # Crop the face from the image
                 face_image = img_array[y:y+h, x:x+w]
                 unique_filename = str(uuid.uuid4()) + '.jpg'
-                SmallImg_save_path = './database/cut_img/' + unique_filename
+                folder_path = './database/cut_img/'
+                if not os.path.exists(folder_path):
+                    os.makedirs(folder_path)
+                SmallImg_save_path = os.path.join(folder_path, unique_filename)
                 mpimg.imsave(SmallImg_save_path, face_image, format='jpg')
 
             print(f"{len(faces)} face(s) detected and saved.")
 
         else:
             print("No faces detected.")
-            return jsonify({'error': 'Emotion analysis result not found or missing dominant_emotion.'})
+            return jsonify({'error': 'Emotion analysis result not found or missing dominant_emotion.', 'dominant_emotion': "Face not found",'person_name': 'unknow'})
             #----------------------face emotion detect --------------
         emo_result = DeepFace.analyze(img_path = SmallImg_save_path,detector_backend = 'opencv',actions=("emotion"))
+        person_name = DeepFace.find(img_path=SmallImg_save_path,db_path='./database/member/',enforce_detection=False,model_name='Facenet')
+        print(emo_result)
+        print(person_name)
         if emo_result and 'emotion' in emo_result[0]:
             dominant_emotion = emo_result[0]['dominant_emotion']
             print(dominant_emotion)
-            # print(small_face)
-            return jsonify({'dominant_emotion': dominant_emotion})
-
+            print(person_name[0]['identity'][0].split('/')[3])
+            return jsonify({'dominant_emotion': dominant_emotion,'person_name': person_name[0]['identity'][0].split('/')[3]})
+            # if(person_name and 'identity' in person_name[0]):
+            
         else:
-            return jsonify({'error': 'Emotion analysis result not found or missing dominant_emotion.'})
-        #------------------------------------------
-
-        # return jsonify({'message': 'Image processed successfully'})
+            return jsonify({'dominant_emotion': "Face not found",'person_name': 'unknow'})
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
-    
+        return jsonify({'error': str(e) , 'dominant_emotion': "Face not found",'person_name': 'unknow'}), 500
 
 
+
+## MAIN ##
 if __name__ == "__main__":
-    # app.run(debug=True)
-    app.run(host="0.0.0.0", port=3001)
+    #app.run(debug=True)
+    app.run(host="0.0.0.0", port=3001,debug=True)
     

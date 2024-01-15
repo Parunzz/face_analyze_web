@@ -6,6 +6,9 @@ import SignUp from './component/SignUp';
 import Camera from './component/Carmera';
 import Member from './component/Member';
 import AddMember from './component/AddMember';
+import Detect from './component/Detect';
+import WebcamCapture from './component/WebcamCapture';
+
 function App() {
 
   
@@ -18,7 +21,9 @@ function App() {
           <Route path='/Camera' element={<Camera />} />
           <Route path='/Member' element={<Member />} />
           <Route path='/AddMember' element={<AddMember />} />
-          
+          <Route path='/Kiosk' element={<Detect />} />
+          <Route path='/CCTV1' element={<WebcamCapture />} />
+         
       </Routes>
     </BrowserRouter>
   )

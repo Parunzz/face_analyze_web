@@ -1,5 +1,4 @@
 import { useState, useRef } from 'react';
-import WebcamCapture from './WebcamCapture';
 import Nav from './Nav';
 
 function Camera() {
@@ -12,7 +11,9 @@ function Camera() {
   return (
     <div>
       <Nav/>
-      <WebcamCapture/>
+      <h1>Choose Camera</h1>
+      <a href="Kiosk">Kiosk</a><br />
+      <a href="CCTV1">CCTV</a>
     </div>
   );
 }
