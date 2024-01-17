@@ -291,21 +291,55 @@ def process_image():
             return jsonify({'error': 'Emotion analysis result not found or missing dominant_emotion.', 'dominant_emotion': "Face not found",'person_name': 'unknow'})
             #----------------------face emotion detect --------------
         emo_result = DeepFace.analyze(img_path = SmallImg_save_path,detector_backend = 'opencv',actions=("emotion"))
-        person_name = DeepFace.find(img_path=SmallImg_save_path,db_path='./database/member/',enforce_detection=False,model_name='Facenet')
-        print(emo_result)
-        print(person_name)
         if emo_result and 'emotion' in emo_result[0]:
             dominant_emotion = emo_result[0]['dominant_emotion']
             print(dominant_emotion)
-            print(person_name[0]['identity'][0].split('/')[3])
-            return jsonify({'dominant_emotion': dominant_emotion,'person_name': person_name[0]['identity'][0].split('/')[3]})
-            # if(person_name and 'identity' in person_name[0]):
-            
+            person_name_result = DeepFace.find(img_path=SmallImg_save_path, db_path='./database/member/', enforce_detection=False, model_name='Facenet')
+            print(person_name_result[0]['identity'][0].split('/')[3])
+            print(person_name_result[0]['identity'][0])
+        
+            if person_name_result:
+
+                # Find person from img_path 
+                mycursor.execute('SELECT FirstName, pid FROM person_info WHERE img_path = %s', (person_name_result[0]['identity'][0],))
+                person_info = mycursor.fetchone()
+
+                if person_info:
+                    person_pid = person_info['pid']
+                    person_name = person_info['FirstName']
+
+                    # Retrieve emotion_id from the emotion_data table
+                    mycursor.execute('SELECT emotion_id,response_text_id FROM emotion_data WHERE emotion_data = %s', (dominant_emotion,))
+                    emotion_data_result = mycursor.fetchone()
+
+                    if emotion_data_result is not None:
+                        emotion_id = emotion_data_result['emotion_id']
+                        response_text_id = emotion_data_result['response_text_id']
+                        mycursor.execute('SELECT response_text FROM response_text WHERE response_text_id = %s', (response_text_id,))
+                        response_text = mycursor.fetchone()
+
+                        current_datetime = datetime.now()
+                        date_mysql_format = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
+
+                        # Insert the new user into the database
+                        mycursor.execute("INSERT INTO data_info (pid, emotion_id, DateTime, Full_path, Cut_path) VALUES (%s, %s, %s, %s, %s)",
+                                        (person_pid, emotion_id, date_mysql_format, FullImg_save_path, SmallImg_save_path))
+                        mydb.commit()
+
+                        return jsonify({'dominant_emotion': dominant_emotion, 'person_name': person_name , 'response_text': response_text['response_text']})
+
+            return jsonify({'dominant_emotion': "Person not found", 'person_name': 'unknown', 'response_text': 'หาไม่เจอ T_T'})
+
         else:
-            return jsonify({'dominant_emotion': "Face not found",'person_name': 'unknow'})
+            person_name_result = DeepFace.find(img_path=SmallImg_save_path, db_path='./database/member/', enforce_detection=False, model_name='Facenet')
+            if person_name_result:
+                person_name = person_name_result[0]['identity'][0].split('/')[3]
+                return jsonify({'person_name': person_name,'response_text': 'หาไม่เจอ T_T'})
+
+            return jsonify({'dominant_emotion': "Not found emotion", 'person_name': 'unknown','response_text': 'หาไม่เจอ T_T'})
 
     except Exception as e:
-        return jsonify({'error': str(e) , 'dominant_emotion': "Face not found",'person_name': 'unknow'}), 500
+        return jsonify({'error': str(e), 'dominant_emotion': "Error", 'person_name': 'unknown','response_text': 'หาไม่เจอ T_T'}), 500
 
 
 
