@@ -1,7 +1,8 @@
 // Import dependencies
 import React, { useRef, useState, useEffect } from "react";
 import * as tf from "@tensorflow/tfjs";
-import * as cocossd from "@tensorflow-models/coco-ssd";
+import * as faceDetection from '@tensorflow-models/face-detection';
+
 import Webcam from "react-webcam";
 import { drawRect } from "./utilities";
 
@@ -13,18 +14,28 @@ function Detect() {
     const [screenshotCounter, setScreenshotCounter] = useState(0);
     const [isVideoRunning, setIsVideoRunning] = useState(true);
     const [isCameraOn, setIsCameraOn] = useState(true);
+    const [imageSrc, setImageSrc] = useState(null);
 
     const toggleCamera = () => {
         setIsCameraOn((prev) => !prev);
       };
     // Main function
-    const runCoco = async () => {
-        const net = await cocossd.load();
-        console.log("Handpose model loaded.");
-        //  Loop and detect hands
-        setInterval(() => {
-            detect(net);
-        }, 1000);
+    const loadModel = async () => {
+        // const net = await cocossd.load();
+        try {
+            const model = faceDetection.SupportedModels.MediaPipeFaceDetector;
+            const detectorConfig = {
+            runtime: 'tfjs', // or 'tfjs'
+            }
+            const net = await faceDetection.createDetector(model, detectorConfig);
+            console.log("Handpose model loaded.");
+            //  Loop and detect hands
+            setInterval(() => {
+                detect(net);
+            }, 500);
+        } catch (error) {
+            console.error("Error loading or using the face detection model:", error);
+        }
     };
 
     const getScreenshot = (video, width, height) => {
@@ -35,14 +46,26 @@ function Detect() {
         ctx.drawImage(video, 0, 0, width, height);
         return canvas.toDataURL(); // returns a base64-encoded data URL
     };
-    const stopVideo = () => {
-        // Stop the video stream
-        if (webcamRef.current && webcamRef.current.video) {
-            const tracks = webcamRef.current.video.srcObject.getTracks();
-            tracks.forEach(track => track.stop());
-            setIsVideoRunning(false);
+    const getFaceScreenshot = (video, width, height, face) => {
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+    
+        // Check if the face object and its box property are defined
+        if (face && face.box) {
+            // Extract box coordinates from the face
+            const { xMin, xMax, yMin, yMax } = face.box;
+            // Draw only the region within the face bounding box
+            ctx.drawImage(video, xMin, yMin, xMax - xMin, yMax - yMin, 0, 0, width, height);
+        } else {
+            // If the face or its box property is undefined, draw the entire video frame
+            ctx.drawImage(video, 0, 0, width, height);
         }
+    
+        return canvas.toDataURL(); // returns a base64-encoded data URL
     };
+    
 
     const detect = async (net) => {
         // Check data is available
@@ -65,15 +88,24 @@ function Detect() {
             canvasRef.current.height = videoHeight;
 
             // Make Detections
-            const obj = await net.detect(video);
+            // const faces = await net.detect(video);
+            const faces = await net.estimateFaces(video);
+            // console.log(faces)
 
             // Draw mesh
             const ctx = canvasRef.current.getContext("2d");
-            drawRect(obj, ctx);
-            // Check if 'person' is detected
-            const personDetected = obj.some((prediction) => prediction.class === 'person');
-
-            if (personDetected) {
+            drawRect(faces, ctx);
+            // Check if 'face' is detected
+            const noFaceDetected = !faces || faces.length === 0;
+            if(!noFaceDetected){
+                const facescreenshot = getFaceScreenshot(video, videoWidth, videoHeight, faces[0]);
+                setImageSrc(facescreenshot);
+                console.log("facescreenshot")
+            }
+            else{
+                setImageSrc(null);
+            }
+            if (false) {
                 // Take a screenshot
                 const screenshot = getScreenshot(video, videoWidth, videoHeight);
 
@@ -104,7 +136,7 @@ function Detect() {
         }
     };
 
-    useEffect(() => { runCoco() }, [screenshotCounter]);
+    useEffect(() => { loadModel() }, [screenshotCounter]);
 
     return (
         <div className="">
@@ -161,6 +193,14 @@ function Detect() {
             <button onClick={toggleCamera}>
                 {isCameraOn ? 'Turn Off Camera' : 'Turn On Camera'}
             </button>
+            {imageSrc && (
+                <img
+                    src={imageSrc}
+                    alt="Detected Face"
+                    width={200}
+                    height={200}
+                />
+            )}
         </div>
     );
 }
