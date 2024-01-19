@@ -1,7 +1,14 @@
 // Import dependencies
 import React, { useRef, useState, useEffect } from "react";
-import * as tf from "@tensorflow/tfjs";
+// import * as tf from "@tensorflow/tfjs";
+// import * as faceDetection from '@tensorflow-models/face-detection';
+//--------------------Import the libraries---------------------
+import '@mediapipe/face_detection';
+import '@tensorflow/tfjs-core';
+// Register WebGL backend.
+import '@tensorflow/tfjs-backend-webgl';
 import * as faceDetection from '@tensorflow-models/face-detection';
+//--------------------Import the libraries---------------------
 
 import Webcam from "react-webcam";
 import { drawRect } from "./utilities";
@@ -25,14 +32,17 @@ function Detect() {
         try {
             const model = faceDetection.SupportedModels.MediaPipeFaceDetector;
             const detectorConfig = {
-            runtime: 'tfjs', // or 'tfjs'
+                runtime: 'mediapipe', // or 'tfjs'
+                solutionPath: 'node_modules/@mediapipe/face_detection/',
             }
             const net = await faceDetection.createDetector(model, detectorConfig);
-            console.log("Handpose model loaded.");
+            console.log("Face detection model loaded.");
+
             //  Loop and detect hands
             setInterval(() => {
                 detect(net);
-            }, 500);
+            }, 100);
+
         } catch (error) {
             console.error("Error loading or using the face detection model:", error);
         }
@@ -89,8 +99,9 @@ function Detect() {
 
             // Make Detections
             // const faces = await net.detect(video);
-            const faces = await net.estimateFaces(video);
-            // console.log(faces)
+            const estimationConfig = {flipHorizontal: false};
+            const faces = await net.estimateFaces(video,estimationConfig);
+            console.log(faces)
 
             // Draw mesh
             const ctx = canvasRef.current.getContext("2d");
@@ -136,7 +147,9 @@ function Detect() {
         }
     };
 
-    useEffect(() => { loadModel() }, [screenshotCounter]);
+    useEffect(() => {
+        loadModel()
+    }, []);
 
     return (
         <div className="">
