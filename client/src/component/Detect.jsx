@@ -1,7 +1,6 @@
 // Import dependencies
 import React, { useRef, useState, useEffect } from "react";
-// import * as tf from "@tensorflow/tfjs";
-// import * as faceDetection from '@tensorflow-models/face-detection';
+import * as tf from "@tensorflow/tfjs";
 //--------------------Import the libraries---------------------
 import '@mediapipe/face_detection';
 import '@tensorflow/tfjs-core';
@@ -22,6 +21,7 @@ function Detect() {
     const [isVideoRunning, setIsVideoRunning] = useState(true);
     const [isCameraOn, setIsCameraOn] = useState(true);
     const [imageSrc, setImageSrc] = useState(null);
+    let isCaptureEnabled = true; // Add this variable
 
     const toggleCamera = () => {
         setIsCameraOn((prev) => !prev);
@@ -32,8 +32,10 @@ function Detect() {
         try {
             const model = faceDetection.SupportedModels.MediaPipeFaceDetector;
             const detectorConfig = {
-                runtime: 'mediapipe', // or 'tfjs'
-                solutionPath: 'node_modules/@mediapipe/face_detection/',
+                runtime: 'tfjs', 
+                maxFaces: '10',
+                // runtime: 'mediapipe', // or 'tfjs'
+                // solutionPath: 'node_modules/@mediapipe/face_detection/',
             }
             const net = await faceDetection.createDetector(model, detectorConfig);
             console.log("Face detection model loaded.");
@@ -108,12 +110,15 @@ function Detect() {
             drawRect(faces, ctx);
             // Check if 'face' is detected
             const noFaceDetected = !faces || faces.length === 0;
-            if(!noFaceDetected){
+            if(!noFaceDetected && isCaptureEnabled){
+                isCaptureEnabled = false;
                 const facescreenshot = getFaceScreenshot(video, videoWidth, videoHeight, faces[0]);
                 setImageSrc(facescreenshot);
                 console.log("facescreenshot")
+                
             }
             else{
+                isCaptureEnabled = true;
                 setImageSrc(null);
             }
             if (false) {
@@ -148,7 +153,7 @@ function Detect() {
     };
 
     useEffect(() => {
-        loadModel()
+        loadModel();
     }, []);
 
     return (
