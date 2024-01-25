@@ -26,14 +26,14 @@ CORS(app, supports_credentials=True)
 
 
 ## FOR DEV ENV ###
-# host = "localhost"
-# user = "root"
-# password = ""
+host = "localhost"
+user = "root"
+password = ""
 
 ### FOR Docker ###
-host = "db"
-user = "admin"
-password = "admin"
+# host = "db"
+# user = "admin"
+# password = "admin"
 
 
 db = "deepface"
@@ -262,84 +262,91 @@ def process_image():
         FullImg_save_path = os.path.join(folder_path, unique_filename)
         out_jpg = img.convert('RGB')
         out_jpg.save(FullImg_save_path)
+        print("Full Img save")
 
 
         #------------------------IMG DETECT ------------------
         
-        # small_face = DeepFace.extract_faces(img_path=FullImg_save_path, target_size=(224, 224), detector_backend='opencv')
-        imgn = Image.open(FullImg_save_path)
-        img_array = np.array(imgn)
-        # print(img_array)
-        face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-        faces = face_cascade.detectMultiScale(img_array, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
-        # Check if faces are detected
-        if len(faces) > 0:
-            for (x, y, w, h) in faces:
-                # Crop the face from the image
-                face_image = img_array[y:y+h, x:x+w]
-                unique_filename = str(uuid.uuid4()) + '.jpg'
-                folder_path = './database/cut_img/'
-                if not os.path.exists(folder_path):
-                    os.makedirs(folder_path)
-                SmallImg_save_path = os.path.join(folder_path, unique_filename)
-                mpimg.imsave(SmallImg_save_path, face_image, format='jpg')
+        small_face = DeepFace.extract_faces(img_path=FullImg_save_path,enforce_detection=False, target_size=(224, 224), detector_backend='opencv')
+        print("face detect")
+        SmallImg_list = []
+        # Iterate over each face object in the list
+        for i, face in enumerate(small_face):
+            # Generate a unique filename for each face
+            unique_filename = str(uuid.uuid4()) + '.jpg'
+            Img_save_path='./database/faces/'
+            if not os.path.exists(Img_save_path):
+                os.makedirs(Img_save_path)
+            SmallImg_save_path = os.path.join(Img_save_path, unique_filename)
+            SmallImg_list.append(SmallImg_save_path)
+            # Save the face image
+            mpimg.imsave(SmallImg_save_path, face['face'], format='jpg')
+            print(f"Extract faces {i+1} saved successfully.")
+        #----------------------face emotion detect --------------
+        results = []
 
-            print(f"{len(faces)} face(s) detected and saved.")
+        print(SmallImg_list)
+        for img_path in SmallImg_list:
+            # Analyze emotions for the current image
+            emotion_result = DeepFace.analyze(img_path=img_path, detector_backend='opencv', actions=['emotion'])
+            if emotion_result:
+                dominant_emotion = emotion_result[0]['dominant_emotion']
+            else:
+                dominant_emotion = None
 
-        else:
-            print("No faces detected.")
-            return jsonify({'error': 'Emotion analysis result not found or missing dominant_emotion.', 'dominant_emotion': "Face not found",'person_name': 'unknow'})
-            #----------------------face emotion detect --------------
-        emo_result = DeepFace.analyze(img_path = SmallImg_save_path,detector_backend = 'opencv',actions=("emotion"))
-        if emo_result and 'emotion' in emo_result[0]:
-            dominant_emotion = emo_result[0]['dominant_emotion']
-            print(dominant_emotion)
-            person_name_result = DeepFace.find(img_path=SmallImg_save_path, db_path='./database/member/', enforce_detection=False, model_name='Facenet')
-            print(person_name_result[0]['identity'][0].split('/')[3])
-            print(person_name_result[0]['identity'][0])
-        
+            db_path='./database/member/'
+            if not os.path.exists(db_path):
+                os.makedirs(db_path)
+            person_name_result = DeepFace.find(img_path=img_path, db_path=db_path, enforce_detection=True, model_name='Facenet')
+            
             if person_name_result:
-
-                # Find person from img_path 
-                mycursor.execute('SELECT FirstName, pid FROM person_info WHERE img_path = %s', (person_name_result[0]['identity'][0],))
+                person_name = person_name_result[0]['identity'][0]
+                mycursor.execute('SELECT FirstName, pid FROM person_info WHERE img_path = %s', (person_name,))
                 person_info = mycursor.fetchone()
-
                 if person_info:
-                    person_pid = person_info['pid']
                     person_name = person_info['FirstName']
+                    person_pid = person_info['pid']
+                else:
+                    person_name = None
+                    person_pid = None
+            else:
+                person_name = None
+                person_pid = None
+            
+            mycursor.execute('SELECT emotion_id,response_text_id FROM emotion_data WHERE emotion_data = %s', (dominant_emotion,))
+            emotion_data_result = mycursor.fetchone()
+            
+            if emotion_data_result is not None:
+                emotion_id = emotion_data_result['emotion_id']
+                response_text_id = emotion_data_result['response_text_id']
+                mycursor.execute('SELECT response_text FROM response_text WHERE response_text_id = %s', (response_text_id,))
+                response_text_result = mycursor.fetchone()
+                if response_text_result is not None and 'response_text' in response_text_result:
+                    response_text = response_text_result['response_text']
+                else:
+                    response_text = None
 
-                    # Retrieve emotion_id from the emotion_data table
-                    mycursor.execute('SELECT emotion_id,response_text_id FROM emotion_data WHERE emotion_data = %s', (dominant_emotion,))
-                    emotion_data_result = mycursor.fetchone()
-
-                    if emotion_data_result is not None:
-                        emotion_id = emotion_data_result['emotion_id']
-                        response_text_id = emotion_data_result['response_text_id']
-                        mycursor.execute('SELECT response_text FROM response_text WHERE response_text_id = %s', (response_text_id,))
-                        response_text = mycursor.fetchone()
-
-                        current_datetime = datetime.now()
-                        date_mysql_format = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
-
-                        # Insert the new user into the database
-                        mycursor.execute("INSERT INTO data_info (pid, emotion_id, DateTime, Full_path, Cut_path) VALUES (%s, %s, %s, %s, %s)",
-                                        (person_pid, emotion_id, date_mysql_format, FullImg_save_path, SmallImg_save_path))
-                        mydb.commit()
-
-                        return jsonify({'dominant_emotion': dominant_emotion, 'person_name': person_name , 'response_text': response_text['response_text']})
-
-            return jsonify({'dominant_emotion': "Person not found", 'person_name': 'unknown', 'response_text': 'หาไม่เจอ T_T'})
-
-        else:
-            person_name_result = DeepFace.find(img_path=SmallImg_save_path, db_path='./database/member/', enforce_detection=False, model_name='Facenet')
-            if person_name_result:
-                person_name = person_name_result[0]['identity'][0].split('/')[3]
-                return jsonify({'person_name': person_name,'response_text': 'หาไม่เจอ T_T'})
-
-            return jsonify({'dominant_emotion': "Not found emotion", 'person_name': 'unknown','response_text': 'หาไม่เจอ T_T'})
+                # Insert the new user into the database
+                current_datetime = datetime.now()
+                date_mysql_format = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
+                mycursor.execute("INSERT INTO data_info (pid, emotion_id, DateTime, Full_path, Cut_path) VALUES (%s, %s, %s, %s, %s)",
+                                (person_pid, emotion_id, date_mysql_format, FullImg_save_path, SmallImg_save_path))
+                mydb.commit()
+            else:
+                response_text = None
+            
+            
+            results.append({
+                'dominant_emotion': dominant_emotion,
+                'person_name': person_name,
+                'response_text': response_text
+            })
+        print("all done")
+        return jsonify(results)
 
     except Exception as e:
-        return jsonify({'error': str(e), 'dominant_emotion': "Error", 'person_name': 'unknown','response_text': 'หาไม่เจอ T_T'}), 500
+        print(e)
+        return jsonify({'error': str(e), 'dominant_emotion': "Error", 'person_name': 'unknown','response_text': 'หาไม่เจอ'}), 500
 
 
 

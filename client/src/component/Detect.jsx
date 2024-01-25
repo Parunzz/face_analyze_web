@@ -43,7 +43,7 @@ function Detect() {
             //  Loop and detect hands
             setInterval(() => {
                 detect(net);
-            }, 100);
+            }, 1500);
 
         } catch (error) {
             console.error("Error loading or using the face detection model:", error);
