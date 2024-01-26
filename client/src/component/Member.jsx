@@ -4,60 +4,42 @@ import Search from './Search';
 import { Box, Container, Button } from '@mui/material';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import { Link } from 'react-router-dom';
 
 function Member() {
-    const [images, setImages] = useState([]);
-
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await fetch('http://localhost:3001/getimg', {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-    
-          if (response.ok) {
-            const data = await response.json();
-            // Assuming data structure is { images: [...] }
-            setImages(data.images || []);
-          } else {
-            console.error('Failed to get images:', response);
-            window.alert('Error during fetching images');
-          }
-        } catch (error) {
-          // Handle error
-          console.error('Error during fetching images:', error);
-        }
-      };
-    
-      // Call the fetchData function when the component mounts
-      fetchData();
-    }, []); // Empty dependency array means this effect runs once when the component mounts
-    const handleRemoveImage = async (pid) => {
+    const [responseData, setResponseData] = useState([]);
+    const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3001/rmimg', {
-          method: 'POST',
+        const response = await fetch('http://localhost:3001/getMember', {
+          method: 'GET',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ pid }),
         });
-  
         if (response.ok) {
-          // Update the images after successful removal
-          const updatedImages = images.filter((image) => image.pid !== pid);
-          setImages(updatedImages);
+          const data = await response.json();
+          // console.log(data)
+          setResponseData(data.Member)
+          // console.log(responseData)
         } else {
-          console.error('Failed to remove image:', response);
-          window.alert('Error during image removal');
+          console.error('Failed to get images:', response);
+          window.alert('Error during fetching images');
         }
       } catch (error) {
-        // Handle error
-        console.error('Error during image removal:', error);
+        console.error('Error during fetching images:', error);
       }
     };
+
+    useEffect(() => {
+      fetchData();
+    }, []); // Empty dependency array means this effect runs once when the component mounts
   return (
     <div>
       <Nav />
@@ -69,24 +51,36 @@ function Member() {
           </Fab>
         </Box>
         <Search />
-
-        <div>
-          {images.map((image, index) => (
-            <div key={index}>
-              <h3>Name: {image.fname + ' ' + image.lname}</h3>
-              {image.base64 ? (
-                <>
-                  <img src={`data:image/jpeg;base64,${image.base64}`} alt={`Image ${index}`} />
-                  <Button onClick={() => handleRemoveImage(image.pid)} variant="contained" color="error">
-                    Remove Image
-                  </Button>
-                </>
-              ) : (
-                <p>No image available</p>
-              )}
-            </div>
-          ))}
-        </div>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell style={{ fontWeight: 'bold', fontSize: '1.1 rem' }}>Member No.</TableCell>
+                <TableCell align="left" style={{ fontWeight: 'bold', fontSize: '1.1 rem' }}>FirstName</TableCell>
+                <TableCell align="left" style={{ fontWeight: 'bold', fontSize: '1.1 rem' }}>LastName</TableCell>
+                <TableCell align="left" style={{ fontWeight: 'bold', fontSize: '1.1 rem' }}>Member Detail</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {responseData.map((responseData, index) => (
+                <TableRow
+                  key={index}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">{index+1}</TableCell>
+                  <TableCell align="left">{responseData.FirstName}</TableCell>
+                  <TableCell align="left">{responseData.LastName}</TableCell>
+                  <TableCell align="left">
+                    <Link to={`/member/${responseData.pid}`} style={{ color:"blue" }}>
+                      View Details
+                    </Link>
+                  </TableCell>
+                  
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Container>
     </div>
   );

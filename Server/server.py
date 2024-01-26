@@ -172,9 +172,19 @@ def getimg():
                     encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
                     img_data.append({'img_path': image_path, 'base64': encoded_image , 'fname': Fname, 'lname':Lname, 'pid':Pid})
             else:
-                img_data.append({'img_path': image_path, 'base64': None})
+                img_data.append({'img_path': image_path, 'base64': None, 'fname': Fname, 'lname':Lname, 'pid':Pid})
 
         return make_response(jsonify({'images': img_data }), 200)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)})
+    
+@app.route('/getMember', methods=['GET'])
+def getMember():
+    try:
+        mycursor.execute('SELECT FirstName,LastName,pid FROM person_info')
+        data = mycursor.fetchall()
+        return make_response(jsonify({'Member': data }), 200)
     except Exception as e:
         print(f"Error: {str(e)}")
         return jsonify({'error': str(e)})
