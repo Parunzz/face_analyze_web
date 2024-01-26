@@ -325,9 +325,9 @@ def process_image():
             person_name_result = DeepFace.find(img_path=img_path, db_path=db_path, enforce_detection=True, model_name='Facenet')
             print(person_name_result)
             if not person_name_result[0].empty:
-                person_name = person_name_result[0]['identity'][0]
-                print(person_name)
-                mycursor.execute('SELECT FirstName, pid FROM person_info WHERE img_path = %s', (person_name,))
+                person_name = person_name_result[0]['identity'][0].split('/')[3]
+                print("ชื่อ : ",person_name)
+                mycursor.execute('SELECT FirstName, pid FROM person_info WHERE FirstName = %s', (person_name,))
                 person_info = mycursor.fetchone()
                 if person_info:
                     person_name = person_info['FirstName']
@@ -367,6 +367,7 @@ def process_image():
                 'response_text': response_text
             })
         print("all done")
+        print(results)
         return jsonify(results)
 
     except Exception as e:

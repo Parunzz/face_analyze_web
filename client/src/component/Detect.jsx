@@ -15,24 +15,22 @@ import { drawRect } from "./utilities";
 function Detect() {
     const webcamRef = useRef(null);
     const canvasRef = useRef(null);
-    const [responseText, setResponseText] = useState('');
-    const [responseName, setResponseName] = useState('');
-    const [screenshotCounter, setScreenshotCounter] = useState(0);
-    const [isVideoRunning, setIsVideoRunning] = useState(true);
     const [isCameraOn, setIsCameraOn] = useState(true);
     const [imageSrc, setImageSrc] = useState(null);
+    const [responseData, setresponseData] = useState([]);
     let isCaptureEnabled = true
+
 
     const toggleCamera = () => {
         setIsCameraOn((prev) => !prev);
-      };
+    };
     // Main function
     const loadModel = async () => {
         // const net = await cocossd.load();
         try {
             const model = faceDetection.SupportedModels.MediaPipeFaceDetector;
             const detectorConfig = {
-                runtime: 'tfjs', 
+                runtime: 'tfjs',
                 maxFaces: '10',
                 // runtime: 'mediapipe', // or 'tfjs'
                 // solutionPath: 'node_modules/@mediapipe/face_detection/',
@@ -63,7 +61,7 @@ function Detect() {
         canvas.width = width;
         canvas.height = height;
         const ctx = canvas.getContext('2d');
-    
+
         // Check if the face object and its box property are defined
         if (face && face.box) {
             // Extract box coordinates from the face
@@ -74,10 +72,10 @@ function Detect() {
             // If the face or its box property is undefined, draw the entire video frame
             ctx.drawImage(video, 0, 0, width, height);
         }
-    
+
         return canvas.toDataURL(); // returns a base64-encoded data URL
     };
-    
+
 
     const detect = async (net) => {
         // Check data is available
@@ -101,8 +99,8 @@ function Detect() {
 
             // Make Detections
             // const faces = await net.detect(video);
-            const estimationConfig = {flipHorizontal: false};
-            const faces = await net.estimateFaces(video,estimationConfig);
+            const estimationConfig = { flipHorizontal: false };
+            const faces = await net.estimateFaces(video, estimationConfig);
             // console.log(faces)
 
             // Draw mesh
@@ -110,25 +108,11 @@ function Detect() {
             drawRect(faces, ctx);
             // Check if 'face' is detected
             const noFaceDetected = !faces || faces.length === 0;
-            if(!noFaceDetected && isCaptureEnabled){
+            if (!noFaceDetected && isCaptureEnabled) {
                 isCaptureEnabled = false
                 const facescreenshot = getFaceScreenshot(video, videoWidth, videoHeight, faces[0]);
                 setImageSrc(facescreenshot);
-                console.log("facescreenshot")
-                setTimeout(() => {
-                    isCaptureEnabled = true;
-                    setImageSrc(null);
-                }, 2000);
-            }
-            else if (noFaceDetected){
-                isCaptureEnabled = true
-                setImageSrc(null);
-            }
-            if (false) {
-                // Take a screenshot
                 const screenshot = getScreenshot(video, videoWidth, videoHeight);
-
-                // Send the screenshot to the API
                 const response = await fetch('http://localhost:3001/api/save_fullImg', {
                     method: 'POST',
                     headers: {
@@ -140,18 +124,26 @@ function Detect() {
                 });
 
                 // Handle the API response as needed
-                const responseData = await response.json();
-                console.log('API response:', responseData);
-                setResponseText(responseData.dominant_emotion);
-                console.log(screenshotCounter);
-                setResponseName(responseData.person_name)
-                // Increment the counter
-                // setScreenshotCounter(screenshotCounter + 1);
-            }else {
-                // If 'person' is not detected, reset the counter
-                // setScreenshotCounter(0);
-            }
+                const responseInfo = await response.json();
+                if(response.ok){
+                    setresponseData(responseInfo)
+                    console.log(responseInfo);
+                }
+                else{
+                    setresponseData(responseInfo)
+                    console.log("response Error");
+                }
 
+
+                setTimeout(() => {
+                    isCaptureEnabled = true;
+                    setImageSrc(null);
+                }, 2000);
+            }
+            else if (noFaceDetected) {
+                isCaptureEnabled = true
+                setImageSrc(null);
+            }
         }
     };
 
@@ -163,22 +155,22 @@ function Detect() {
         <div className="">
             <header className="">
                 {isCameraOn ? (
-                <Webcam
-                    ref={webcamRef}
-                    muted={true}
-                    screenshotFormat="image/jpeg"
-                    // mirrored={true}
-                    style={{
-                        position: "absolute",
-                        marginLeft: "auto",
-                        marginRight: "auto",
-                        left: 0,
-                        right: 0,
-                        textAlign: "center",
-                        zindex: 9,
-                        width: 640,
-                        height: 480,
-                    }}
+                    <Webcam
+                        ref={webcamRef}
+                        muted={true}
+                        screenshotFormat="image/jpeg"
+                        // mirrored={true}
+                        style={{
+                            position: "absolute",
+                            marginLeft: "auto",
+                            marginRight: "auto",
+                            left: 0,
+                            right: 0,
+                            textAlign: "center",
+                            zindex: 9,
+                            width: 640,
+                            height: 480,
+                        }}
                     />
                 ) : (
                     <div style={{
@@ -190,10 +182,10 @@ function Detect() {
                         textAlign: "center",
                         zindex: 9,
                         width: 640,
-                        height: 480, 
-                         backgroundColor: 'black' 
-                        }}></div>
-                  )}
+                        height: 480,
+                        backgroundColor: 'black'
+                    }}></div>
+                )}
                 <canvas
                     ref={canvasRef}
                     style={{
@@ -207,10 +199,23 @@ function Detect() {
                         width: 640,
                         height: 480,
                     }}
-                    />
+                />
             </header>
-            <h1>Name : {responseName}</h1>
-            <h1>Response Text: {responseText}</h1>
+            <div>
+                {Array.isArray(responseData) ? (
+                    responseData.map((result, index) => (
+                        <div key={index}>
+                            <p>Dominant Emotion: {result.dominant_emotion}</p>
+                            <p>Person Name: {result.person_name}</p>
+                            <p>Response Text: {result.response_text}</p>
+                        </div>
+                    ))
+                ) : (
+                    <div>
+                        <p>Don't find face</p>
+                    </div>
+                )}
+            </div>
             <button onClick={toggleCamera}>
                 {isCameraOn ? 'Turn Off Camera' : 'Turn On Camera'}
             </button>
