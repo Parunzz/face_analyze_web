@@ -120,7 +120,7 @@ def AddMember():
             print(f"The file '{file_path}' has been successfully removed.")
         
         # Insert the new user into the database
-        mycursor.execute("INSERT INTO person_info (FirstName, LastName , gender , DateOfBirth, img_path) VALUES (%s, %s, %s, %s, %s)", (AddfirstName, AddlastName , Addgender ,formatted_date, member_path))
+        mycursor.execute("INSERT INTO person_info (FirstName, LastName , gender , DateOfBirth, img_path) VALUES (%s, %s, %s, %s, %s)", (AddfirstName, AddlastName , Addgender ,formatted_date, folder_path))
         mydb.commit()
 
         return make_response(jsonify({'message': 'Add Member successfully'}), 200)
@@ -151,33 +151,52 @@ def signin():
     else:
         # Authentication failed
         return jsonify({'error': 'Invalid credentials'}), 401
-
-# Sent Member IMG
-@app.route('/getimg', methods=['GET'])
-def getimg():
+# Function to read an image file and convert it to base64
+def image_to_base64(file_path):
     try:
-        mycursor.execute('SELECT img_path,FirstName,LastName,pid FROM person_info')
-        img_paths = mycursor.fetchall()
-        # print(img_paths)
-        # return make_response(jsonify(img_paths), 200)
-        img_data = []
-        for path in img_paths:
-            # print(path)
-            image_path = path.get('img_path')
-            Fname = path.get('FirstName')
-            Lname = path.get('LastName')
-            Pid = path.get('pid')
-            if os.path.exists(image_path):
-                with open(image_path, "rb") as image_file:
-                    encoded_image = base64.b64encode(image_file.read()).decode('utf-8')
-                    img_data.append({'img_path': image_path, 'base64': encoded_image , 'fname': Fname, 'lname':Lname, 'pid':Pid})
-            else:
-                img_data.append({'img_path': image_path, 'base64': None, 'fname': Fname, 'lname':Lname, 'pid':Pid})
+        with open(file_path, 'rb') as f:
+            img_data = f.read()
+            base64_data = base64.b64encode(img_data).decode('utf-8')
+        return base64_data
+    except PermissionError:
+        print(f"Permission denied to access file: {file_path}")
+        return None
+    except Exception as e:
+        print(f"Error reading file {file_path}: {e}")
+        return None
+@app.route('/Memberdetail', methods=['POST'])
+def Memberdetail():
+    try:
+        data = request.json
+        pid = int(data.get('pid'))
+        
+        # Fetch member details
+        mycursor.execute('SELECT * FROM person_info WHERE pid = %s', (pid,))
+        member_info = mycursor.fetchall()
 
-        return make_response(jsonify({'images': img_data }), 200)
+        if not member_info:
+            return jsonify({'error': 'Member not found'}), 404
+
+        # Extract image paths from member info
+        img_directory = [row['img_path'] for row in member_info]
+        img_paths = [os.path.join(img_directory[0], img) for img in os.listdir(img_directory[0]) if img.endswith('.jpg') or img.endswith('.png')]
+        # Initialize a dictionary to store base64-encoded images
+        base64_images = {}
+
+        # Iterate over each image file path
+        for img_path in img_paths:
+            # Convert the image to base64
+            print(img_path)
+            base64_data = image_to_base64(img_path)
+            # print(base64_data)
+            # Add the base64 data to the dictionary with the image path as the key
+            base64_images[img_path] = base64_data
+
+        return make_response(jsonify({'MemberDetail': member_info, 'Base64Images': base64_images}), 200)
+
     except Exception as e:
         print(f"Error: {str(e)}")
-        return jsonify({'error': str(e)})
+        return jsonify({'error': str(e)}), 500
     
 @app.route('/getMember', methods=['GET'])
 def getMember():
@@ -209,7 +228,7 @@ def remove_image_file(folder_path):
 
     except Exception as e:
         print(f"Error removing folder: {str(e)}")  
-@app.route('/rmimg', methods=['POST'])
+@app.route('/removeMember', methods=['POST'])
 def rmimg():
     try:
         data = request.json
