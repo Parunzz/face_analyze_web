@@ -21,7 +21,7 @@ function Detect() {
     const [isVideoRunning, setIsVideoRunning] = useState(true);
     const [isCameraOn, setIsCameraOn] = useState(true);
     const [imageSrc, setImageSrc] = useState(null);
-    let isCaptureEnabled = true; // Add this variable
+    let isCaptureEnabled = true
 
     const toggleCamera = () => {
         setIsCameraOn((prev) => !prev);
@@ -43,7 +43,7 @@ function Detect() {
             //  Loop and detect hands
             setInterval(() => {
                 detect(net);
-            }, 100);
+            }, 500);
 
         } catch (error) {
             console.error("Error loading or using the face detection model:", error);
@@ -103,7 +103,7 @@ function Detect() {
             // const faces = await net.detect(video);
             const estimationConfig = {flipHorizontal: false};
             const faces = await net.estimateFaces(video,estimationConfig);
-            console.log(faces)
+            // console.log(faces)
 
             // Draw mesh
             const ctx = canvasRef.current.getContext("2d");
@@ -111,14 +111,17 @@ function Detect() {
             // Check if 'face' is detected
             const noFaceDetected = !faces || faces.length === 0;
             if(!noFaceDetected && isCaptureEnabled){
-                isCaptureEnabled = false;
+                isCaptureEnabled = false
                 const facescreenshot = getFaceScreenshot(video, videoWidth, videoHeight, faces[0]);
                 setImageSrc(facescreenshot);
                 console.log("facescreenshot")
-                
+                setTimeout(() => {
+                    isCaptureEnabled = true;
+                    setImageSrc(null);
+                }, 2000);
             }
-            else{
-                isCaptureEnabled = true;
+            else if (noFaceDetected){
+                isCaptureEnabled = true
                 setImageSrc(null);
             }
             if (false) {
