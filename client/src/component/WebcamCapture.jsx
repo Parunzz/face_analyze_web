@@ -1,4 +1,4 @@
-import React, { useRef,  } from 'react';
+import React, { useState ,useRef,  } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 import Webcam from 'react-webcam';
@@ -93,7 +93,7 @@ export default function WebcamCapture() {
         {/* Display the captured image at the bottom */}
         {/* {capturedImage && <img src={capturedImage} alt="Captured" style={{ marginTop: '20px' }} />} */}
         <div>
-            {Array.isArray(responseData) && responseData.length > 0 ? (
+            {Array.isArray(responseData) ? (
                 responseData.map((result, index) => (
                     <div key={index}>
                         <p>Dominant Emotion: {result.dominant_emotion}</p>
@@ -103,8 +103,7 @@ export default function WebcamCapture() {
                 ))
             ) : (
                 <div>
-                  <p>No data available</p>
-                  
+                  <p>Don't find face</p>
                 </div>
             )}
         </div>

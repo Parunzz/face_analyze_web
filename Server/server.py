@@ -262,13 +262,11 @@ def process_image():
         FullImg_save_path = os.path.join(folder_path, unique_filename)
         out_jpg = img.convert('RGB')
         out_jpg.save(FullImg_save_path)
-        print("Full Img save")
 
 
         #------------------------IMG DETECT ------------------
         
         small_face = DeepFace.extract_faces(img_path=FullImg_save_path,enforce_detection=False, target_size=(224, 224), detector_backend='opencv')
-        print("face detect")
         SmallImg_list = []
         # Iterate over each face object in the list
         for i, face in enumerate(small_face):
@@ -284,8 +282,6 @@ def process_image():
             print(f"Extract faces {i+1} saved successfully.")
         #----------------------face emotion detect --------------
         results = []
-
-        print(SmallImg_list)
         for img_path in SmallImg_list:
             # Analyze emotions for the current image
             emotion_result = DeepFace.analyze(img_path=img_path, detector_backend='opencv', actions=['emotion'])
@@ -298,24 +294,24 @@ def process_image():
             if not os.path.exists(db_path):
                 os.makedirs(db_path)
             person_name_result = DeepFace.find(img_path=img_path, db_path=db_path, enforce_detection=True, model_name='Facenet')
-            
-            if person_name_result:
+            print(person_name_result)
+            if not person_name_result[0].empty:
                 person_name = person_name_result[0]['identity'][0]
+                print(person_name)
                 mycursor.execute('SELECT FirstName, pid FROM person_info WHERE img_path = %s', (person_name,))
                 person_info = mycursor.fetchone()
                 if person_info:
                     person_name = person_info['FirstName']
                     person_pid = person_info['pid']
                 else:
-                    person_name = None
-                    person_pid = None
+                    person_name = "Unknown"
+                    person_pid = -1
             else:
-                person_name = None
-                person_pid = None
+                person_name = "Unknown"
+                person_pid = -1
             
             mycursor.execute('SELECT emotion_id,response_text_id FROM emotion_data WHERE emotion_data = %s', (dominant_emotion,))
             emotion_data_result = mycursor.fetchone()
-            
             if emotion_data_result is not None:
                 emotion_id = emotion_data_result['emotion_id']
                 response_text_id = emotion_data_result['response_text_id']
@@ -345,7 +341,7 @@ def process_image():
         return jsonify(results)
 
     except Exception as e:
-        print(e)
+        print("error",e)
         return jsonify({'error': str(e), 'dominant_emotion': "Error", 'person_name': 'unknown','response_text': 'หาไม่เจอ'}), 500
 
 
