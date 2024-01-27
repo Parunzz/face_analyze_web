@@ -131,6 +131,68 @@ def AddMember():
         error_message = str(e)
         print("Error: ",{error_message})
         return make_response(jsonify({'error': str(e)}), 500)
+    
+@app.route('/UpdateMember', methods=['POST'])
+def UpdateMember():
+    try:
+        data = request.json
+        AddfirstName = data.get('firstName')
+        AddlastName = data.get('lastName')
+        Addgender = data.get('gender')
+        Addmydate = data.get('mydate')
+        image_data = data.get('imgUpload')
+        pid = int(data.get('pid'))
+        date_object = datetime.strptime(Addmydate, '%m/%d/%Y')
+        formatted_date = date_object.strftime('%Y-%m-%d')
+
+        mycursor.execute("SELECT FirstName FROM person_info WHERE pid = %s", (pid,))
+
+        FirstName = mycursor.fetchone()
+
+        if FirstName is None or FirstName['FirstName'] is None:
+            return make_response(jsonify({'message': 'No Member found'}), 400)
+        
+        # save img
+        # Decode the base64-encoded string
+        if image_data is not None:
+            bytes_decoded = base64.b64decode(image_data)
+
+            # Create an image from the decoded bytes
+            img = Image.open(BytesIO(bytes_decoded))
+        
+            unique_filename = str(uuid.uuid4()) + '.jpg'
+            FirstName = FirstName['FirstName']
+            folder_path = f'./database/member/{FirstName}/'
+            new_folder_path = f'./database/member/{AddfirstName}/'
+            os.rename(folder_path, new_folder_path)
+
+            member_path = os.path.join(new_folder_path, unique_filename)
+
+            out_jpg = img.convert('RGB')
+            out_jpg.save(member_path)
+
+            # remove model
+            file_path = "./database/member/representations_facenet.pkl"
+            if os.path.exists(file_path):
+                os.remove(file_path)
+                print(f"The file '{file_path}' has been successfully removed.")
+                DeepFace.find(img_path=member_path, db_path='./database/member/', enforce_detection=True, model_name='Facenet')
+    
+            print("have pic ")
+            # Insert the new user into the database
+            mycursor.execute("UPDATE person_info SET FirstName = %s, LastName = %s, gender = %s, DateOfBirth = %s, img_path = %s WHERE pid = %s", (AddfirstName, AddlastName, Addgender, formatted_date, new_folder_path, pid))
+            mydb.commit()
+        else:
+            print("not have pic ")
+            mycursor.execute("UPDATE person_info SET FirstName = %s, LastName = %s, gender = %s, DateOfBirth = %s WHERE pid = %s", (AddfirstName, AddlastName, Addgender, formatted_date, pid))
+            mydb.commit()
+
+        return make_response(jsonify({'message': 'Add Member successfully'}), 200)
+
+    except Exception as e:
+        error_message = str(e)
+        print("Error: ",{error_message})
+        return make_response(jsonify({'error': str(e)}), 500)
 
 SECRET_KEY = 'zen'
 @app.route('/login', methods=['POST'])
@@ -231,7 +293,7 @@ def remove_image_file(folder_path):
     except Exception as e:
         print(f"Error removing folder: {str(e)}")  
 @app.route('/removeMember', methods=['POST'])
-def rmimg():
+def removeMember():
     try:
         data = request.json
         pid = data.get('pid')
@@ -258,6 +320,21 @@ def rmimg():
     except Exception as e:
         print(f"Error: {str(e)}")
         return jsonify({'error': str(e)})
+@app.route('/removeImg', methods=['POST'])
+def removeImg():
+    try:
+        data = request.json
+        imgPath = data.get('imgPath')
+        if os.path.exists(imgPath):
+            os.remove(imgPath)
+            return jsonify({'message': 'Image removed successfully'}), 200
+        else:
+            return jsonify({'dont find img'}),400
+            
+
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)}),500
     
 #--------------------- Machine learning ----------------------------------------------------------------
 @app.route('/api/save_fullImg', methods=['POST'])
@@ -296,35 +373,32 @@ def process_image():
 
 
         #------------------------IMG DETECT ------------------
-        
-        small_face = DeepFace.extract_faces(img_path=FullImg_save_path,enforce_detection=False, target_size=(224, 224), detector_backend='opencv')
-        SmallImg_list = []
-        # Iterate over each face object in the list
-        for i, face in enumerate(small_face):
+        emotion_result = DeepFace.analyze(img_path=FullImg_save_path, detector_backend='opencv', actions=['emotion'])
+        results = []
+        for entry in emotion_result:
+            # Load image
+            image = Image.open(FullImg_save_path)
+
+            # Extract face region
+            x, y, w, h = entry['region']['x'], entry['region']['y'], entry['region']['w'], entry['region']['h']
+            face_region = image.crop((x, y, x + w, y + h))
+            
             # Generate a unique filename for each face
             unique_filename = str(uuid.uuid4()) + '.jpg'
-            Img_save_path='./database/faces/'
-            if not os.path.exists(Img_save_path):
-                os.makedirs(Img_save_path)
-            SmallImg_save_path = os.path.join(Img_save_path, unique_filename)
-            SmallImg_list.append(SmallImg_save_path)
-            # Save the face image
-            mpimg.imsave(SmallImg_save_path, face['face'], format='jpg')
-            print(f"Extract faces {i+1} saved successfully.")
-        #----------------------face emotion detect --------------
-        results = []
-        for img_path in SmallImg_list:
-            # Analyze emotions for the current image
-            emotion_result = DeepFace.analyze(img_path=img_path, detector_backend='opencv', actions=['emotion'])
-            if emotion_result:
-                dominant_emotion = emotion_result[0]['dominant_emotion']
-            else:
-                dominant_emotion = None
+            folder_path = './database/faces/'
+            small_img_save_path = os.path.join(folder_path, unique_filename)
 
+            # Save the cropped face region to the specified folder
+            face_region.save(small_img_save_path)
+
+            dominant_emotion = entry['dominant_emotion']
+            print(dominant_emotion)
+
+            #find member
             db_path='./database/member/'
             if not os.path.exists(db_path):
                 os.makedirs(db_path)
-            person_name_result = DeepFace.find(img_path=img_path, db_path=db_path, enforce_detection=False)
+            person_name_result = DeepFace.find(img_path=small_img_save_path, db_path=db_path, enforce_detection=False)
             print(person_name_result)
             if not person_name_result[0].empty:
                 person_name = person_name_result[0]['identity'][0].split('/')[3]
@@ -340,7 +414,7 @@ def process_image():
             else:
                 person_name = "Unknown"
                 person_pid = -1
-            
+            print(person_name)
             mycursor.execute('SELECT emotion_id,response_text_id FROM emotion_data WHERE emotion_data = %s', (dominant_emotion,))
             emotion_data_result = mycursor.fetchone()
             if emotion_data_result is not None:
@@ -357,20 +431,18 @@ def process_image():
                 current_datetime = datetime.now()
                 date_mysql_format = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
                 mycursor.execute("INSERT INTO data_info (pid, emotion_id, DateTime, Full_path, Cut_path) VALUES (%s, %s, %s, %s, %s)",
-                                (person_pid, emotion_id, date_mysql_format, FullImg_save_path, SmallImg_save_path))
+                                (person_pid, emotion_id, date_mysql_format, FullImg_save_path, small_img_save_path))
                 mydb.commit()
             else:
                 response_text = None
-            
-            
+            print(response_text)
             results.append({
-                'dominant_emotion': dominant_emotion,
-                'person_name': person_name,
-                'response_text': response_text
+                    'dominant_emotion': dominant_emotion,
+                    'person_name': person_name,
+                    'response_text': response_text
             })
-        print("all done")
         print(results)
-        return jsonify(results)
+        return jsonify(results),200
 
     except Exception as e:
         print("error",e)

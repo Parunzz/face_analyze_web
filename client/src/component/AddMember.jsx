@@ -162,7 +162,7 @@ export default function AddMember() {
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="Member" variant="body2">
+                                <Link href="/Member" variant="body2">
                                     Back
                                 </Link>
                             </Grid>

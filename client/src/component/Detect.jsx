@@ -143,7 +143,7 @@ function Detect() {
                 setTimeout(() => {
                     isCaptureEnabled = true;
                     setImageSrc(null);
-                }, 3000);
+                }, 5000);
             }
             else if (noFaceDetected) {
                 isCaptureEnabled = true
@@ -180,7 +180,7 @@ function Detect() {
                             ref={webcamRef}
                             muted={true}
                             screenshotFormat="image/jpeg"
-                            videoConstraints={{ facingMode: 'user', width: 560,height: 920 , }}
+                            videoConstraints={{ facingMode: 'user', width: 1080,height: 1920 , }}
                             style={{
                                 position: "absolute",
                                 top: 0,
@@ -255,7 +255,7 @@ function Detect() {
                                             height={50}
                                             style={{ zIndex: 20, marginLeft: '16px' }}
                                         />
-                                    )}<br />
+                                    )}
                                 </ThemeProvider>
                             ))
                         ) : (
@@ -263,6 +263,15 @@ function Detect() {
                                 <Typography variant="h2" gutterBottom style={{ zIndex: 20 }}>
                                     Don't find face
                                 </Typography>
+                                {imageSrc && (
+                                        <img
+                                            src={imageSrc}
+                                            alt="Detected Face"
+                                            width={50}
+                                            height={50}
+                                            style={{ zIndex: 20, marginLeft: '16px' }}
+                                        />
+                                    )}
                             </ThemeProvider>
                         )}
                     </Box>
