@@ -152,6 +152,11 @@ def UpdateMember():
         if FirstName is None or FirstName['FirstName'] is None:
             return make_response(jsonify({'message': 'No Member found'}), 400)
         
+        FirstName = FirstName['FirstName']
+        folder_path = f'./database/member/{FirstName}/'
+        new_folder_path = f'./database/member/{AddfirstName}/'
+        os.rename(folder_path, new_folder_path)
+
         # save img
         # Decode the base64-encoded string
         if image_data is not None:
@@ -161,13 +166,7 @@ def UpdateMember():
             img = Image.open(BytesIO(bytes_decoded))
         
             unique_filename = str(uuid.uuid4()) + '.jpg'
-            FirstName = FirstName['FirstName']
-            folder_path = f'./database/member/{FirstName}/'
-            new_folder_path = f'./database/member/{AddfirstName}/'
-            os.rename(folder_path, new_folder_path)
-
             member_path = os.path.join(new_folder_path, unique_filename)
-
             out_jpg = img.convert('RGB')
             out_jpg.save(member_path)
 
@@ -178,14 +177,11 @@ def UpdateMember():
                 print(f"The file '{file_path}' has been successfully removed.")
                 DeepFace.find(img_path=member_path, db_path='./database/member/', enforce_detection=True, model_name='Facenet')
     
-            print("have pic ")
-            # Insert the new user into the database
-            mycursor.execute("UPDATE person_info SET FirstName = %s, LastName = %s, gender = %s, DateOfBirth = %s, img_path = %s WHERE pid = %s", (AddfirstName, AddlastName, Addgender, formatted_date, new_folder_path, pid))
-            mydb.commit()
-        else:
-            print("not have pic ")
-            mycursor.execute("UPDATE person_info SET FirstName = %s, LastName = %s, gender = %s, DateOfBirth = %s WHERE pid = %s", (AddfirstName, AddlastName, Addgender, formatted_date, pid))
-            mydb.commit()
+        
+        # Insert the new user into the database
+        mycursor.execute("UPDATE person_info SET FirstName = %s, LastName = %s, gender = %s, DateOfBirth = %s, img_path = %s WHERE pid = %s", (AddfirstName, AddlastName, Addgender, formatted_date, new_folder_path, pid))
+        mydb.commit()
+        
 
         return make_response(jsonify({'message': 'Add Member successfully'}), 200)
 
@@ -272,26 +268,23 @@ def getMember():
         print(f"Error: {str(e)}")
         return jsonify({'error': str(e)})
     
-#Remove Member #
-def remove_image_file(folder_path):
+def remove_files_and_folder(folder_path):
     try:
-        for item in os.listdir(folder_path):
-            item_path = os.path.join(folder_path, item)
-            if os.path.isfile(item_path):
-                os.remove(item_path)
-            elif os.path.isdir(item_path):
-                remove_image_file(item_path)
-        # Remove the empty folder
-        os.rmdir(folder_path)
-        print(f'Removed folder: {folder_path}')
-        # remove model
-        file_path = "./database/member/representations_facenet.pkl"
-        if os.path.exists(file_path):
-            os.remove(file_path)
-            print(f"The file '{file_path}' has been successfully removed.")
+        # Iterate over all files in the folder
+        for file_name in os.listdir(folder_path):
+            file_path = os.path.join(folder_path, file_name)
+            # Check if the file is a regular file
+            if os.path.isfile(file_path):
+                # Remove the file
+                os.remove(file_path)
+                print(f"Removed file: {file_path}")
 
+        # Remove the folder
+        os.rmdir(folder_path)
+        print(f"Removed folder: {folder_path}")
     except Exception as e:
-        print(f"Error removing folder: {str(e)}")  
+        print(f"An error occurred: {str(e)}")
+
 @app.route('/removeMember', methods=['POST'])
 def removeMember():
     try:
@@ -311,10 +304,12 @@ def removeMember():
         # Perform deletion from the database
         mycursor.execute('DELETE FROM person_info WHERE `person_info`.`pid` = %s', (pid,))
         mydb.commit()
-
         # Remove the associated image file from the server file system
-        if image_filename:
-            remove_image_file(folder_path)
+        if os.path.exists(image_filename):
+            remove_files_and_folder(image_filename)
+            print("File removed successfully")
+        else:
+            print("File does not exist")
 
         return jsonify({'message': f'Successfully deleted person with PID {pid}'})
     except Exception as e:
