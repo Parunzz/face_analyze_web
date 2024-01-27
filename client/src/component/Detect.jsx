@@ -8,9 +8,14 @@ import '@tensorflow/tfjs-core';
 import '@tensorflow/tfjs-backend-webgl';
 import * as faceDetection from '@tensorflow-models/face-detection';
 //--------------------Import the libraries---------------------
-
+import Typography from '@mui/material/Typography';
 import Webcam from "react-webcam";
 import { drawRect } from "./utilities";
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
 
 function Detect() {
     const webcamRef = useRef(null);
@@ -125,11 +130,11 @@ function Detect() {
 
                 // Handle the API response as needed
                 const responseInfo = await response.json();
-                if(response.ok){
+                if (response.ok) {
                     setresponseData(responseInfo)
                     console.log(responseInfo);
                 }
-                else{
+                else {
                     setresponseData(responseInfo)
                     console.log("response Error");
                 }
@@ -138,7 +143,7 @@ function Detect() {
                 setTimeout(() => {
                     isCaptureEnabled = true;
                     setImageSrc(null);
-                }, 2000);
+                }, 3000);
             }
             else if (noFaceDetected) {
                 isCaptureEnabled = true
@@ -146,88 +151,126 @@ function Detect() {
             }
         }
     };
-
+    const theme = createTheme({
+        typography: {
+            h3: {
+                fontSize: 20,
+                color: 'green',
+            },
+            h2: {
+                fontSize: 20,
+                color: 'red',
+            },
+        },
+    });
     useEffect(() => {
         loadModel();
     }, []);
 
     return (
-        <div className="">
-            <header className="">
-                {isCameraOn ? (
-                    <Webcam
-                        ref={webcamRef}
-                        muted={true}
-                        screenshotFormat="image/jpeg"
-                        // mirrored={true}
+        
+        <div style={{ position: "relative", width: "100%", height: "100vh" }}>
+            <Button variant="contained" color="error" onClick={toggleCamera} style={{ zIndex: 30, marginTop: 16 }}>
+                {isCameraOn ? 'Turn Off Camera' : 'Turn On Camera'}
+            </Button>
+            <Container fixed>
+                <header>
+                    {isCameraOn ? (
+                        <Webcam
+                            ref={webcamRef}
+                            muted={true}
+                            screenshotFormat="image/jpeg"
+                            videoConstraints={{ facingMode: 'user', width: 560,height: 920 , }}
+                            style={{
+                                position: "absolute",
+                                top: 0,
+                                left: "50%",
+                                transform: "translateX(-50%)",
+                                zIndex: -1,
+                                width:"100%",
+                                height: "100%",
+                                pointerEvents: "none",
+                            }}
+                        />
+                    ) : (
+                        <div style={{
+                            position: "absolute",
+                            top: 0,
+                            left: "50%",
+                            transform: "translateX(-50%)",
+                            zIndex: -1,
+                            width: 560,
+                            height: 920,
+                            pointerEvents: "none",
+                            backgroundColor: 'black'
+                        }}></div>
+                    )}
+                    <canvas
+                        ref={canvasRef}
                         style={{
                             position: "absolute",
-                            marginLeft: "auto",
-                            marginRight: "auto",
-                            left: 0,
-                            right: 0,
-                            textAlign: "center",
-                            zindex: 9,
-                            width: 640,
-                            height: 480,
+                            top: 0,
+                            left: "50%",
+                            transform: "translateX(-50%)",
+                            zIndex: -1,
+                            width: 560,
+                            height: 920,
+                            pointerEvents: "none",
                         }}
                     />
-                ) : (
-                    <div style={{
-                        position: "absolute",
-                        marginLeft: "auto",
-                        marginRight: "auto",
-                        left: 0,
-                        right: 0,
-                        textAlign: "center",
-                        zindex: 9,
-                        width: 640,
-                        height: 480,
-                        backgroundColor: 'black'
-                    }}></div>
-                )}
-                <canvas
-                    ref={canvasRef}
-                    style={{
-                        position: "absolute",
-                        marginLeft: "auto",
-                        marginRight: "auto",
-                        left: 0,
-                        right: 0,
-                        textAlign: "center",
-                        zindex: 8,
-                        width: 640,
-                        height: 480,
-                    }}
-                />
-            </header>
-            <div>
-                {Array.isArray(responseData) ? (
-                    responseData.map((result, index) => (
-                        <div key={index}>
-                            <p>Dominant Emotion: {result.dominant_emotion}</p>
-                            <p>Person Name: {result.person_name}</p>
-                            <p>Response Text: {result.response_text}</p>
-                        </div>
-                    ))
-                ) : (
-                    <div>
-                        <p>Don't find face</p>
-                    </div>
-                )}
-            </div>
-            <button onClick={toggleCamera}>
-                {isCameraOn ? 'Turn Off Camera' : 'Turn On Camera'}
-            </button>
-            {imageSrc && (
-                <img
-                    src={imageSrc}
-                    alt="Detected Face"
-                    width={200}
-                    height={200}
-                />
-            )}
+                    <Box
+                        sx={{
+                            position: "absolute",
+                            bottom: 0,
+                            left: "35%",
+                            // width: "100%",
+                            width: 565,
+                            padding: '20px',
+                            zIndex: 10,
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                        }}
+                        style={{ display: 'flex', flexWrap: 'warp',direction:"row" }}
+                    >
+                        {Array.isArray(responseData) ? (
+                            responseData.map((result, index) => (
+                                <ThemeProvider theme={theme} key={index}>
+                                    <div>
+                                        <Typography variant="h3" gutterBottom style={{ zIndex: 20 }}>
+                                            Dominant Emotion: {result.dominant_emotion}
+                                        </Typography>
+                                        <Typography variant="h3" gutterBottom style={{ zIndex: 20 }}>
+                                            Person Name: {result.person_name}
+                                        </Typography>
+                                        <Typography variant="h3" gutterBottom style={{ zIndex: 20 }}>
+                                            Response Text: {result.response_text}
+                                        </Typography>
+                                    </div>
+                                    {imageSrc && (
+                                        <img
+                                            src={imageSrc}
+                                            alt="Detected Face"
+                                            width={50}
+                                            height={50}
+                                            style={{ zIndex: 20, marginLeft: '16px' }}
+                                        />
+                                    )}<br />
+                                </ThemeProvider>
+                            ))
+                        ) : (
+                            <ThemeProvider theme={theme}>
+                                <Typography variant="h2" gutterBottom style={{ zIndex: 20 }}>
+                                    Don't find face
+                                </Typography>
+                            </ThemeProvider>
+                        )}
+                    </Box>
+                </header>
+            </Container>
         </div>
+
+
     );
 }
 

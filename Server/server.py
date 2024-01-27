@@ -118,7 +118,9 @@ def AddMember():
         if os.path.exists(file_path):
             os.remove(file_path)
             print(f"The file '{file_path}' has been successfully removed.")
-        
+  
+        DeepFace.find(img_path=member_path, db_path='./database/member/', enforce_detection=True, model_name='Facenet')
+    
         # Insert the new user into the database
         mycursor.execute("INSERT INTO person_info (FirstName, LastName , gender , DateOfBirth, img_path) VALUES (%s, %s, %s, %s, %s)", (AddfirstName, AddlastName , Addgender ,formatted_date, folder_path))
         mydb.commit()
@@ -322,7 +324,7 @@ def process_image():
             db_path='./database/member/'
             if not os.path.exists(db_path):
                 os.makedirs(db_path)
-            person_name_result = DeepFace.find(img_path=img_path, db_path=db_path, enforce_detection=True, model_name='Facenet')
+            person_name_result = DeepFace.find(img_path=img_path, db_path=db_path, enforce_detection=False)
             print(person_name_result)
             if not person_name_result[0].empty:
                 person_name = person_name_result[0]['identity'][0].split('/')[3]
