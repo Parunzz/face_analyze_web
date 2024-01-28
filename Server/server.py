@@ -119,8 +119,7 @@ def AddMember():
             os.remove(file_path)
             print(f"The file '{file_path}' has been successfully removed.")
   
-        DeepFace.find(img_path=member_path, db_path='./database/member/', enforce_detection=True, model_name='Facenet')
-    
+        DeepFace.find(img_path=member_path, db_path='./database/member/', enforce_detection=False)
         # Insert the new user into the database
         mycursor.execute("INSERT INTO person_info (FirstName, LastName , gender , DateOfBirth, img_path) VALUES (%s, %s, %s, %s, %s)", (AddfirstName, AddlastName , Addgender ,formatted_date, folder_path))
         mydb.commit()
@@ -171,11 +170,16 @@ def UpdateMember():
             out_jpg.save(member_path)
 
             # remove model
-            file_path = "./database/member/representations_facenet.pkl"
-            if os.path.exists(file_path):
-                os.remove(file_path)
-                print(f"The file '{file_path}' has been successfully removed.")
-                DeepFace.find(img_path=member_path, db_path='./database/member/', enforce_detection=True, model_name='Facenet')
+            directory = "./database/member/"
+
+            # Iterate over all files in the directory
+            for filename in os.listdir(directory):
+                if filename.endswith(".pkl"):
+                    file_path = os.path.join(directory, filename)  # Get the full path of the file
+                    os.remove(file_path)  # Remove the file
+                    print(f"Removed: {file_path}")
+                
+            DeepFace.find(img_path=member_path, db_path='./database/member/', enforce_detection=False)
     
         
         # Insert the new user into the database

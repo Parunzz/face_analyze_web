@@ -168,7 +168,7 @@ function Detect() {
     }, []);
 
     return (
-        
+
         <div style={{ position: "relative", width: "100%", height: "100vh" }}>
             <Button variant="contained" color="error" onClick={toggleCamera} style={{ zIndex: 30, marginTop: 16 }}>
                 {isCameraOn ? 'Turn Off Camera' : 'Turn On Camera'}
@@ -180,14 +180,14 @@ function Detect() {
                             ref={webcamRef}
                             muted={true}
                             screenshotFormat="image/jpeg"
-                            videoConstraints={{ facingMode: 'user', width: 1080,height: 1920 , }}
+                            videoConstraints={{ facingMode: 'user', width: 1080, height: 1920, }}
                             style={{
                                 position: "absolute",
                                 top: 0,
                                 left: "50%",
                                 transform: "translateX(-50%)",
                                 zIndex: -1,
-                                width:"100%",
+                                width: "100%",
                                 height: "100%",
                                 pointerEvents: "none",
                             }}
@@ -230,50 +230,41 @@ function Detect() {
                             backgroundColor: 'rgba(255, 255, 255, 0.8)',
                             display: 'flex',
                             justifyContent: 'space-between',
+                            alignItems: 'center',
                         }}
-                        style={{ display: 'flex', flexWrap: 'warp',direction:"row" }}
+                        style={{ display: 'block' }}
                     >
+
                         {Array.isArray(responseData) ? (
                             responseData.map((result, index) => (
                                 <ThemeProvider theme={theme} key={index}>
-                                    <div>
-                                        <Typography variant="h3" gutterBottom style={{ zIndex: 20 }}>
-                                            Dominant Emotion: {result.dominant_emotion}
-                                        </Typography>
-                                        <Typography variant="h3" gutterBottom style={{ zIndex: 20 }}>
-                                            Person Name: {result.person_name}
-                                        </Typography>
-                                        <Typography variant="h3" gutterBottom style={{ zIndex: 20 }}>
-                                            Response Text: {result.response_text}
-                                        </Typography>
-                                    </div>
-                                    {imageSrc && (
-                                        <img
-                                            src={imageSrc}
-                                            alt="Detected Face"
-                                            width={50}
-                                            height={50}
-                                            style={{ zIndex: 20, marginLeft: '16px' }}
-                                        />
-                                    )}
+                                    <Typography variant="h3" gutterBottom style={{ zIndex: 20 }}>
+                                        <span>Dominant Emotion: {result.dominant_emotion}</span><br />
+                                        <span>Person Name: {result.person_name}</span><br />
+                                        <span>Response Text: {result.response_text}</span>
+                                        {/* {imageSrc && (
+                                            <img
+                                                src={imageSrc}
+                                                alt="Detected Face"
+                                                width={50}
+                                                height={50}
+                                                style={{ marginLeft: '16px' }} 
+                                            />
+                                        )} */}
+                                    </Typography>
                                 </ThemeProvider>
                             ))
                         ) : (
-                            <ThemeProvider theme={theme}>
-                                <Typography variant="h2" gutterBottom style={{ zIndex: 20 }}>
-                                    Don't find face
-                                </Typography>
-                                {imageSrc && (
-                                        <img
-                                            src={imageSrc}
-                                            alt="Detected Face"
-                                            width={50}
-                                            height={50}
-                                            style={{ zIndex: 20, marginLeft: '16px' }}
-                                        />
-                                    )}
-                            </ThemeProvider>
+                            <div style={{ display: 'inline-flex' }}>
+                                <ThemeProvider theme={theme}>
+
+                                    <Typography variant="h2" gutterBottom style={{ zIndex: 20 }}>
+                                        Don't find face
+                                    </Typography>
+                                </ThemeProvider>
+                            </div>
                         )}
+
                     </Box>
                 </header>
             </Container>

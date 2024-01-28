@@ -16,10 +16,7 @@ import GenderInput from './GenderInput';
 import MyDatePicker from './MyDatePicker';
 import dayjs from 'dayjs';
 import LoadingButton from '@mui/lab/LoadingButton';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
 import SaveIcon from '@mui/icons-material/Save';
-import SendIcon from '@mui/icons-material/Send';
 
 const MemberDetail = () => {
     const { pid } = useParams();
