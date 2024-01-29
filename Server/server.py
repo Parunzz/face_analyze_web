@@ -113,11 +113,13 @@ def AddMember():
         out_jpg = img.convert('RGB')
         out_jpg.save(member_path)
         #-----------------------img-------------------------------
-        # remove model
-        file_path = "./database/member/representations_facenet.pkl"
-        if os.path.exists(file_path):
-            os.remove(file_path)
-            print(f"The file '{file_path}' has been successfully removed.")
+        # Iterate over all files in the directory
+        directory = "./database/member/"
+        for filename in os.listdir(directory):
+            if filename.endswith(".pkl"):
+                file_path = os.path.join(directory, filename)  # Get the full path of the file
+                os.remove(file_path)  # Remove the file
+                print(f"Removed: {file_path}")
   
         DeepFace.find(img_path=member_path, db_path='./database/member/', enforce_detection=False)
         # Insert the new user into the database
@@ -314,6 +316,12 @@ def removeMember():
             print("File removed successfully")
         else:
             print("File does not exist")
+        directory = "./database/member/"
+        for filename in os.listdir(directory):
+            if filename.endswith(".pkl"):
+                file_path = os.path.join(directory, filename)  # Get the full path of the file
+                os.remove(file_path)  # Remove the file
+                print(f"Removed: {file_path}")
 
         return jsonify({'message': f'Successfully deleted person with PID {pid}'})
     except Exception as e:
@@ -385,6 +393,8 @@ def process_image():
             # Generate a unique filename for each face
             unique_filename = str(uuid.uuid4()) + '.jpg'
             folder_path = './database/faces/'
+            if not os.path.exists(folder_path):
+                os.makedirs(folder_path)
             small_img_save_path = os.path.join(folder_path, unique_filename)
 
             # Save the cropped face region to the specified folder
@@ -429,6 +439,10 @@ def process_image():
                 # Insert the new user into the database
                 current_datetime = datetime.now()
                 date_mysql_format = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
+                if person_name == "Unknown":#don't have age
+                    mycursor.execute("INSERT INTO data_info (pid, emotion_id, DateTime, Full_path, Cut_path) VALUES (%s, %s, %s, %s, %s)",
+                                    (person_pid, emotion_id, date_mysql_format, FullImg_save_path, small_img_save_path))
+                    
                 mycursor.execute("INSERT INTO data_info (pid, emotion_id, DateTime, Full_path, Cut_path) VALUES (%s, %s, %s, %s, %s)",
                                 (person_pid, emotion_id, date_mysql_format, FullImg_save_path, small_img_save_path))
                 mydb.commit()
