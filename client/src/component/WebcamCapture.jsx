@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState ,useRef,  } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 import Webcam from 'react-webcam';
@@ -13,12 +13,9 @@ const videoConstraints = {
 export default function WebcamCapture() {
   const webRef = useRef(null);
   const [capturedImage, setCapturedImage] = useState(null);
-  const [dominantEmotion, setDominantEmotion] = useState(null);
   const [isCameraOn, setIsCameraOn] = useState(true);
   const [autoCaptureInterval, setAutoCaptureInterval] = useState(null);
-  const [responseTextemo, setResponseTextemo] = useState('');
-  const [responseTextName, setResponseTextName] = useState('');
-  const [responseTextHello, setResponseTextHello] = useState('');
+  const [responseData, setResponseData] = useState([]);
 
   const toggleCamera = () => {
     setIsCameraOn((prev) => !prev);
@@ -55,16 +52,7 @@ export default function WebcamCapture() {
           // Log the response details
           const responseData = await response.json();
           console.log('API response:', responseData);
-          if(responseData){
-            setResponseTextemo(responseData.dominant_emotion);
-            setResponseTextName(responseData.person_name);
-            setResponseTextHello(responseData.response_text)
-          }
-          else{
-            setResponseTextemo(responseData.error)
-            setResponseTextName(responseData.person_name);
-            setResponseTextHello("T_T")
-          }
+          setResponseData(responseData);
 
         } else {
           console.error('Image source is empty or null');
@@ -95,18 +83,30 @@ export default function WebcamCapture() {
           ) : (
           <div style={{ width: '500px', height: '500px', backgroundColor: 'black' }}></div>
         )}
-        <button onClick={showImage}>Capture photo</button>
-        <button onClick={startAutoCapture}>Start Auto-Capture</button>
-        <button onClick={stopAutoCapture}>Stop Auto-Capture</button>
+        <button onClick={showImage}>Capture photo</button><br />
+        <button onClick={startAutoCapture}>Start Auto-Capture</button><br />
+        <button onClick={stopAutoCapture}>Stop Auto-Capture</button><br />
         <button onClick={toggleCamera}>
           {isCameraOn ? 'Turn Off Camera' : 'Turn On Camera'}
-        </button>
+        </button><br />
 
         {/* Display the captured image at the bottom */}
         {/* {capturedImage && <img src={capturedImage} alt="Captured" style={{ marginTop: '20px' }} />} */}
-        <h1>Emotion : {responseTextemo}</h1>
-        <h1>Person name : {responseTextName}</h1>
-        <h1>{responseTextHello}</h1>
+        <div>
+            {Array.isArray(responseData) ? (
+                responseData.map((result, index) => (
+                    <div key={index}>
+                        <p>Dominant Emotion: {result.dominant_emotion}</p>
+                        <p>Person Name: {result.person_name}</p>
+                        <p>Response Text: {result.response_text}</p>
+                    </div>
+                ))
+            ) : (
+                <div>
+                  <p>Don't find face</p>
+                </div>
+            )}
+        </div>
       </Container>
     </React.Fragment>
   );

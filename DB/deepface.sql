@@ -205,7 +205,7 @@ ALTER TABLE `user`
 --
 ALTER TABLE `data_info`
   ADD CONSTRAINT `emotion` FOREIGN KEY (`emotion_id`) REFERENCES `emotion_data` (`emotion_id`),
-  ADD CONSTRAINT `person` FOREIGN KEY (`pid`) REFERENCES `person_info` (`pid`);
+  -- ADD CONSTRAINT `person` FOREIGN KEY (`pid`) REFERENCES `person_info` (`pid`);
 
 --
 -- Constraints for table `emotion_data`

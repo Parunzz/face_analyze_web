@@ -14,6 +14,8 @@ import { useNavigate } from 'react-router-dom';
 import GenderInput from './GenderInput';
 import MyDatePicker from './MyDatePicker';
 import ImageUpload from './ImageUpload';
+import LoadingButton from '@mui/lab/LoadingButton';
+import SaveIcon from '@mui/icons-material/Save';
 
 function Copyright(props) {
     return (
@@ -37,14 +39,15 @@ export default function AddMember() {
 
     const readFileAsBase64 = (file) => {
         return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result.split(',')[1]);
-          reader.onerror = (error) => reject(error);
-          reader.readAsDataURL(file);
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = (error) => reject(error);
+            reader.readAsDataURL(file);
         });
     };
-
+    const [loading, setLoading] = React.useState(false);
     const handleSubmit = async (event) => {
+        setLoading(true);
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         // formData.append('imgUpload', event.target.imgUpload.files[0]);
@@ -52,52 +55,55 @@ export default function AddMember() {
         if (selectedFile) {
             // Read the selected file as a base64-encoded string
             const base64String = await readFileAsBase64(selectedFile);
-      
+
             // Set the base64 string in FormData
             formData.set('imgUpload', base64String);
         }
 
         console.log({
-          firstname: formData.get('firstName'),
-          lastname: formData.get('lastName'),
-          gender: formData.get('gender'),
-          DateOfBirth: formData.get('mydate'),
-          imgUpload: formData.get('imgUpload'),
+            firstname: formData.get('firstName'),
+            lastname: formData.get('lastName'),
+            gender: formData.get('gender'),
+            DateOfBirth: formData.get('mydate'),
+            imgUpload: formData.get('imgUpload'),
         });
         //---------------------------------api -------------------------------------------
-        
+
         const jsonData = {};
         formData.forEach((value, key) => {
             jsonData[key] = value;
         });
         try {
             const response = await fetch('http://localhost:3001/AddMember', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(jsonData),
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(jsonData),
             });
-      
-            if (response.ok) {
-              console.log('Add member successfully');
-              window.alert(`Add member successfully`);
-              navigate('/Member');
-              // Handle success, e.g., redirect to a different page
-            } else {
-              const errorData = await response.json();
-              console.error('Failed to add member:', response);
-              if (response.status === 400){
-                window.alert('Member already exists');
-              }
-              window.alert('Error during add member');
-            }
-          } catch (error) {
-              // Handle error
-            console.error('Error during add member:', error);
-          
 
-          }
+            if (response.ok) {
+                console.log('Add member successfully');
+                setLoading(false);
+                window.alert(`Add member successfully`);
+                navigate('/Member');
+                // Handle success, e.g., redirect to a different page
+            } else {
+                setLoading(false);
+                const errorData = await response.json();
+                console.error('Failed to add member:', response);
+                if (response.status === 400) {
+                    window.alert('Member already exists');
+                }
+                window.alert('Error during add member');
+            }
+        } catch (error) {
+            setLoading(false);
+            // Handle error
+            console.error('Error during add member:', error);
+
+
+        }
         //---------------------------------api -------------------------------------------
     };
 
@@ -143,26 +149,30 @@ export default function AddMember() {
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <GenderInput/>
+                                <GenderInput />
                             </Grid>
                             <Grid item xs={12}>
-                                <MyDatePicker/>
+                                <MyDatePicker />
                             </Grid>
                             <Grid item xs={12}>
-                                <ImageUpload/>
+                                <ImageUpload />
                             </Grid>
                         </Grid>
-                        <Button
+                        <LoadingButton
                             type="submit"
                             fullWidth
+                            color="secondary"
+                            loading={loading}
+                            loadingPosition="start"
+                            startIcon={<SaveIcon />}
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Add Member
-                        </Button>
+                            <span>Save</span>
+                        </LoadingButton>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="Member" variant="body2">
+                                <Link href="/Member" variant="body2">
                                     Back
                                 </Link>
                             </Grid>
