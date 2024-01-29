@@ -180,7 +180,7 @@ function Detect() {
                             ref={webcamRef}
                             muted={true}
                             screenshotFormat="image/jpeg"
-                            videoConstraints={{ facingMode: 'user', width: 1080, height: 1920, }}
+                            // videoConstraints={{ facingMode: 'user', width: 1080, height: 1920, }}
                             style={{
                                 position: "absolute",
                                 top: 0,
@@ -199,8 +199,8 @@ function Detect() {
                             left: "50%",
                             transform: "translateX(-50%)",
                             zIndex: -1,
-                            width: 560,
-                            height: 920,
+                            width: "100%",
+                            height: "100%",
                             pointerEvents: "none",
                             backgroundColor: 'black'
                         }}></div>
@@ -213,8 +213,8 @@ function Detect() {
                             left: "50%",
                             transform: "translateX(-50%)",
                             zIndex: -1,
-                            width: 560,
-                            height: 920,
+                            width: "100%",
+                            height: "100%",
                             pointerEvents: "none",
                         }}
                     />
@@ -222,9 +222,9 @@ function Detect() {
                         sx={{
                             position: "absolute",
                             bottom: 0,
-                            left: "35%",
-                            // width: "100%",
-                            width: 565,
+                            left: "0",
+                            width: "100%",
+                            // width: 565,
                             padding: '20px',
                             zIndex: 10,
                             backgroundColor: 'rgba(255, 255, 255, 0.8)',
