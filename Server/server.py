@@ -401,7 +401,6 @@ def process_image():
             face_region.save(small_img_save_path)
 
             dominant_emotion = entry['dominant_emotion']
-            print(dominant_emotion)
 
             #find member
             db_path='./database/member/'
@@ -424,31 +423,21 @@ def process_image():
                 person_name = "Unknown"
                 person_pid = -1
             print(person_name)
-            mycursor.execute('SELECT emotion_id,response_text_id FROM emotion_data WHERE emotion_data = %s', (dominant_emotion,))
+            mycursor.execute('SELECT emotion_data.emotion_id,emotion_data.emotion_data,response_text.response_text FROM `emotion_data` JOIN response_text ON emotion_data.emotion_id = response_text.emotion_id WHERE emotion_data.emotion_data = %s', (dominant_emotion,))
             emotion_data_result = mycursor.fetchone()
-            if emotion_data_result is not None:
-                emotion_id = emotion_data_result['emotion_id']
-                response_text_id = emotion_data_result['response_text_id']
-                mycursor.execute('SELECT response_text FROM response_text WHERE response_text_id = %s', (response_text_id,))
-                response_text_result = mycursor.fetchone()
-                if response_text_result is not None and 'response_text' in response_text_result:
-                    response_text = response_text_result['response_text']
-                else:
-                    response_text = None
-
-                # Insert the new user into the database
-                current_datetime = datetime.now()
-                date_mysql_format = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
-                if person_name == "Unknown":#don't have age
-                    mycursor.execute("INSERT INTO data_info (pid, emotion_id, DateTime, Full_path, Cut_path) VALUES (%s, %s, %s, %s, %s)",
-                                    (person_pid, emotion_id, date_mysql_format, FullImg_save_path, small_img_save_path))
-                    
-                mycursor.execute("INSERT INTO data_info (pid, emotion_id, DateTime, Full_path, Cut_path) VALUES (%s, %s, %s, %s, %s)",
-                                (person_pid, emotion_id, date_mysql_format, FullImg_save_path, small_img_save_path))
-                mydb.commit()
-            else:
-                response_text = None
+            print(dominant_emotion)
+            # print(emotion_data_result)
+            response_text = emotion_data_result['response_text']
             print(response_text)
+            # Insert the new user into the database
+            emotion_id = emotion_data_result['emotion_id']
+            print(emotion_id)
+            current_datetime = datetime.now()
+            date_mysql_format = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
+            mycursor.execute("INSERT INTO data_info (pid, emotion_id, DateTime, Full_path, Cut_path) VALUES (%s, %s, %s, %s, %s)",
+                            (person_pid, emotion_id, date_mysql_format, FullImg_save_path, small_img_save_path))
+            mydb.commit()
+            
             results.append({
                     'dominant_emotion': dominant_emotion,
                     'person_name': person_name,
