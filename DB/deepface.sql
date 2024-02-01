@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 15, 2024 at 07:26 PM
+-- Generation Time: Feb 01, 2024 at 03:10 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.4
 
@@ -46,23 +46,22 @@ CREATE TABLE `data_info` (
 --
 
 CREATE TABLE `emotion_data` (
-  `emotion_id` int(11) NOT NULL,
-  `emotion_data` varchar(255) NOT NULL,
-  `response_text_id` int(11) NOT NULL
+  `emotion_id` int(255) NOT NULL,
+  `emotion_data` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `emotion_data`
 --
 
-INSERT INTO `emotion_data` (`emotion_id`, `emotion_data`, `response_text_id`) VALUES
-(5, 'angry', 1),
-(6, 'disgust', 2),
-(7, 'fear', 3),
-(8, 'happy', 4),
-(9, 'sad', 6),
-(10, 'surprise', 6),
-(11, 'neutral', 7);
+INSERT INTO `emotion_data` (`emotion_id`, `emotion_data`) VALUES
+(1, 'angry'),
+(2, 'disgust'),
+(3, 'fear'),
+(4, 'happy'),
+(5, 'sad'),
+(6, 'surprise'),
+(7, 'neutral');
 
 -- --------------------------------------------------------
 
@@ -87,21 +86,22 @@ CREATE TABLE `person_info` (
 
 CREATE TABLE `response_text` (
   `response_text_id` int(11) NOT NULL,
-  `response_text` varchar(255) NOT NULL
+  `response_text` varchar(255) NOT NULL,
+  `emotion_id` int(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `response_text`
 --
 
-INSERT INTO `response_text` (`response_text_id`, `response_text`) VALUES
-(1, 'ทำไมโกรธจัง'),
-(2, 'รังเกียจกันทำไม'),
-(3, 'กลัวอะไรอะ'),
-(4, 'ดีใจเรื่องอะไร'),
-(5, 'เสียใจทำไมอะ'),
-(6, 'ตกใจไรเนี่ย'),
-(7, 'ปกติดีหนิ');
+INSERT INTO `response_text` (`response_text_id`, `response_text`, `emotion_id`) VALUES
+(1, 'ทำไมโกรธจัง', 1),
+(2, 'รังเกียจกันทำไม', 2),
+(3, 'กลัวอะไรอะ', 3),
+(4, 'ดีใจเรื่องอะไร', 4),
+(5, 'เสียใจทำไมอะ', 5),
+(6, 'ตกใจไรเนี่ย', 6),
+(7, 'ปกติดีหนิ', 7);
 
 -- --------------------------------------------------------
 
@@ -140,8 +140,7 @@ ALTER TABLE `data_info`
 -- Indexes for table `emotion_data`
 --
 ALTER TABLE `emotion_data`
-  ADD PRIMARY KEY (`emotion_id`),
-  ADD KEY `response_id` (`response_text_id`);
+  ADD PRIMARY KEY (`emotion_id`);
 
 --
 -- Indexes for table `person_info`
@@ -153,7 +152,8 @@ ALTER TABLE `person_info`
 -- Indexes for table `response_text`
 --
 ALTER TABLE `response_text`
-  ADD PRIMARY KEY (`response_text_id`);
+  ADD PRIMARY KEY (`response_text_id`),
+  ADD KEY `emotion_id` (`emotion_id`);
 
 --
 -- Indexes for table `user`
@@ -176,7 +176,7 @@ ALTER TABLE `data_info`
 -- AUTO_INCREMENT for table `emotion_data`
 --
 ALTER TABLE `emotion_data`
-  MODIFY `emotion_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `emotion_id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `person_info`
@@ -204,14 +204,13 @@ ALTER TABLE `user`
 -- Constraints for table `data_info`
 --
 ALTER TABLE `data_info`
-  ADD CONSTRAINT `emotion` FOREIGN KEY (`emotion_id`) REFERENCES `emotion_data` (`emotion_id`),
-  -- ADD CONSTRAINT `person` FOREIGN KEY (`pid`) REFERENCES `person_info` (`pid`);
+  ADD CONSTRAINT `emotion` FOREIGN KEY (`emotion_id`) REFERENCES `emotion_data` (`emotion_id`);
 
 --
--- Constraints for table `emotion_data`
+-- Constraints for table `response_text`
 --
-ALTER TABLE `emotion_data`
-  ADD CONSTRAINT `response_id` FOREIGN KEY (`response_text_id`) REFERENCES `response_text` (`response_text_id`);
+ALTER TABLE `response_text`
+  ADD CONSTRAINT `emotion_id` FOREIGN KEY (`emotion_id`) REFERENCES `emotion_data` (`emotion_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
