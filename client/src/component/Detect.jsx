@@ -242,15 +242,15 @@ function Detect() {
                                         <span>Dominant Emotion: {result.dominant_emotion}</span><br />
                                         <span>Person Name: {result.person_name}</span><br />
                                         <span>Response Text: {result.response_text}</span>
-                                        {/* {imageSrc && (
+                                        {result.base64_image && (
                                             <img
-                                                src={imageSrc}
+                                                src={`data:image/jpeg;base64,${result.base64_image}`}
                                                 alt="Detected Face"
                                                 width={50}
                                                 height={50}
-                                                style={{ marginLeft: '16px' }} 
+                                                style={{ marginLeft: '16px' }}
                                             />
-                                        )} */}
+                                        )}
                                     </Typography>
                                 </ThemeProvider>
                             ))

@@ -399,6 +399,10 @@ def process_image():
 
             # Save the cropped face region to the specified folder
             face_region.save(small_img_save_path)
+            
+            # Convert the small image to base64
+            with open(small_img_save_path, "rb") as image_file:
+                base64_image = base64.b64encode(image_file.read()).decode('utf-8')
 
             dominant_emotion = entry['dominant_emotion']
 
@@ -441,7 +445,8 @@ def process_image():
             results.append({
                     'dominant_emotion': dominant_emotion,
                     'person_name': person_name,
-                    'response_text': response_text
+                    'response_text': response_text,
+                    'base64_image': base64_image
             })
         print(results)
         return jsonify(results),200

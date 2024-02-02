@@ -47,7 +47,7 @@ export default function WebcamCapture() {
             },
             body: JSON.stringify({ image: imageSrc }),
           });
-          
+          console.log(JSON.stringify({ image: imageSrc }))
 
           // Log the response details
           const responseData = await response.json();
