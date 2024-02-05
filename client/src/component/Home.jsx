@@ -12,9 +12,9 @@ function Home() {
   return (
     <div>
       <Nav/>
-      <div className="container">
-        <img src="\img\image-10@2x.png" alt="" width="100%" height="100%"/>
-      <div className="centered-text">ANALYZE</div>
+      <div >
+        <img class="absolute object-cover	" src="\img\image-10@2x.png"/>
+        <div class="absolute top-5200">ANALYZE</div>
     </div>
     </div>
   );

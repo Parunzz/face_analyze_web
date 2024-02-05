@@ -26,14 +26,14 @@ CORS(app, supports_credentials=True)
 
 
 ## FOR DEV ENV ###
-host = "localhost"
-user = "root"
-password = ""
+# host = "localhost"
+# user = "root"
+# password = ""
 
-### FOR Docker ###
-# host = "db"
-# user = "admin"
-# password = "admin"
+## FOR Docker ###
+host = "db"
+user = "admin"
+password = "admin"
 
 
 db = "deepface"
