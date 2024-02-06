@@ -36,8 +36,11 @@ password = ""
 # password = "admin"
 
 
-db = "deepface"
-mydb = mysql.connector.connect(host=host,user=user,password=password,db=db)
+## FOR DEV ENV ###
+mydb = mysql.connector.connect(host="localhost",user="root",password="",db="deepface",connect_timeout=100)
+### FOR Docker ###
+# mydb = mysql.connector.connect(host="db",user="admin",password="admin",db="deepface")
+
 mycursor = mydb.cursor(dictionary=True)
 
 @app.route("/")
@@ -448,7 +451,7 @@ def process_image():
                     'response_text': response_text,
                     'base64_image': base64_image
             })
-        print(results)
+        # print(results)
         return jsonify(results),200
 
     except Exception as e:
