@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Feb 01, 2024 at 03:10 PM
--- Server version: 10.4.24-MariaDB
--- PHP Version: 8.1.4
+-- Host: localhost
+-- Generation Time: Feb 07, 2024 at 04:51 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `deepface`
 --
-CREATE DATABASE IF NOT EXISTS `deepface` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `deepface`;
 
 -- --------------------------------------------------------
 
@@ -31,13 +29,13 @@ USE `deepface`;
 
 CREATE TABLE `data_info` (
   `Data_id` int(11) NOT NULL,
-  `pid` int(11) NOT NULL,
+  `pid` int(11) DEFAULT NULL,
   `emotion_id` int(11) NOT NULL,
   `DateTime` datetime NOT NULL,
   `Full_path` varchar(255) NOT NULL,
   `Cut_path` varchar(255) NOT NULL,
-  `place` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `place` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -48,7 +46,7 @@ CREATE TABLE `data_info` (
 CREATE TABLE `emotion_data` (
   `emotion_id` int(255) NOT NULL,
   `emotion_data` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `emotion_data`
@@ -76,7 +74,7 @@ CREATE TABLE `person_info` (
   `img_path` varchar(255) NOT NULL,
   `gender` varchar(255) NOT NULL,
   `DateOfBirth` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -88,7 +86,7 @@ CREATE TABLE `response_text` (
   `response_text_id` int(11) NOT NULL,
   `response_text` varchar(255) NOT NULL,
   `emotion_id` int(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `response_text`
@@ -115,7 +113,7 @@ CREATE TABLE `user` (
   `uid` int(11) NOT NULL,
   `Firstname` varchar(255) NOT NULL,
   `Lastname` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user`
@@ -170,7 +168,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `data_info`
 --
 ALTER TABLE `data_info`
-  MODIFY `Data_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `Data_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `emotion_data`
@@ -182,7 +180,7 @@ ALTER TABLE `emotion_data`
 -- AUTO_INCREMENT for table `person_info`
 --
 ALTER TABLE `person_info`
-  MODIFY `pid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `pid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `response_text`
@@ -204,7 +202,8 @@ ALTER TABLE `user`
 -- Constraints for table `data_info`
 --
 ALTER TABLE `data_info`
-  ADD CONSTRAINT `emotion` FOREIGN KEY (`emotion_id`) REFERENCES `emotion_data` (`emotion_id`);
+  ADD CONSTRAINT `emotion` FOREIGN KEY (`emotion_id`) REFERENCES `emotion_data` (`emotion_id`),
+  ADD CONSTRAINT `pid` FOREIGN KEY (`pid`) REFERENCES `person_info` (`pid`);
 
 --
 -- Constraints for table `response_text`

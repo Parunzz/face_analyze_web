@@ -425,10 +425,10 @@ def process_image():
                     person_pid = person_info['pid']
                 else:
                     person_name = "Unknown"
-                    person_pid = -1
+                    person_pid = None
             else:
                 person_name = "Unknown"
-                person_pid = -1
+                person_pid = None
             print(person_name)
             mycursor.execute('SELECT emotion_data.emotion_id,emotion_data.emotion_data,response_text.response_text FROM `emotion_data` JOIN response_text ON emotion_data.emotion_id = response_text.emotion_id WHERE emotion_data.emotion_data = %s', (dominant_emotion,))
             emotion_data_result = mycursor.fetchone()
@@ -456,7 +456,7 @@ def process_image():
 
     except Exception as e:
         print("error",e)
-        return jsonify({'error': str(e), 'dominant_emotion': "Error", 'person_name': 'unknown','response_text': 'หาไม่เจอ'}), 500
+        return jsonify({'error': str(e), 'dominant_emotion': "Error", 'person_name': 'unknown','response_text': 'หาไม่เจอ'}), 404
 
 
 
