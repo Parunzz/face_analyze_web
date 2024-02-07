@@ -1,0 +1,17 @@
+{
+	"ulid": "01HNCF340RE58X98XFZB3HS855",
+	"minTime": 1706530517360,
+	"maxTime": 1706536800000,
+	"stats": {
+		"numSamples": 42590,
+		"numSeries": 1278,
+		"numChunks": 1278
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01HNCF340RE58X98XFZB3HS855"
+		]
+	},
+	"version": 1
+}

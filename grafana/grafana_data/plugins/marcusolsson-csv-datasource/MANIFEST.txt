@@ -1,0 +1,39 @@
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+{
+  "manifestVersion": "2.0.0",
+  "signatureType": "grafana",
+  "signedByOrg": "grafana",
+  "signedByOrgName": "Grafana Labs",
+  "plugin": "marcusolsson-csv-datasource",
+  "version": "0.6.12",
+  "time": 1703072509901,
+  "keyId": "7e4d0c6a708866e7",
+  "files": {
+    "CHANGELOG.md": "9a39eab94eb7f58dd6b6ce5e51860cd2458fe7410ba418940f0d9d1964f1bc5f",
+    "LICENSE": "d5b1ff528d57ff4f35c684bb357810c8e064869ac41b828e98839d445eaa7cb4",
+    "README.md": "027a9e0aa1250daae2274d1458bc6da947c6c774d64eee1f6010523b96bfc3b8",
+    "go_plugin_build_manifest": "adb924b896356d75f94c08a8b3e8928455a23f91c04e00e9492d4bcec64beb84",
+    "gpx_csv-datasource_linux_amd64": "6c82b1776848b43d12b01725463031039a71c2eb37acabd293fa1b69be48fed8",
+    "img/dark.png": "9e0d577c29d983d7c258ea5704ecdc3e574ff3d16cb9762e9b7fd06a13630daa",
+    "img/light.png": "e71042db587b73f3b6f5e90df09b9d74213060632a3b22250f483a55c752e287",
+    "img/logo.svg": "0bcb07e8f33b833bc4e5ac340feb0997a71dec4c0d8f497feaac775823bbb091",
+    "module.js": "174cdc5611768d0976838a11543f23c5d5f43eae61f2202e0c0c2a3345838117",
+    "module.js.LICENSE.txt": "b010eea5011d9f1bd2330b38fe4674166a63a6dfd4fe466302a6d64ac6dc4345",
+    "module.js.map": "138cbfc6bd4274ae556c61b9b519f6438cf99942ec83bc206fedfab10af1018a",
+    "plugin.json": "cf273a749d8dda77d8b85a634cc841d7dd296d795ab4f5e4e9c5435d8f0f7269"
+  }
+}
+-----BEGIN PGP SIGNATURE-----
+Version: OpenPGP.js v4.10.10
+Comment: https://openpgpjs.org
+
+wrkEARMKAAYFAmWC0v4AIQkQfk0ManCIZucWIQTzOyW2kQdOhGNlcPN+TQxq
+cIhm56gTAgkB91ESLzZK7fT6Keb204Tfqgub83N0ShfbCIHWr6te5s5fX2JQ
+Mzr4T/8tOrD+5v1jbsQr2ir/otEdp66Mwj6CMM0CCQHcCHXug5Madu7Bn37r
+edRtd2HqZ6qjo76gY3o/DrkXmRAeVuNPVhOYBWJbhngA1j4D4ksfplbpXcGw
+EfUuRbN6VA==
+=Ri3G
+-----END PGP SIGNATURE-----

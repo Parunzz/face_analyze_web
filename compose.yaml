@@ -38,3 +38,34 @@ services:
       - "8080:80"
     depends_on:
       - db
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./grafana/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./grafana/prometheus_data:/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention=${PROMETHEUS_RETENTION:-24h}
+    restart: always
+    networks:
+      - monitor-net
+  node-exporter:
+    image: prom/node-exporter:latest
+    networks:
+      - monitor-net
+  grafana:
+    image: grafana/grafana:latest
+    volumes:
+      - ./grafana/grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    ports:
+      - 3000:3000
+    networks:
+      - monitor-net
+
+
+networks:
+  monitor-net:
+    driver: bridge
