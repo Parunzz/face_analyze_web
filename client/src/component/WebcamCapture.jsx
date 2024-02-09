@@ -47,7 +47,7 @@ export default function WebcamCapture() {
             },
             body: JSON.stringify({ image: imageSrc }),
           });
-          console.log(JSON.stringify({ image: imageSrc }))
+          // console.log(JSON.stringify({ image: imageSrc }))
 
           // Log the response details
           const responseData = await response.json();
@@ -90,8 +90,6 @@ export default function WebcamCapture() {
           {isCameraOn ? 'Turn Off Camera' : 'Turn On Camera'}
         </button><br />
 
-        {/* Display the captured image at the bottom */}
-        {/* {capturedImage && <img src={capturedImage} alt="Captured" style={{ marginTop: '20px' }} />} */}
         <div>
             {Array.isArray(responseData) ? (
                 responseData.map((result, index) => (

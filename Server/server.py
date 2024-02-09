@@ -26,18 +26,10 @@ CORS(app, supports_credentials=True)
 
 
 ## FOR DEV ENV ###
-host = "localhost"
-user = "root"
-password = ""
-
+mydb = mysql.connector.connect(host="localhost",user="root",password="",db="deepface",connect_timeout=100)
 ### FOR Docker ###
-# host = "db"
-# user = "admin"
-# password = "admin"
+#mydb = mysql.connector.connect(host="db",user="admin",password="admin",db="deepface",connect_timeout=10000)
 
-
-db = "deepface"
-mydb = mysql.connector.connect(host=host,user=user,password=password,db=db)
 mycursor = mydb.cursor(dictionary=True)
 
 @app.route("/")
@@ -422,10 +414,10 @@ def process_image():
                     person_pid = person_info['pid']
                 else:
                     person_name = "Unknown"
-                    person_pid = -1
+                    person_pid = None
             else:
                 person_name = "Unknown"
-                person_pid = -1
+                person_pid = None
             print(person_name)
             mycursor.execute('SELECT emotion_data.emotion_id,emotion_data.emotion_data,response_text.response_text FROM `emotion_data` JOIN response_text ON emotion_data.emotion_id = response_text.emotion_id WHERE emotion_data.emotion_data = %s', (dominant_emotion,))
             emotion_data_result = mycursor.fetchone()
@@ -448,12 +440,12 @@ def process_image():
                     'response_text': response_text,
                     'base64_image': base64_image
             })
-        print(results)
+        # print(results)
         return jsonify(results),200
 
     except Exception as e:
         print("error",e)
-        return jsonify({'error': str(e), 'dominant_emotion': "Error", 'person_name': 'unknown','response_text': 'หาไม่เจอ'}), 500
+        return jsonify({'error': str(e), 'dominant_emotion': "Error", 'person_name': 'unknown','response_text': 'หาไม่เจอ'}), 404
 
 
 
