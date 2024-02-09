@@ -72,8 +72,10 @@ function Homepage() {
       </div>
       <div className='right-responsive'>
         <div className='top-menu'>
-          <div className='date text-white'>{currentDate}</div>
-          <div className='time text-white'>{currentTime}</div>
+          <div className='data'>
+            <div className='date text-white'>{currentDate}</div>
+            <div className='time text-white'>{currentTime}</div>
+          </div>
         </div>
         <div className='info'>   
         </div>
