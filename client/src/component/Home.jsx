@@ -11,11 +11,13 @@ function Home() {
 
   return (
     <div>
-      <Nav/>
-      <div className="container">
-        <img src="\img\image-10@2x.png" alt="" width="100%" height="100%"/>
-      <div className="centered-text">ANALYZE</div>
-    </div>
+      <Nav />
+      <div className="size-full">
+        <img src="\img\image-10@2x.png" alt="" />
+        <div className="centered-text">
+          ANALYZE
+        </div>
+      </div>
     </div>
   );
 }

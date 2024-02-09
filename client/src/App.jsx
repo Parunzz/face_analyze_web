@@ -9,6 +9,8 @@ import AddMember from './component/AddMember';
 import Detect from './component/Detect';
 import WebcamCapture from './component/WebcamCapture';
 import MemberDetail from './component/MemberDetail';
+import Dashboard from './component/Dashboard';
+
 function App() {
 
   
@@ -24,7 +26,7 @@ function App() {
           <Route path='/AddMember' element={<AddMember />} />
           <Route path='/Kiosk' element={<Detect />} />
           <Route path='/CCTV1' element={<WebcamCapture />} />
-         
+          <Route path='/Dashboard' element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
   )
