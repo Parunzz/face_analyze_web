@@ -86,7 +86,7 @@ export default function AddMember() {
                 console.log('Add member successfully');
                 setLoading(false);
                 window.alert(`Add member successfully`);
-                navigate('/Member');
+                navigate('/Members');
                 // Handle success, e.g., redirect to a different page
             } else {
                 setLoading(false);
