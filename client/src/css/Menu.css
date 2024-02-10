@@ -158,3 +158,19 @@ video
     padding-top: 150px;
     padding: 200px;
 }
+
+.img-section
+{
+
+    width: 100%;
+    height: 30px;
+    padding-top: 80px;
+}
+
+.img-1
+{
+    padding-right: 50px;
+    width: 600px;
+    display: inline-block;
+
+}

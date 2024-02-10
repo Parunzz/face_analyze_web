@@ -36,7 +36,7 @@ function Homepage() {
           <div className='logo'></div>
           <div className='menu'>
             <li className='Home' >
-                <div className='menu-item'>
+                <div className='menu-item' a href='./'>
                     <img src='../../public/img/home.gif' className='menu-icon'></img>
                     <a href='./' className='home'>หน้าหลัก</a>
                 </div>
@@ -88,12 +88,16 @@ function Homepage() {
           </div>
           <div className='Introduce-section'>
               <h3 className='text-3xl font-bold title	'>What is Analyze Company</h3>
-              <p className='paragraph text-2xl'>
+              <p className='paragraph text-xl'>
                 บริษัท Analyze เป็นผู้นำด้านนวัตกรรมและเทคโนโลยีที่ตั้งคติที่จะเปลี่ยนแปลงโลกด้วยการใช้ประโยชน์จากปัญญาประดิษฐ์ 
                 (Artificial Intelligence: AI) ให้กับสังคมและธุรกิจต่างๆ ทั่วโลก ด้วยการนำเสนอและพัฒนาเทคโนโลยี AI ที่
                 โดดเด่นและมีประสิทธิภาพสูง บริษัท Analyze ได้เป็นส่วนสำคัญในการสร้างความสะดวกสบายให้แก่คนทั่วโลกผ่านการปรับใช้ 
                 AI ในหลากหลายด้านด้วยความคิดสร้างสรรค์และการพัฒนาที่ไม่หยุดยั้ง
               </p>
+              <div className='img-section'>
+                <img src ='../../public/img/1.png' className='img-1'></img>
+                <img src='../../public/img/1.png' className='img-1'></img>
+              </div>
           </div>
         </div>
       </div>
