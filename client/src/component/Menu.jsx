@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import '../css/Menu.css';
 import vdoBg from '../assets/video/Kiosk.mp4'
 
 
@@ -37,31 +36,31 @@ function Menu() {
           <div className='menu'>
             <li className='Home' >
                 <div className='menu-item' a href='./'>
-                    <img src='../../public/img/home.gif' className='menu-icon'></img>
+                    <img src='/img/home.gif' className='menu-icon'></img>
                     <a href='./' className='home'>หน้าหลัก</a>
                 </div>
             </li>
             <li className='CCTV'>
                 <div className='menu-item'>
-                    <img src='../../public/img/camera.gif' className='menu-icon'></img>
+                    <img src='/img/camera.gif' className='menu-icon'></img>
                     <a href='./Camera' className='cctv'>กล้องวงจรปิด</a>
                 </div>
             </li>
             <li className='History'>
                 <div className='menu-item'>
-                    <img src='../../public/img/history.gif' className='menu-icon'></img>
+                    <img src='/img/history.gif' className='menu-icon'></img>
                     <a href='./History' className='history'>ประวัติ</a>
                 </div>
             </li>
             <li className='Member'>
                 <div className='menu-item'>
-                    <img src='../../public/img/profile.gif' className='menu-icon'></img>
+                    <img src='/img/profile.gif' className='menu-icon'></img>
                     <a href='./Member' className='member'>สมาชิก</a>
                 </div>
             </li>
             <li className='Dashboard'>
                 <div className='menu-item'>
-                    <img src='../../public/img/presentation.gif' className='menu-icon'></img>
+                    <img src='/img/presentation.gif' className='menu-icon'></img>
                     <a href='./Dashboard' className='dashboard'>สถิติ</a>
                 </div>
             </li>
@@ -95,8 +94,8 @@ function Menu() {
                 AI ในหลากหลายด้านด้วยความคิดสร้างสรรค์และการพัฒนาที่ไม่หยุดยั้ง
               </p>
               <div className='img-section'>
-                <img src ='../../public/img/1.png' className='img-1'></img>
-                <img src='../../public/img/1.png' className='img-1'></img>
+                <img src ='/img/1.png' className='img-1'></img>
+                <img src='/img/1.png' className='img-1'></img>
               </div>
           </div>
         </div>
