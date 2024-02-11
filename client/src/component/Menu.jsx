@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import '../css/Menu.css';
 import vdoBg from '../assets/video/Kiosk.mp4'
 
 
