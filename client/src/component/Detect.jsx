@@ -262,7 +262,7 @@ function Detect() {
                             screenshotFormat="image/jpeg"
                             videoConstraints={{
                                 facingMode: 'user',
-                                // aspectRatio: aspectRatio
+                                aspectRatio: aspectRatio
                             }}
                             style={{
                                 position: "absolute",
@@ -282,7 +282,7 @@ function Detect() {
                             left: "50%",
                             transform: "translateX(-50%)",
                             zIndex: -1,
-                            // width: `calc(100vh * ${aspectRatio})`, // Calculate width based on aspect ratio
+                            width: `calc(100vh * ${aspectRatio})`, // Calculate width based on aspect ratio
                             height: "100%",
                             pointerEvents: "none",
                             backgroundColor: 'black'
@@ -296,7 +296,7 @@ function Detect() {
                             left: "50%",
                             transform: "translateX(-50%)",
                             zIndex: -1,
-                            // width: `calc(100vh * ${aspectRatio})`, 
+                            width: `calc(100vh * ${aspectRatio})`, 
                             height: "100%",
                             pointerEvents: "none",
                         }}

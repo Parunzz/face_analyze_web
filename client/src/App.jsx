@@ -11,11 +11,13 @@ import WebcamCapture from './component/WebcamCapture';
 import MemberDetail from './component/MemberDetail';
 import ResponsiveAppBar from './component/ResponsiveAppBar.jsx'
 import Menu from './component/Menu.jsx';
+import Left from './component/Left.jsx';
 function App() {
 
   
   return (
     <BrowserRouter>
+    <Left />
       <Routes>
           <Route path='/' element={<Menu />} />
           <Route path='/SignIn' element={<SignIn />} />
