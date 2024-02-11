@@ -46,7 +46,7 @@ function Detect() {
             //  Loop and detect hands
             setInterval(() => {
                 detect(net);
-            }, 1000);
+            }, 500);
 
         } catch (error) {
             console.error("Error loading or using the face detection model:", error);
@@ -80,7 +80,8 @@ function Detect() {
 
         return canvas.toDataURL(); // returns a base64-encoded data URL
     };
-
+    let seenIds = [];
+    let trackedPersons = [];
 
     const detect = async (net) => {
         // Check data is available
@@ -106,7 +107,7 @@ function Detect() {
             // const faces = await net.detect(video);
             const estimationConfig = { flipHorizontal: false };
             const faces = await net.estimateFaces(video, estimationConfig);
-            console.log(faces)
+            // console.log(faces)
             // Function to calculate the Euclidean distance between two points
             function euclideanDistance(point1, point2) {
                 return Math.sqrt(Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2));
@@ -122,11 +123,13 @@ function Detect() {
                 // Iterate through corresponding keypoints and check their distances
                 for (let i = 0; i < oldKeypoints.length; i++) {
                     const distance = euclideanDistance(oldKeypoints[i], newKeypoints[i]);
-                    if (distance > threshold) {            
+                    // console.log("dis : ", distance);
+                    if (distance > threshold) {
                         return false;
                     }
                 }
-
+                // If all distances are within the threshold, consider them to be the same person
+                // console.log("SAME");
                 return true;
             }
 
@@ -143,7 +146,7 @@ function Detect() {
                     // Check if keypoints match any existing person
                     let matchedPerson = null;
                     for (let i = 0; i < trackedPersons.length; i++) {
-                        if (isSamePerson(trackedPersons[i].keypoints, keypoints, 80)) {
+                        if (isSamePerson(trackedPersons[i].keypoints, keypoints, 0)) {
                             matchedPerson = trackedPersons[i];
                             break;
                         }
@@ -166,12 +169,24 @@ function Detect() {
             }
 
 
-            // Example usage
-            let trackedPersons = [];
+
 
             trackedPersons = trackPersons(faces, trackedPersons);
-            console.log("Tracked persons:", trackedPersons);
-
+            // console.log("Tracked persons:", trackedPersons);
+            if (trackedPersons.length === 0) {
+                // console.log("No face");
+                seenIds = [];
+            } else {
+                // Loop through each tracked person and print their ID
+                trackedPersons.forEach(face => {
+                    // console.log("ID:", face.id);
+                    // Check if the current ID is not in the list of seen IDs
+                    if (!seenIds.includes(face.id)) {
+                        // console.log("New"); // Print "New" if the ID is new
+                        seenIds.push(face.id); // Add the current ID to the list of seen IDs
+                    }
+                });
+            }
             // Draw mesh
             const ctx = canvasRef.current.getContext("2d");
             drawRect(faces, ctx, trackedPersons);
