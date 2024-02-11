@@ -42,7 +42,6 @@ function Member() {
     }, []); // Empty dependency array means this effect runs once when the component mounts
   return (
     <div>
-      
       <Container maxWidth="lg">
         <Box sx={{ p: 2, bgcolor: 'white', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <h1 style={{ paddingBottom: 30 }}>Member</h1>

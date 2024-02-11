@@ -1,0 +1,15 @@
+.Camera{
+    display: block;
+    padding: 500px;
+    padding-top: 20px;
+    padding-left: 285px;
+    text-align: center;
+}
+
+
+
+#rect-1{
+    padding: 100px;
+    background: #d3cfcf;
+}
+
