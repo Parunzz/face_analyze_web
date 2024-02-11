@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import vdoBg from '../assets/video/Kiosk.mp4'
-import UseAuth from './UseAuth';
-import Cookies from 'js-cookie';
+import '../css/Menu.css'
 
 function Menu() {
   const [currentTime, setCurrentTime] = useState('');

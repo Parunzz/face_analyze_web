@@ -20,6 +20,7 @@ function App() {
   
   return (
     <BrowserRouter>
+    <Left />
       <Routes>
           <Route path='/' element={<Menu />} />
           <Route path='/SignIn' element={<SignIn />} />
