@@ -80,7 +80,8 @@ function Detect() {
 
         return canvas.toDataURL(); // returns a base64-encoded data URL
     };
-
+    let seenIds = [];
+    let trackedPersons = [];
 
     const detect = async (net) => {
         // Check data is available
@@ -107,48 +108,126 @@ function Detect() {
             const estimationConfig = { flipHorizontal: false };
             const faces = await net.estimateFaces(video, estimationConfig);
             // console.log(faces)
+            // Function to calculate the Euclidean distance between two points
+            function euclideanDistance(point1, point2) {
+                return Math.sqrt(Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2));
+            }
 
+            // Function to check if keypoints belong to the same person
+            function isSamePerson(oldKeypoints, newKeypoints, threshold) {
+                // Check if both old and new keypoints have the same length
+                if (oldKeypoints.length !== newKeypoints.length) {
+                    return false;
+                }
+
+                // Iterate through corresponding keypoints and check their distances
+                for (let i = 0; i < oldKeypoints.length; i++) {
+                    const distance = euclideanDistance(oldKeypoints[i], newKeypoints[i]);
+                    // console.log("dis : ", distance);
+                    if (distance > threshold) {
+                        return false;
+                    }
+                }
+                // If all distances are within the threshold, consider them to be the same person
+                // console.log("SAME");
+                return true;
+            }
+
+            // Function to track persons and preserve their identities
+            function trackPersons(detections, trackedPersons) {
+                let newTrackedPersons = [];
+                let newPersonId = 1; // Initialize the ID counter
+
+                // Loop through each prediction
+                detections.forEach(prediction => {
+                    // Extract keypoints
+                    const keypoints = prediction.keypoints;
+
+                    // Check if keypoints match any existing person
+                    let matchedPerson = null;
+                    for (let i = 0; i < trackedPersons.length; i++) {
+                        if (isSamePerson(trackedPersons[i].keypoints, keypoints, 0)) {
+                            matchedPerson = trackedPersons[i];
+                            break;
+                        }
+                    }
+
+                    if (matchedPerson !== null) {
+                        // Key points matched with an existing person
+                        // Update keypoints and preserve ID
+                        matchedPerson.keypoints = keypoints;
+                        newTrackedPersons.push(matchedPerson);
+                    } else {
+                        // Key points did not match any existing person
+                        // Create a new person entry with a new ID
+                        newTrackedPersons.push({ id: newPersonId, keypoints: keypoints });
+                        newPersonId++; // Increment the ID counter
+                    }
+                });
+
+                return newTrackedPersons;
+            }
+
+
+
+
+            trackedPersons = trackPersons(faces, trackedPersons);
+            // console.log("Tracked persons:", trackedPersons);
+            if (trackedPersons.length === 0) {
+                // console.log("No face");
+                seenIds = [];
+            } else {
+                // Loop through each tracked person and print their ID
+                trackedPersons.forEach(face => {
+                    // console.log("ID:", face.id);
+                    // Check if the current ID is not in the list of seen IDs
+                    if (!seenIds.includes(face.id)) {
+                        // console.log("New"); // Print "New" if the ID is new
+                        seenIds.push(face.id); // Add the current ID to the list of seen IDs
+                    }
+                });
+            }
             // Draw mesh
             const ctx = canvasRef.current.getContext("2d");
-            drawRect(faces, ctx);
+            drawRect(faces, ctx, trackedPersons);
             // Check if 'face' is detected
-            const noFaceDetected = !faces || faces.length === 0;
-            if (!noFaceDetected && isCaptureEnabled) {
-                isCaptureEnabled = false
-                setTimeout(async () => {
-                    console.log("detect")
-                    const facescreenshot = getFaceScreenshot(video, videoWidth, videoHeight, faces[0]);
-                    setImageSrc(facescreenshot);
-                    const screenshot = getScreenshot(video, videoWidth, videoHeight);
-                    const response = await fetch('http://localhost:3001/api/save_fullImg', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            image: screenshot,
-                        }),
-                    });
+            // const noFaceDetected = !faces || faces.length === 0;
+            // if (!noFaceDetected && isCaptureEnabled) {
+            //     isCaptureEnabled = false
+            //     setTimeout(async () => {
+            //         console.log("detect")
+            //         const facescreenshot = getFaceScreenshot(video, videoWidth, videoHeight, faces[0]);
+            //         setImageSrc(facescreenshot);
+            //         const screenshot = getScreenshot(video, videoWidth, videoHeight);
+            //         const response = await fetch('http://localhost:3001/api/save_fullImg', {
+            //             method: 'POST',
+            //             headers: {
+            //                 'Content-Type': 'application/json',
+            //             },
+            //             body: JSON.stringify({
+            //                 image: screenshot,
+            //             }),
+            //         });
 
-                    // Handle the API response as needed
-                    const responseInfo = await response.json();
-                    if (response.ok) {
-                        setresponseData(responseInfo)
-                        // console.log(responseInfo);
-                    }
-                    else {
-                        setresponseData(responseInfo)
-                        // console.log("response Error");
-                    }
-                    setTimeout(() => {
-                        isCaptureEnabled = true;
-                    }, 5000);
-                }, 1000);
-            }
-            else if (noFaceDetected) {
-                isCaptureEnabled = true
-                setImageSrc(null);
-            }
+            //         // Handle the API response as needed
+            //         const responseInfo = await response.json();
+            //         if (response.ok) {
+            //             setresponseData(responseInfo)
+            //             // console.log(responseInfo);
+            //         }
+            //         else {
+            //             setresponseData(responseInfo)
+            //             // console.log("response Error");
+            //         }
+            //         setTimeout(() => {
+            //             isCaptureEnabled = true;
+            //         }, 5000);
+            //     }, 1000);
+            // }
+            // else if (noFaceDetected) {
+            //     isCaptureEnabled = true
+            //     setImageSrc(null);
+            // }
         }
     };
     const theme = createTheme({
@@ -181,9 +260,9 @@ function Detect() {
                             ref={webcamRef}
                             muted={true}
                             screenshotFormat="image/jpeg"
-                            videoConstraints={{ 
-                                facingMode: 'user', 
-                                aspectRatio: aspectRatio
+                            videoConstraints={{
+                                facingMode: 'user',
+                                // aspectRatio: aspectRatio
                             }}
                             style={{
                                 position: "absolute",
@@ -203,7 +282,7 @@ function Detect() {
                             left: "50%",
                             transform: "translateX(-50%)",
                             zIndex: -1,
-                            width: `calc(100vh * ${aspectRatio})`, // Calculate width based on aspect ratio
+                            // width: `calc(100vh * ${aspectRatio})`, // Calculate width based on aspect ratio
                             height: "100%",
                             pointerEvents: "none",
                             backgroundColor: 'black'
@@ -217,7 +296,7 @@ function Detect() {
                             left: "50%",
                             transform: "translateX(-50%)",
                             zIndex: -1,
-                            width: `calc(100vh * ${aspectRatio})`, 
+                            // width: `calc(100vh * ${aspectRatio})`, 
                             height: "100%",
                             pointerEvents: "none",
                         }}
@@ -235,9 +314,10 @@ function Detect() {
                             justifyContent: 'center',
                             alignItems: 'center',
                         }}
-                        style={{ display: 'block',
-                        width: `calc(100vh * ${aspectRatio})`,
-                    }}
+                        style={{
+                            display: 'block',
+                            // width: `calc(100vh * ${aspectRatio})`,
+                        }}
                     >
 
                         {Array.isArray(responseData) ? (
@@ -260,9 +340,9 @@ function Detect() {
                                 </ThemeProvider>
                             ))
                         ) : (
-                            <div style={{ 
+                            <div style={{
                                 display: 'inline-flex',
-                                width: `calc(100vh * ${aspectRatio})`,  
+                                width: `calc(100vh * ${aspectRatio})`,
                             }}>
                                 <ThemeProvider theme={theme}>
 

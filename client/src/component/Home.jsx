@@ -11,13 +11,11 @@ function Home() {
 
   return (
     <div>
-      <Nav />
-      <div className="size-full">
-        <img src="\img\image-10@2x.png" alt="" />
-        <div className="centered-text">
-          ANALYZE
-        </div>
-      </div>
+      <Nav/>
+      <div >
+        <img class="absolute object-cover	" src="\img\image-10@2x.png"/>
+        <div class="absolute top-5200">ANALYZE</div>
+    </div>
     </div>
   );
 }

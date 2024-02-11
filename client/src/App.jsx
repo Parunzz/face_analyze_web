@@ -9,15 +9,20 @@ import AddMember from './component/AddMember';
 import Detect from './component/Detect';
 import WebcamCapture from './component/WebcamCapture';
 import MemberDetail from './component/MemberDetail';
+<<<<<<< HEAD
 import Dashboard from './component/Dashboard';
 
+=======
+import ResponsiveAppBar from './component/ResponsiveAppBar.jsx'
+import Menu from './component/Menu.jsx';
+>>>>>>> 7121b94d1f9387d83d1038e2cad33c1b84932ef8
 function App() {
 
   
   return (
     <BrowserRouter>
       <Routes>
-          <Route path='/' element={<Home />} />
+          <Route path='/' element={<Menu />} />
           <Route path='/SignIn' element={<SignIn />} />
           <Route path='/SignUp' element={<SignUp />} />
           <Route path='/Camera' element={<Camera />} />
@@ -25,8 +30,12 @@ function App() {
           <Route path='/member/:pid' element={<MemberDetail />} />
           <Route path='/AddMember' element={<AddMember />} />
           <Route path='/Kiosk' element={<Detect />} />
+<<<<<<< HEAD
           <Route path='/CCTV1' element={<WebcamCapture />} />
           <Route path='/Dashboard' element={<Dashboard />} />
+=======
+          <Route path='/CCTV1' element={<WebcamCapture />} />  
+>>>>>>> 7121b94d1f9387d83d1038e2cad33c1b84932ef8
       </Routes>
     </BrowserRouter>
   )

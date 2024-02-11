@@ -14,7 +14,7 @@ function Nav() {
   //------------logout------------------
 
   return (
-    <nav>
+    <nav className='width-100%'>
       <a href='/'>Home</a>
       {authenticated && <a href='/History'>History</a>}
       {authenticated && <a href='/Camera'>Camera</a>}

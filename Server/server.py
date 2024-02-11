@@ -26,16 +26,17 @@ CORS(app, supports_credentials=True)
 
 
 ## FOR DEV ENV ###
-mydb = mysql.connector.connect(host="localhost",user="root",password="",db="deepface",connect_timeout=100)
+# mydb = mysql.connector.connect(host="localhost",user="root",password="",db="deepface",connect_timeout=100)
 ### FOR Docker ###
 #mydb = mysql.connector.connect(host="db",user="admin",password="admin",db="deepface",connect_timeout=10000)
-
+### FOR NETWORK
+mydb = mysql.connector.connect(host="192.168.1.53",user="zen",password="zen",db="deepface",connect_timeout=100)
 mycursor = mydb.cursor(dictionary=True)
 
 @app.route("/")
 def index():
     return "Server"
-#-------------------------------------database--------------------------------------
+#database
 @app.route('/register', methods=['POST'])
 def Register():
     try:
@@ -89,7 +90,7 @@ def AddMember():
         date_object = datetime.strptime(Addmydate, '%m/%d/%Y')
         formatted_date = date_object.strftime('%Y-%m-%d')
         
-        #-----------------------img-------------------------------
+        #img
         
         
         # Decode the base64-encoded string
@@ -104,7 +105,7 @@ def AddMember():
         member_path = os.path.join(folder_path, unique_filename)
         out_jpg = img.convert('RGB')
         out_jpg.save(member_path)
-        #-----------------------img-------------------------------
+        #img
         # Iterate over all files in the directory
         directory = "./database/member/"
         for filename in os.listdir(directory):
@@ -335,7 +336,7 @@ def removeImg():
         print(f"Error: {str(e)}")
         return jsonify({'error': str(e)}),500
     
-#--------------------- Machine learning ----------------------------------------------------------------
+#Machine learning
 @app.route('/api/save_fullImg', methods=['POST'])
 def process_image():
     try:
@@ -371,7 +372,7 @@ def process_image():
         out_jpg.save(FullImg_save_path)
 
 
-        #------------------------IMG DETECT ------------------
+        #IMG DETECT
         emotion_result = DeepFace.analyze(img_path=FullImg_save_path, detector_backend='opencv', actions=['emotion'])
         results = []
         for entry in emotion_result:
