@@ -1,0 +1,17 @@
+{
+	"ulid": "01HP114TA6TW07T32YDB91EBB2",
+	"minTime": 1706594242403,
+	"maxTime": 1706594400000,
+	"stats": {
+		"numSamples": 22140,
+		"numSeries": 1230,
+		"numChunks": 1230
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01HP114TA6TW07T32YDB91EBB2"
+		]
+	},
+	"version": 1
+}

@@ -448,6 +448,15 @@ def process_image():
         print("error",e)
         return jsonify({'error': str(e), 'dominant_emotion': "Error", 'person_name': 'unknown','response_text': 'หาไม่เจอ'}), 404
 
+@app.route('/getimg', methods=['GET'])
+def getimg():
+    try:
+        mycursor.execute('SELECT * FROM data_info')
+        data = mycursor.fetchall()
+        return make_response(jsonify({'DateTime': data }), 200)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)})
 
 
 ## MAIN ##

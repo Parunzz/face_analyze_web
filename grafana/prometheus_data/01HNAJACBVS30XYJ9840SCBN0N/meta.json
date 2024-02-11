@@ -1,0 +1,17 @@
+{
+	"ulid": "01HNAJACBVS30XYJ9840SCBN0N",
+	"minTime": 1706508000000,
+	"maxTime": 1706515200000,
+	"stats": {
+		"numSamples": 1022400,
+		"numSeries": 1278,
+		"numChunks": 7756
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01HNAJACBVS30XYJ9840SCBN0N"
+		]
+	},
+	"version": 1
+}

@@ -1,0 +1,17 @@
+{
+	"ulid": "01HP114VASERFZJYT820E0TERZ",
+	"minTime": 1706594404403,
+	"maxTime": 1706601600000,
+	"stats": {
+		"numSamples": 492525,
+		"numSeries": 1287,
+		"numChunks": 4412
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01HP114VASERFZJYT820E0TERZ"
+		]
+	},
+	"version": 1
+}
