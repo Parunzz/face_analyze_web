@@ -91,7 +91,7 @@ function Dashboard() {
                 </div>
                 <div className='data-box-title font-semibold'>
                     STRANGER DETECT
-                    {/* change */}
+                    {/* changse */} 
                     <div className='text-4xl font-bold detail text-red-600'>25</div> 
                 </div>
                 <div className='SearchBar'>

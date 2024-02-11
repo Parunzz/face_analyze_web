@@ -3,7 +3,7 @@ import '../css/Menu.css';
 import vdoBg from '../assets/video/Kiosk.mp4'
 
 
-function Homepage() {
+function Menu() {
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
 
@@ -106,4 +106,4 @@ function Homepage() {
   );
 }
 
-export default Homepage;
+export default Menu;
