@@ -11,14 +11,15 @@ import WebcamCapture from './component/WebcamCapture';
 import MemberDetail from './component/MemberDetail';
 import ResponsiveAppBar from './component/ResponsiveAppBar.jsx'
 import Menu from './component/Menu.jsx';
+import Sidebar from './component/Sidebar.jsx';
+
 function App() {
 
-  
   return (
     <BrowserRouter>
     <Left />
       <Routes>
-          <Route path='/' element={<Menu />} />
+          <Route path='/' element={<Home />} />
           <Route path='/SignIn' element={<SignIn />} />
           <Route path='/SignUp' element={<SignUp />} />
           <Route path='/Camera' element={<Camera />} />
