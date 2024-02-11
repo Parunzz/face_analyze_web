@@ -9,6 +9,8 @@ import AddMember from './component/AddMember';
 import Detect from './component/Detect';
 import WebcamCapture from './component/WebcamCapture';
 import MemberDetail from './component/MemberDetail';
+import ResponsiveAppBar from './component/ResponsiveAppBar.jsx'
+
 function App() {
 
   
@@ -23,8 +25,7 @@ function App() {
           <Route path='/member/:pid' element={<MemberDetail />} />
           <Route path='/AddMember' element={<AddMember />} />
           <Route path='/Kiosk' element={<Detect />} />
-          <Route path='/CCTV1' element={<WebcamCapture />} />
-         
+          <Route path='/CCTV1' element={<WebcamCapture />} />  
       </Routes>
     </BrowserRouter>
   )
