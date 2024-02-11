@@ -68,7 +68,7 @@ function Homepage() {
           </div>
           <div className='setting'>
             <div className='admin_name'>สวัสดี [User] </div>
-            <div className='button'></div>
+            <div className='logout'></div>
             <div className=''></div>
           </div>
       </div>
