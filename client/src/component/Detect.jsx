@@ -82,6 +82,39 @@ function Detect() {
 
         return canvas.toDataURL(); // returns a base64-encoded data URL
     };
+    
+    const sendApi = (video, videoWidth, videoHeight, faces) =>{
+        setTimeout(async () => {
+            console.log("detect")
+            const facescreenshot = getFaceScreenshot(video, videoWidth, videoHeight, faces[0]);
+            setImageSrc(facescreenshot);
+            const screenshot = getScreenshot(video, videoWidth, videoHeight);
+            const response = await fetch('http://localhost:3001/api/save_fullImg', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    image: screenshot,
+                }),
+            });
+
+            // Handle the API response as needed
+            const responseInfo = await response.json();
+            if (response.ok) {
+                setresponseData(responseInfo)
+                // console.log(responseInfo);
+            }
+            else {
+                setresponseData(responseInfo)
+                console.log("response Error");
+            }
+            
+        }, 0);
+    }
+    // const LoopSendApi = setInterval((video, videoWidth, videoHeight, faces) => {
+    //     sendApi(video, videoWidth, videoHeight, faces);
+    // }, 5000);
     let seenIds = [];
     let trackedPersons = [];
 
@@ -148,7 +181,7 @@ function Detect() {
                     // Check if keypoints match any existing person
                     let matchedPerson = null;
                     for (let i = 0; i < trackedPersons.length; i++) {
-                        if (isSamePerson(trackedPersons[i].keypoints, keypoints, 0)) {
+                        if (isSamePerson(trackedPersons[i].keypoints, keypoints, 1)) {
                             matchedPerson = trackedPersons[i];
                             break;
                         }
@@ -164,6 +197,7 @@ function Detect() {
                         // Create a new person entry with a new ID
                         newTrackedPersons.push({ id: newPersonId, keypoints: keypoints });
                         newPersonId++; // Increment the ID counter
+                        
                     }
                 });
 
@@ -186,6 +220,7 @@ function Detect() {
                     if (!seenIds.includes(face.id)) {
                         console.log("New"); // Print "New" if the ID is new
                         seenIds.push(face.id); // Add the current ID to the list of seen IDs
+                        sendApi(video, videoWidth, videoHeight, faces);
                     }
                 });
             }
@@ -307,18 +342,18 @@ function Detect() {
                         sx={{
                             position: "absolute",
                             bottom: 0,
-                            left: 0,
-                            width: "25%",
+                            left: 547,
+                            width: "0%",
                             padding: '20px',
                             zIndex: 10,
-                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                            backgroundColor: 'rgba(255, 255, 255, 0.7)',
                             display: 'flex',
                             justifyContent: 'center',
                             alignItems: 'center',
                         }}
                         style={{
                             display: 'block',
-                            // width: `calc(100vh * ${aspectRatio})`,
+                            width: `calc(100vh * ${aspectRatio})`,
                         }}
                     >
 
@@ -335,7 +370,7 @@ function Detect() {
                                                 alt="Detected Face"
                                                 width={50}
                                                 height={50}
-                                                style={{ marginLeft: '16px' }}
+                                                style={{ left:300,display:'flex',position:'absolute',top:30 }}
                                             />
                                         )}
                                     </Typography>
@@ -346,6 +381,7 @@ function Detect() {
                                 display: 'inline-flex',
                                 width: `calc(100vh * ${aspectRatio})`,
                             }}>
+                                {/* {LoopSendApi(video, videoWidth, videoHeight, faces)} */}
                                 <ThemeProvider theme={theme}>
 
                                     <Typography variant="h2" gutterBottom style={{ zIndex: 20 }}>
