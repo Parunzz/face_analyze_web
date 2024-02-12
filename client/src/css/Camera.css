@@ -1,0 +1,34 @@
+.add
+{
+    width: 100px;
+    height: 100px;
+    position: fixed;
+    z-index: 9999;    
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 3px 20px #9b9b9b6b;
+    border-radius: 50px;
+    display: block;
+    top: 800px;
+    right: 0;
+    margin-right: 90px;
+}
+
+.add:hover
+{
+    background-color: rgb(250, 250, 250);
+}
+
+.add-text
+{
+    font-size: 60px;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding-top: 8px;
+}
+
+.info
+{
+    height: 1200px;
+}
