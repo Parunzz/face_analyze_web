@@ -12,6 +12,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Link } from 'react-router-dom';
+import '../css/Body.css'
 
 function Member() {
     const [responseData, setResponseData] = useState([]);
@@ -41,7 +42,7 @@ function Member() {
       fetchData();
     }, []); // Empty dependency array means this effect runs once when the component mounts
   return (
-    <div>
+    <div className='Member'>
       <Container maxWidth="lg">
         <Box sx={{ p: 2, bgcolor: 'white', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <h1 style={{ paddingBottom: 30 }}>Member</h1>
