@@ -16,8 +16,10 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
+import '../css/Body.css'
 
 function Detect() {
+    
     const webcamRef = useRef(null);
     const canvasRef = useRef(null);
     const [isCameraOn, setIsCameraOn] = useState(true);
@@ -249,7 +251,7 @@ function Detect() {
 
     return (
 
-        <div style={{ position: "relative", width: "100%", height: "100vh" }}>
+        <div className="Detect" style={{ position: "relative", width: "100%", height: "100vh" }}>
             <Button variant="contained" color="error" onClick={toggleCamera} style={{ zIndex: 30, marginTop: 16 }}>
                 {isCameraOn ? 'Turn Off Camera' : 'Turn On Camera'}
             </Button>
