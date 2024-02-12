@@ -17,6 +17,23 @@
   font-weight: bold;  /* ตั้งค่าความหนาตัวอักษรตามต้องการ */
 }
 
-.size-full{
+
+.Homepage{
+  padding-left: 256px;
+  /* padding-top: 50px; */
   
+}
+
+.img-section{
+  padding-left: 77px;
+  padding-top: 30px;
+}
+
+#Head-text{
+  text-align: center;
+}
+
+#Inform-text{
+  padding-left: 80px;
+  padding-right: 50px;
 }

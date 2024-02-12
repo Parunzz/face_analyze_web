@@ -16,7 +16,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
-import '../css/Body.css'
+// import '../css/Body.css'
 
 function Detect() {
     
@@ -48,7 +48,7 @@ function Detect() {
             //  Loop and detect hands
             setInterval(() => {
                 detect(net);
-            }, 500);
+            }, 1000);
 
         } catch (error) {
             console.error("Error loading or using the face detection model:", error);
@@ -184,7 +184,7 @@ function Detect() {
                     // console.log("ID:", face.id);
                     // Check if the current ID is not in the list of seen IDs
                     if (!seenIds.includes(face.id)) {
-                        // console.log("New"); // Print "New" if the ID is new
+                        console.log("New"); // Print "New" if the ID is new
                         seenIds.push(face.id); // Add the current ID to the list of seen IDs
                     }
                 });
@@ -264,7 +264,7 @@ function Detect() {
                             screenshotFormat="image/jpeg"
                             videoConstraints={{
                                 facingMode: 'user',
-                                // aspectRatio: aspectRatio
+                                aspectRatio: aspectRatio
                             }}
                             style={{
                                 position: "absolute",
@@ -284,7 +284,7 @@ function Detect() {
                             left: "50%",
                             transform: "translateX(-50%)",
                             zIndex: -1,
-                            // width: `calc(100vh * ${aspectRatio})`, // Calculate width based on aspect ratio
+                            width: `calc(100vh * ${aspectRatio})`, // Calculate width based on aspect ratio
                             height: "100%",
                             pointerEvents: "none",
                             backgroundColor: 'black'
@@ -298,7 +298,7 @@ function Detect() {
                             left: "50%",
                             transform: "translateX(-50%)",
                             zIndex: -1,
-                            // width: `calc(100vh * ${aspectRatio})`, 
+                            width: `calc(100vh * ${aspectRatio})`, 
                             height: "100%",
                             pointerEvents: "none",
                         }}
