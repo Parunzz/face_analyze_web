@@ -42,11 +42,7 @@ function Member() {
       fetchData();
     }, []); // Empty dependency array means this effect runs once when the component mounts
   return (
-<<<<<<< HEAD
-    <div className='Member'>
-=======
     <div>
->>>>>>> b6c35c11f28a45b631354e690b0209e8a8967d0d
       <Container maxWidth="lg">
         <Box sx={{ p: 2, bgcolor: 'white', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <h1 style={{ paddingBottom: 30 }}>Member</h1>

@@ -15,20 +15,6 @@ export function drawRect(faces, ctx, trackedPersons) {
         // Extract box coordinates
         const { xMin, yMin, width, height } = face.box;
 
-<<<<<<< HEAD
-        // Draw rectangle
-        ctx.beginPath();
-        ctx.rect(xMin, yMin, width, height);
-        ctx.stroke();
-
-        // Draw ID for the corresponding tracked person
-        const trackedPerson = trackedPersons[index];
-        if (trackedPerson) {
-            ctx.fillText("ID: " + trackedPerson.id, xMin, yMin - 10);
-        }
-    });
-}
-=======
       // Set styling
       ctx.strokeStyle = "rgba(255, 255, 255, 0.743)";
       ctx.lineWidth = 5;
@@ -42,4 +28,3 @@ export function drawRect(faces, ctx, trackedPersons) {
       
   });
 };
->>>>>>> b6c35c11f28a45b631354e690b0209e8a8967d0d

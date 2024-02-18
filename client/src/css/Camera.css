@@ -1,20 +1,3 @@
-<<<<<<< HEAD
-.Camera{
-    display: block;
-    padding: 500px;
-    padding-top: 20px;
-    padding-left: 285px;
-    text-align: center;
-}
-
-
-
-#rect-1{
-    padding: 100px;
-    background: #d3cfcf;
-}
-
-=======
 .add
 {
     width: 100px;
@@ -145,4 +128,3 @@
     align-items: center;
     display: flex;
 }
->>>>>>> b6c35c11f28a45b631354e690b0209e8a8967d0d

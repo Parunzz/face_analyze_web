@@ -39,13 +39,9 @@ function Menu() {
           <div className='menu'>
             <a href='./' className='home'>
               <li className='Home' >
-                <div className='menu-item' a href='./'>
+                <div className='menu-item' href='./'>
                     <img src='/img/home.gif' className='menu-icon'></img>
-<<<<<<< HEAD
-                    <a href='./' className='home'>หน้าหลัก</a>
-=======
                     หน้าหลัก
->>>>>>> b6c35c11f28a45b631354e690b0209e8a8967d0d
                 </div>
               </li>
             </a>
@@ -53,15 +49,6 @@ function Menu() {
               <li className='CCTV'>
                 <div className='menu-item'>
                     <img src='/img/camera.gif' className='menu-icon'></img>
-<<<<<<< HEAD
-                    <a href='./Camera' className='cctv'>กล้องวงจรปิด</a>
-                </div>
-            </li>
-            <li className='History'>
-                <div className='menu-item'>
-                    <img src='/img/history.gif' className='menu-icon'></img>
-                    <a href='./History' className='history'>ประวัติ</a>
-=======
                     กล้องวงจรปิด
                 </div>
               </li> 
@@ -70,7 +57,6 @@ function Menu() {
                     <li className='History'>
                     <div className='menu-item'>
                     <img src='/img/history.gif' className='menu-icon'></img>ประวัติ
->>>>>>> b6c35c11f28a45b631354e690b0209e8a8967d0d
                 </div>
             </li>
             </a>
@@ -78,17 +64,7 @@ function Menu() {
             <li className='Member'>
                 <div className='menu-item'>
                     <img src='/img/profile.gif' className='menu-icon'></img>
-<<<<<<< HEAD
-                    <a href='./Member' className='member'>สมาชิก</a>
-                </div>
-            </li>
-            <li className='Dashboard'>
-                <div className='menu-item'>
-                    <img src='/img/presentation.gif' className='menu-icon'></img>
-                    <a href='./Dashboard' className='dashboard'>สถิติ</a>
-=======
                     สมาชิก
->>>>>>> b6c35c11f28a45b631354e690b0209e8a8967d0d
                 </div>
             </li>
             </a>
@@ -129,13 +105,8 @@ function Menu() {
                 AI ในหลากหลายด้านด้วยความคิดสร้างสรรค์และการพัฒนาที่ไม่หยุดยั้ง
               </p>
               <div className='img-section'>
-<<<<<<< HEAD
-                <img src ='/img/1.png' className='img-1'></img>
-                <img src='/img/1.png' className='img-1'></img>
-=======
                 <img src ='/public/img/1.png' className='img-1'></img>
                 <img src='/public/img/1.png' className='img-1'></img>
->>>>>>> b6c35c11f28a45b631354e690b0209e8a8967d0d
               </div>
           </div>
         </div>
