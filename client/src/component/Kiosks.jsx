@@ -174,7 +174,7 @@ function Camera() {
     return (
         <>
             <div className='container'>
-                <div className='info-data'>
+                <div className='info-data-cam'>
                     <div className='shadows'>
                         
                     </div>
