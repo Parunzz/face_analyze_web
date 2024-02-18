@@ -38,36 +38,45 @@ function History() {
       <div className='left-menu'>
           <div className='logo'></div>
           <div className='menu'>
-            <li className='Home' >
+            <a href='./' className='home'>
+              <li className='Home' >
                 <div className='menu-item' a href='./'>
                     <img src='/img/home.gif' className='menu-icon'></img>
-                    <a href='./' className='home'>หน้าหลัก</a>
+                    หน้าหลัก
                 </div>
-            </li>
-            <li className='CCTV'>
+              </li>
+            </a>
+            <a href='./Camera' className='cctv'>
+              <li className='CCTV'>
                 <div className='menu-item'>
                     <img src='/img/camera.gif' className='menu-icon'></img>
-                    <a href='./Camera' className='cctv'>กล้องวงจรปิด</a>
+                    กล้องวงจรปิด
+                </div>
+              </li> 
+            </a>
+            <a href='./History' className='history'>
+                    <li className='History'>
+                    <div className='menu-item'>
+                    <img src='/img/history.gif' className='menu-icon'></img>ประวัติ
                 </div>
             </li>
-            <li className='History'>
-                <div className='menu-item'>
-                    <img src='/img/history.gif' className='menu-icon'></img>
-                    <a href='./History' className='history'>ประวัติ</a>
-                </div>
-            </li>
+            </a>
+            <a href='./Members' className='member'>
             <li className='Member'>
                 <div className='menu-item'>
                     <img src='/img/profile.gif' className='menu-icon'></img>
-                    <a href='./Members' className='member'>สมาชิก</a>
+                    สมาชิก
                 </div>
             </li>
-            <li className='Dashboard'>
-                <div className='menu-item'>
+            </a>
+              <a href='./Dashboard' className='dashboard'>
+                <li className='Dashboard'>
+                  <div className='menu-item'>
                     <img src='/img/presentation.gif' className='menu-icon'></img>
-                    <a href='./Dashboard' className='dashboard'>สถิติ</a>
-                </div>
-            </li>
+                  สถิติ
+                  </div>
+              </li>
+            </a>
           </div>
           <div className='setting'>
             <div className='admin_name'>สวัสดี [User] </div>
@@ -81,8 +90,10 @@ function History() {
             <div className='time text-white'>{currentTime}</div>
           </div>
         </div>
-        <div className='info-home'>   
-          
+        <div className='info'>   
+          <h3 className='text-3xl font-bold'>History</h3>
+          {/* TABLE */}
+          <table></table>
         </div>
       </div>
     </div>

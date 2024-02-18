@@ -122,6 +122,11 @@ li
     list-style-type: none;
 }
 
+.data-info
+{
+    padding-top: 0px;
+}
+
 .video-section
 {
     width: 100%;
@@ -224,5 +229,25 @@ video
     width: 40rem;
     font-size: 20px;
     color: rgb(71, 71, 71);
+}
+
+.table
+{
+    width: 1000px;
+    height: 500px;
+    background-color: white;
+    border-radius: 25px;
+    margin: 50px;
+    display: flex;
+}
+
+.table-1
+{
+    width: 300px;
+    background-color: white;
+    height: 300px;
+    border-radius: 20px;
+    display: flex;
+
 }
 

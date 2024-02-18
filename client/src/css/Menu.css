@@ -75,7 +75,7 @@ body
 .data-info
 {
     display: block;
-    padding-top: 170px;
+    /* padding-top: 170px; */
     padding-inline: 60px;
 }
 
@@ -195,6 +195,10 @@ video
     padding-right: 50px;
     width: 600px;
     display: inline-block;
-
+    border-radius: 10px 10px 10px 10px;
 }
 
+.img-1:hover
+{
+    
+}

@@ -1,10 +1,27 @@
-import { useState, useEffect } from 'react';
 import vdoBg from '../assets/video/Kiosk.mp4'
 import UseAuth from './UseAuth';
 import Cookies from 'js-cookie';
-import '../css/Camera.css';
+// Import dependencies
+import React, { useRef, useState, useEffect } from "react";
+import * as tf from "@tensorflow/tfjs";
+//--------------------Import the libraries---------------------
+import '@mediapipe/face_detection';
+import '@tensorflow/tfjs-core';
+// Register WebGL backend.
+import '@tensorflow/tfjs-backend-webgl';
+import * as faceDetection from '@tensorflow-models/face-detection';
+//--------------------Import the libraries---------------------
+import Typography from '@mui/material/Typography';
+import Webcam from "react-webcam";
+import { drawRect } from "./utilities";
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
 
-function Camera() {
+
+function CCTV1s() {
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
   const handleLogout = () => {
@@ -73,7 +90,7 @@ function Camera() {
                 <li className='Dashboard'>
                   <div className='menu-item'>
                     <img src='/img/presentation.gif' className='menu-icon'></img>
-                    สถิติ
+                  สถิติ
                   </div>
               </li>
             </a>
@@ -83,29 +100,23 @@ function Camera() {
             <a href='/Signin' onClick={handleLogout}>ออกจากระบบ</a>
           </div>
       </div>
-
       <div className='right-responsive'>
         <div className='top-menu'>
           <div className='data'>
             <div className='date text-white'>{currentDate}</div>
             <div className='time text-white'>{currentTime}</div>
           </div>
-        </div>  
-
+        </div>
         <div className='info'>   
-          <h1 className='text-3xl font-bold'>กล้องวงจรปิด</h1>
-          <a href="Kiosks">Kiosk</a><br />
-          <a href="CCTV1s">CCTV</a>
+          <h3 className='text-3xl font-bold'>กล้องวงจรปิด</h3>
+          <div className='camera-section'>
+
+          </div>
         </div>
-        <a href='' className='add-button'>
-        <div className="add">
-            <h1 className='add-text'> + </h1>
-        </div>
-        </a>  
       </div>
     </div>
     </>
   );
 }
 
-export default Camera;
+export default CCTV1s;

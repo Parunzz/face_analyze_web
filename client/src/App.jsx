@@ -5,12 +5,15 @@ import SignIn from './component/SignIn';
 import SignUp from './component/SignUp';
 import Camera from './component/Camera';
 import Members from './component/Members';
+import Dashboard from './component/Dashboard';
 import AddMember from './component/AddMember';
+import History from './component/History.jsx';
 import Detect from './component/Detect';
-import WebcamCapture from './component/WebcamCapture';
+import WebcamCapture from './component/CCTV1s.jsx';
 import MemberDetail from './component/MemberDetail';
 import ResponsiveAppBar from './component/ResponsiveAppBar.jsx'
 import Menu from './component/Menu.jsx'
+import Kiosks from './component/Kiosks.jsx'
 
 function App() {
 
@@ -26,8 +29,9 @@ function App() {
           <Route path='/member/:pid' element={<MemberDetail />} />
           <Route path='/AddMember' element={<AddMember />} />
           <Route path='/History' element={<History />} />
-          <Route path='/Kiosk' element={<Detect />} />
-          <Route path='/CCTV1' element={<WebcamCapture />} />  
+          <Route path='/Kiosks' element={<Kiosks />} />
+          <Route path='/CCTV1s' element={<WebcamCapture />} />  
+          <Route path='/Dashboard' element={<Dashboard />}/>
       </Routes>
     </BrowserRouter>
   )

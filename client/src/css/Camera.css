@@ -32,3 +32,82 @@
 {
     height: 1200px;
 }
+
+.web-cam-section
+{
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+.webcams
+{
+    width: 540px;
+    height: 970px;
+    justify-content: center;
+
+}
+
+.box1
+{
+    width: 450px;
+    height: 100px;
+    background-color: rgba(255, 255, 255, 0.743);
+    backdrop-filter: blur(6px);
+    position: absolute;
+    display: flex   ;
+    align-items: center;
+    border-radius: 40px;
+    bottom: 120px;
+    box-shadow: 0px 10px 10px #0000001e;
+    z-index: 998;
+}
+.Name
+{
+    font-size: 24px;
+    padding-top: 15px;
+    /* padding-left: 50px; */
+    display: block;
+}
+
+.Text
+{
+    /* display: block; */
+    display: block;
+
+}
+
+.emoji
+{
+    width: 80px;
+    align-items: center ;
+    display: flex;
+    justify-content: center;
+    height: 80px;
+    margin-left: 15px;
+}
+
+.times
+{
+    position: absolute;
+    z-index: 995;
+    font-size: 80px;
+    color: white;
+    top: 20px;
+    left: 730px;
+    padding-top: 20px;
+}
+
+.shadows
+{
+    /* top: 0; */
+    width: 540px;       
+    height: 230px;
+    left: 712px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 400;
+    position: absolute;
+    background: linear-gradient(#000000a2,#00000000);
+}
+
