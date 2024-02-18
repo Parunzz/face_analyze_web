@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import vdoBg from '../assets/video/Kiosk.mp4'
 import UseAuth from './UseAuth';
 import Cookies from 'js-cookie';
+import '../css/Camera.css';
 
-function Menu() {
+function Camera() {
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
   const handleLogout = () => {
@@ -41,11 +42,7 @@ function Menu() {
               <li className='Home' >
                 <div className='menu-item' a href='./'>
                     <img src='/img/home.gif' className='menu-icon'></img>
-<<<<<<< HEAD
-                    <a href='./' className='home'>หน้าหลัก</a>
-=======
                     หน้าหลัก
->>>>>>> b6c35c11f28a45b631354e690b0209e8a8967d0d
                 </div>
               </li>
             </a>
@@ -53,15 +50,6 @@ function Menu() {
               <li className='CCTV'>
                 <div className='menu-item'>
                     <img src='/img/camera.gif' className='menu-icon'></img>
-<<<<<<< HEAD
-                    <a href='./Camera' className='cctv'>กล้องวงจรปิด</a>
-                </div>
-            </li>
-            <li className='History'>
-                <div className='menu-item'>
-                    <img src='/img/history.gif' className='menu-icon'></img>
-                    <a href='./History' className='history'>ประวัติ</a>
-=======
                     กล้องวงจรปิด
                 </div>
               </li> 
@@ -70,7 +58,6 @@ function Menu() {
                     <li className='History'>
                     <div className='menu-item'>
                     <img src='/img/history.gif' className='menu-icon'></img>ประวัติ
->>>>>>> b6c35c11f28a45b631354e690b0209e8a8967d0d
                 </div>
             </li>
             </a>
@@ -78,17 +65,7 @@ function Menu() {
             <li className='Member'>
                 <div className='menu-item'>
                     <img src='/img/profile.gif' className='menu-icon'></img>
-<<<<<<< HEAD
-                    <a href='./Member' className='member'>สมาชิก</a>
-                </div>
-            </li>
-            <li className='Dashboard'>
-                <div className='menu-item'>
-                    <img src='/img/presentation.gif' className='menu-icon'></img>
-                    <a href='./Dashboard' className='dashboard'>สถิติ</a>
-=======
                     สมาชิก
->>>>>>> b6c35c11f28a45b631354e690b0209e8a8967d0d
                 </div>
             </li>
             </a>
@@ -96,7 +73,7 @@ function Menu() {
                 <li className='Dashboard'>
                   <div className='menu-item'>
                     <img src='/img/presentation.gif' className='menu-icon'></img>
-                  สถิติ
+                    สถิติ
                   </div>
               </li>
             </a>
@@ -106,43 +83,29 @@ function Menu() {
             <a href='/Signin' onClick={handleLogout}>ออกจากระบบ</a>
           </div>
       </div>
+
       <div className='right-responsive'>
         <div className='top-menu'>
           <div className='data'>
             <div className='date text-white'>{currentDate}</div>
             <div className='time text-white'>{currentTime}</div>
           </div>
+        </div>  
+
+        <div className='info'>   
+          <h1 className='text-3xl font-bold'>กล้องวงจรปิด</h1>
+          <a href="Kiosks">Kiosk</a><br />
+          <a href="CCTV1s">CCTV</a>
         </div>
-        <div className='info-home'>   
-          <div className='video-section'>
-            <div className='video'>
-              <div className='shadow'></div>
-              <video src={vdoBg} autoPlay loop muted/>
-            </div>
-          </div>
-          <div className='Introduce-section'>
-              <h3 className='text-3xl font-bold title	'>What is Analyze Company</h3>
-              <p className='paragraph text-xl'>
-                บริษัท Analyze เป็นผู้นำด้านนวัตกรรมและเทคโนโลยีที่ตั้งคติที่จะเปลี่ยนแปลงโลกด้วยการใช้ประโยชน์จากปัญญาประดิษฐ์ 
-                (Artificial Intelligence: AI) ให้กับสังคมและธุรกิจต่างๆ ทั่วโลก ด้วยการนำเสนอและพัฒนาเทคโนโลยี AI ที่
-                โดดเด่นและมีประสิทธิภาพสูง บริษัท Analyze ได้เป็นส่วนสำคัญในการสร้างความสะดวกสบายให้แก่คนทั่วโลกผ่านการปรับใช้ 
-                AI ในหลากหลายด้านด้วยความคิดสร้างสรรค์และการพัฒนาที่ไม่หยุดยั้ง
-              </p>
-              <div className='img-section'>
-<<<<<<< HEAD
-                <img src ='/img/1.png' className='img-1'></img>
-                <img src='/img/1.png' className='img-1'></img>
-=======
-                <img src ='/public/img/1.png' className='img-1'></img>
-                <img src='/public/img/1.png' className='img-1'></img>
->>>>>>> b6c35c11f28a45b631354e690b0209e8a8967d0d
-              </div>
-          </div>
+        <a href='' className='add-button'>
+        <div className="add">
+            <h1 className='add-text'> + </h1>
         </div>
+        </a>  
       </div>
     </div>
     </>
   );
 }
 
-export default Menu;
+export default Camera;

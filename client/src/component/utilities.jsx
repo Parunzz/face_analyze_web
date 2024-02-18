@@ -15,6 +15,7 @@ export function drawRect(faces, ctx, trackedPersons) {
         // Extract box coordinates
         const { xMin, yMin, width, height } = face.box;
 
+<<<<<<< HEAD
         // Draw rectangle
         ctx.beginPath();
         ctx.rect(xMin, yMin, width, height);
@@ -27,3 +28,18 @@ export function drawRect(faces, ctx, trackedPersons) {
         }
     });
 }
+=======
+      // Set styling
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.743)";
+      ctx.lineWidth = 5;
+
+      // Draw rectangle
+      // ctx.roundRect(10,20,80,80,[30]);
+      ctx.beginPath();
+      // ctx.rect(xMin, yMin, width, height);
+      ctx.roundRect(xMin, yMin, width, height,[7]);
+      ctx.stroke();
+      
+  });
+};
+>>>>>>> b6c35c11f28a45b631354e690b0209e8a8967d0d
