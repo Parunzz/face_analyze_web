@@ -106,8 +106,10 @@ function Detect() {
                 // console.log(responseInfo);
             }
             else {
-                setresponseData(responseInfo)
-                console.log("response Error");
+                // setresponseData(responseInfo)
+                // console.log("response Error",responseData);
+                sendApi(video, videoWidth, videoHeight, faces);
+
             }
             
         }, 0);
@@ -224,6 +226,7 @@ function Detect() {
                     }
                 });
             }
+            
             // Draw mesh
             const ctx = canvasRef.current.getContext("2d");
             drawRect(faces, ctx, trackedPersons);
