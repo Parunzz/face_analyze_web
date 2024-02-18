@@ -5,6 +5,7 @@ import SignIn from './component/SignIn';
 import SignUp from './component/SignUp';
 import Camera from './component/Camera';
 import Members from './component/Members';
+import Member from './component/Member';
 import Dashboard from './component/Dashboard';
 import AddMember from './component/AddMember';
 import History from './component/History.jsx';
@@ -26,6 +27,7 @@ function App() {
           <Route path='/SignUp' element={<SignUp />} />
           <Route path='/Camera' element={<Camera />} />
           <Route path='/Members' element={<Members />} />
+          <Route path='/Member' element={<Member />} /> 
           <Route path='/member/:pid' element={<MemberDetail />} />
           <Route path='/AddMember' element={<AddMember />} />
           <Route path='/History' element={<History />} />

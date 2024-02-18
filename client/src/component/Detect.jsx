@@ -234,23 +234,15 @@ function Detect() {
                         }}
                         style={{ display: 'block' }}
                     >
-
+                        <div className="">
                         {Array.isArray(responseData) ? (
                             responseData.map((result, index) => (
                                 <ThemeProvider theme={theme} key={index}>
-                                    <Typography variant="h3" gutterBottom style={{ zIndex: 20 }}>
-                                        <span>Dominant Emotion: {result.dominant_emotion}</span><br />
+                                    <Typography varia nt="h3" gutterBottom style={{ zIndex: 20 }}>
+                                        {/* Image Emotion */}
+                                        <span>Dominant Emotion: {result.dominant_emotion}</span><br /> 
                                         <span>Person Name: {result.person_name}</span><br />
                                         <span>Response Text: {result.response_text}</span>
-                                        {/* {imageSrc && (
-                                            <img
-                                                src={imageSrc}
-                                                alt="Detected Face"
-                                                width={50}
-                                                height={50}
-                                                style={{ marginLeft: '16px' }} 
-                                            />
-                                        )} */}
                                     </Typography>
                                 </ThemeProvider>
                             ))
@@ -264,6 +256,8 @@ function Detect() {
                                 </ThemeProvider>
                             </div>
                         )}
+                        </div>
+                        
 
                     </Box>
                 </header>

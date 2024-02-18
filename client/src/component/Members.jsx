@@ -93,7 +93,7 @@ function Members() {
           </div>
         </div>
         <div className='info'>   
-            <Member />
+            <Member/>
         </div>
       </div>
     </div>
