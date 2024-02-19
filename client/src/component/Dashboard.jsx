@@ -55,7 +55,7 @@ function Dashboard() {
             <li className='Member'>
                 <div className='menu-item'>
                     <img src='../../public/img/profile.gif' className='menu-icon'></img>
-                    <a href='./Member' className='member'>สมาชิก</a>
+                    <a href='./Members' className='member'>สมาชิก</a>
                 </div>
             </li>
             <li className='Dashboard'>

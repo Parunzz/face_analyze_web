@@ -420,15 +420,18 @@ def process_image():
                 person_name = "Unknown"
                 person_pid = None
             print(person_name)
-            mycursor.execute('SELECT emotion_data.emotion_id,emotion_data.emotion_data,response_text.response_text FROM `emotion_data` JOIN response_text ON emotion_data.emotion_id = response_text.emotion_id WHERE emotion_data.emotion_data = %s', (dominant_emotion,))
+            mycursor.execute('SELECT IMG_Emotion, emotion_data.emotion_id,emotion_data.emotion_data,response_text.response_text FROM `emotion_data` JOIN response_text ON emotion_data.emotion_id = response_text.emotion_id WHERE emotion_data.emotion_data = %s', (dominant_emotion,))
             emotion_data_result = mycursor.fetchone()
-            print(dominant_emotion)
+            # print(dominant_emotion)
             # print(emotion_data_result)
             response_text = emotion_data_result['response_text']
-            print(response_text)
+            # print(response_text)
+
+            img_emotion = emotion_data_result['IMG_Emotion']
+            img_emotion_base64 = base64.b64encode(img_emotion).decode('utf-8')
             # Insert the new user into the database
             emotion_id = emotion_data_result['emotion_id']
-            print(emotion_id)
+            # print(img_emotion_base64)
             current_datetime = datetime.now()
             date_mysql_format = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
             mycursor.execute("INSERT INTO data_info (pid, emotion_id, DateTime, Full_path, Cut_path) VALUES (%s, %s, %s, %s, %s)",
@@ -439,7 +442,8 @@ def process_image():
                     'dominant_emotion': dominant_emotion,
                     'person_name': person_name,
                     'response_text': response_text,
-                    'base64_image': base64_image
+                    'base64_image': base64_image,
+                    'BLOB': img_emotion_base64
             })
         # print(results)
         return jsonify(results),200
