@@ -40,7 +40,7 @@ function Camera() {
           <div className='menu'>
             <a href='./' className='home'>
               <li className='Home' >
-                <div className='menu-item' a href='./'>
+                <div className='menu-item' href='./'>
                     <img src='/img/home.gif' className='menu-icon'></img>
                     หน้าหลัก
                 </div>
