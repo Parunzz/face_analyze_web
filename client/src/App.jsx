@@ -17,6 +17,7 @@ import Kiosks from './component/Kiosks.jsx'
 
 function App() {
 
+  
   return (
     <BrowserRouter>
       <Routes>

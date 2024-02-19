@@ -16,8 +16,6 @@ import MyDatePicker from './MyDatePicker';
 import ImageUpload from './ImageUpload';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
-import { div } from '@tensorflow/tfjs-core';
-import '../css/Body.css'
 
 function Copyright(props) {
     return (
@@ -110,7 +108,6 @@ export default function AddMember() {
     };
 
     return (
-        <div className='Add-member'>
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
@@ -185,6 +182,5 @@ export default function AddMember() {
                 <Copyright sx={{ mt: 5 }} />
             </Container>
         </ThemeProvider>
-        </div>
     );
 }

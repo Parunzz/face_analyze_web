@@ -13,7 +13,6 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-import '../css/Body.css';
 
 function Copyright(props) {
     return (
@@ -80,7 +79,6 @@ export default function SignUp() {
     };
 
     return (
-        <div className='SignUp'>
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
@@ -169,6 +167,5 @@ export default function SignUp() {
                 <Copyright sx={{ mt: 5 }} />
             </Container>
         </ThemeProvider>
-        </div>
     );
 }

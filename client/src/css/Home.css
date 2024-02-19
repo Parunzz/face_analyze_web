@@ -1,7 +1,7 @@
-/* .container {
+.container {
   position: relative;
   text-align: center;
-} */
+}
 
 .image {
   width: 100%;  /* ตั้งค่าขนาดรูปภาพตามต้องการ */
@@ -15,25 +15,4 @@
   color: #029EC6;  /* ตั้งค่าสีตัวอักษรตามต้องการ */
   font-size: 5vh;  /* ตั้งค่าขนาดตัวอักษรตามต้องการ */
   font-weight: bold;  /* ตั้งค่าความหนาตัวอักษรตามต้องการ */
-}
-
-
-.Homepage{
-  padding-left: 256px;
-  /* padding-top: 50px; */
-  
-}
-
-.img-section{
-  padding-left: 77px;
-  padding-top: 30px;
-}
-
-#Head-text{
-  text-align: center;
-}
-
-#Inform-text{
-  padding-left: 80px;
-  padding-right: 50px;
 }
