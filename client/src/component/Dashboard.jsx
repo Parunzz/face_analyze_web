@@ -99,9 +99,12 @@ function Dashboard() {
                 </div>
             </div>
           </div>
+          <div className='table-line'>
           <div className='table'>
-
           </div>
+          <div className='table-1'></div> 
+          </div>
+          
         </div>
       </div>
     </div>

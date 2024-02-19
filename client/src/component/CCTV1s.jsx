@@ -1,9 +1,27 @@
-import { useState, useEffect } from 'react';
 import vdoBg from '../assets/video/Kiosk.mp4'
 import UseAuth from './UseAuth';
 import Cookies from 'js-cookie';
+// Import dependencies
+import React, { useRef, useState, useEffect } from "react";
+import * as tf from "@tensorflow/tfjs";
+//--------------------Import the libraries---------------------
+import '@mediapipe/face_detection';
+import '@tensorflow/tfjs-core';
+// Register WebGL backend.
+import '@tensorflow/tfjs-backend-webgl';
+import * as faceDetection from '@tensorflow-models/face-detection';
+//--------------------Import the libraries---------------------
+import Typography from '@mui/material/Typography';
+import Webcam from "react-webcam";
+import { drawRect } from "./utilities";
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
 
-function Menu() {
+
+function CCTV1s() {
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
   const handleLogout = () => {
@@ -39,7 +57,7 @@ function Menu() {
           <div className='menu'>
             <a href='./' className='home'>
               <li className='Home' >
-                <div className='menu-item' href='./'>
+                <div className='menu-item' a href='./'>
                     <img src='/img/home.gif' className='menu-icon'></img>
                     หน้าหลัก
                 </div>
@@ -89,25 +107,10 @@ function Menu() {
             <div className='time text-white'>{currentTime}</div>
           </div>
         </div>
-        <div className='info-home'>   
-          <div className='video-section'>
-            <div className='video'>
-              <div className='shadow'></div>
-              <video src={vdoBg} autoPlay loop muted/>
-            </div>
-          </div>
-          <div className='Introduce-section'>
-              <h3 className='text-3xl font-bold title	'>What is Analyze Company</h3>
-              <p className='paragraph text-xl'>
-                บริษัท Analyze เป็นผู้นำด้านนวัตกรรมและเทคโนโลยีที่ตั้งคติที่จะเปลี่ยนแปลงโลกด้วยการใช้ประโยชน์จากปัญญาประดิษฐ์ 
-                (Artificial Intelligence: AI) ให้กับสังคมและธุรกิจต่างๆ ทั่วโลก ด้วยการนำเสนอและพัฒนาเทคโนโลยี AI ที่
-                โดดเด่นและมีประสิทธิภาพสูง บริษัท Analyze ได้เป็นส่วนสำคัญในการสร้างความสะดวกสบายให้แก่คนทั่วโลกผ่านการปรับใช้ 
-                AI ในหลากหลายด้านด้วยความคิดสร้างสรรค์และการพัฒนาที่ไม่หยุดยั้ง
-              </p>
-              <div className='img-section'>
-                <img src ='/public/img/1.png' className='img-1'></img>
-                <img src='/public/img/1.png' className='img-1'></img>
-              </div>
+        <div className='info'>   
+          <h3 className='text-3xl font-bold'>กล้องวงจรปิด</h3>
+          <div className='camera-section'>
+
           </div>
         </div>
       </div>
@@ -116,4 +119,4 @@ function Menu() {
   );
 }
 
-export default Menu;
+export default CCTV1s;

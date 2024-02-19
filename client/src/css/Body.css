@@ -1,13 +1,11 @@
-.Body{
-    width: auto;
-    height: auto;
-}
 
 .bg{
     color: azure;
-    text-align: right;
-    background: #282929;
-    padding: 20px;
+    /* text-align: right; */
+    background: #292828;
+    padding: 15px;
+    padding-left: 15;
+    
 }
 
 .img{
@@ -28,4 +26,35 @@
     text-align: center;
     transform: translateX(100px);
     font-size: 60px;
+}
+
+
+.Member{
+    padding-left: 280px;
+}
+
+.Detect{
+    padding-left: 280px;
+}
+
+.Add-member{
+    padding-left: 280px;
+}
+
+.Text-2{
+    text-align: center;
+    font-size: 20px;
+}
+
+.SignIn{
+    padding-left: 200px;
+}
+
+.SignUp{
+    padding-left: 200px;
+}
+
+.Member-detail{
+    padding-top: 80px;
+    padding-left: 200px;
 }

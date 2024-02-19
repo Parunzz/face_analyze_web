@@ -17,6 +17,7 @@ import MyDatePicker from './MyDatePicker';
 import dayjs from 'dayjs';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
+import '../css/Body.css';
 
 const MemberDetail = () => {
     const { pid } = useParams();
@@ -179,8 +180,7 @@ const MemberDetail = () => {
     return (
 
         <div>
-            <Nav />
-            <div>
+            <div className='Member-detail'> 
                 <ThemeProvider theme={defaultTheme}>
                     <Container component="main" maxWidth="xs">
                         <Box component="form" noValidate={false} onSubmit={handleSubmit} sx={{ mt: 3 }}>

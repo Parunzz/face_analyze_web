@@ -1,3 +1,13 @@
+body
+{
+  padding: 0;
+  margin: 0;
+  box-sizing: content-box;
+  background-color: rgb(235, 232, 232);
+  background-size:cover;
+  font-family: 'Noto Sans Thai', sans-serif;
+}
+
 .container {
     max-width: 100%;
     width: 100%;
@@ -46,15 +56,27 @@
     width: 100%;
     align-items: center;
     text-align: center;
-    justify-content: end;
+    justify-content: flex-end;
 }
 
 .info
 {
     background-color: rgb(233, 233, 233);
     display: block;
+    padding-top: 160px;
     height: 2000px;
-    /* padding: 160px; */
+}
+
+.info-home
+{
+    height: 2000px;
+}
+
+.data-info
+{
+    display: block;
+    /* padding-top: 170px; */
+    padding-inline: 60px;
 }
 
 .date
@@ -106,6 +128,7 @@
     text-align: center;
     bottom: 20px;
     align-items: center;
+    padding-top: 160px;
 }
 
 .menu-icon
@@ -172,6 +195,10 @@ video
     padding-right: 50px;
     width: 600px;
     display: inline-block;
-
+    border-radius: 10px 10px 10px 10px;
 }
 
+.img-1:hover
+{
+    
+}

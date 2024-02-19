@@ -15,15 +15,16 @@ export function drawRect(faces, ctx, trackedPersons) {
         // Extract box coordinates
         const { xMin, yMin, width, height } = face.box;
 
-        // Draw rectangle
-        ctx.beginPath();
-        ctx.rect(xMin, yMin, width, height);
-        ctx.stroke();
+      // Set styling
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.743)";
+      ctx.lineWidth = 5;
 
-        // Draw ID for the corresponding tracked person
-        const trackedPerson = trackedPersons[index];
-        if (trackedPerson) {
-            ctx.fillText("ID: " + trackedPerson.id, xMin, yMin - 10);
-        }
-    });
-}
+      // Draw rectangle
+      // ctx.roundRect(10,20,80,80,[30]);
+      ctx.beginPath();
+      // ctx.rect(xMin, yMin, width, height);
+      ctx.roundRect(xMin, yMin, width, height,[7]);
+      ctx.stroke();
+      
+  });
+};
