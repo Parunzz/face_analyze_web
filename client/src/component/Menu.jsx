@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import vdoBg from '../assets/video/Kiosk.mp4'
-import '../css/Menu.css'
+import UseAuth from './UseAuth';
+import Cookies from 'js-cookie';
 
 function Menu() {
   const [currentTime, setCurrentTime] = useState('');
@@ -48,15 +49,6 @@ function Menu() {
               <li className='CCTV'>
                 <div className='menu-item'>
                     <img src='/img/camera.gif' className='menu-icon'></img>
-<<<<<<< HEAD
-                    <a href='./Camera' className='cctv'>กล้องวงจรปิด</a>
-                </div>
-            </li>
-            <li className='History'>
-                <div className='menu-item'>
-                    <img src='/img/history.gif' className='menu-icon'></img>
-                    <a href='./History' className='history'>ประวัติ</a>
-=======
                     กล้องวงจรปิด
                 </div>
               </li> 
@@ -65,7 +57,6 @@ function Menu() {
                     <li className='History'>
                     <div className='menu-item'>
                     <img src='/img/history.gif' className='menu-icon'></img>ประวัติ
->>>>>>> 9df7331 (Test)
                 </div>
             </li>
             </a>
@@ -73,17 +64,7 @@ function Menu() {
             <li className='Member'>
                 <div className='menu-item'>
                     <img src='/img/profile.gif' className='menu-icon'></img>
-<<<<<<< HEAD
-                    <a href='./Member' className='member'>สมาชิก</a>
-                </div>
-            </li>
-            <li className='Dashboard'>
-                <div className='menu-item'>
-                    <img src='/img/presentation.gif' className='menu-icon'></img>
-                    <a href='./Dashboard' className='dashboard'>สถิติ</a>
-=======
                     สมาชิก
->>>>>>> 9df7331 (Test)
                 </div>
             </li>
             </a>
@@ -124,8 +105,8 @@ function Menu() {
                 AI ในหลากหลายด้านด้วยความคิดสร้างสรรค์และการพัฒนาที่ไม่หยุดยั้ง
               </p>
               <div className='img-section'>
-                <img src ='/img/1.png' className='img-1'></img>
-                <img src='/img/1.png' className='img-1'></img>
+                <img src ='/public/img/1.png' className='img-1'></img>
+                <img src='/public/img/1.png' className='img-1'></img>
               </div>
           </div>
         </div>

@@ -17,7 +17,6 @@ import MyDatePicker from './MyDatePicker';
 import dayjs from 'dayjs';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
-import '../css/Body.css';
 
 const MemberDetail = () => {
     const { pid } = useParams();
@@ -77,7 +76,7 @@ const MemberDetail = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log(data)
-                navigate('/Members');
+                navigate('/Member');
             }
             else {
                 console.log("Response Error")
@@ -180,7 +179,8 @@ const MemberDetail = () => {
     return (
 
         <div>
-            <div className='Member-detail'> 
+            <Nav />
+            <div>
                 <ThemeProvider theme={defaultTheme}>
                     <Container component="main" maxWidth="xs">
                         <Box component="form" noValidate={false} onSubmit={handleSubmit} sx={{ mt: 3 }}>
@@ -235,7 +235,7 @@ const MemberDetail = () => {
                                         </Grid>
                                         <Grid container item xs={12} sm={6} justifyContent="flex-end">
                                             <Grid item>
-                                                <Link href="/Members" variant="body2">
+                                                <Link href="/Member" variant="body2">
                                                     Back
                                                 </Link>
                                             </Grid>
