@@ -235,7 +235,7 @@ const MemberDetail = () => {
                                         </Grid>
                                         <Grid container item xs={12} sm={6} justifyContent="flex-end">
                                             <Grid item>
-                                                <Link href="/Member" variant="body2">
+                                                <Link href="/Members" variant="body2">
                                                     Back
                                                 </Link>
                                             </Grid>
