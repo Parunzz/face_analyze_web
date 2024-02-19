@@ -29,13 +29,14 @@ CORS(app, supports_credentials=True)
 mydb = mysql.connector.connect(host="localhost",user="root",password="",db="deepface",connect_timeout=100)
 ### FOR Docker ###
 #mydb = mysql.connector.connect(host="db",user="admin",password="admin",db="deepface",connect_timeout=10000)
-
+### FOR NETWORK
+# mydb = mysql.connector.connect(host="192.168.1.53",user="zen",password="zen",db="deepface",connect_timeout=100)
 mycursor = mydb.cursor(dictionary=True)
 
 @app.route("/")
 def index():
     return "Server"
-#-------------------------------------database--------------------------------------
+#database
 @app.route('/register', methods=['POST'])
 def Register():
     try:
@@ -89,7 +90,7 @@ def AddMember():
         date_object = datetime.strptime(Addmydate, '%m/%d/%Y')
         formatted_date = date_object.strftime('%Y-%m-%d')
         
-        #-----------------------img-------------------------------
+        #img
         
         
         # Decode the base64-encoded string
@@ -104,7 +105,7 @@ def AddMember():
         member_path = os.path.join(folder_path, unique_filename)
         out_jpg = img.convert('RGB')
         out_jpg.save(member_path)
-        #-----------------------img-------------------------------
+        #img
         # Iterate over all files in the directory
         directory = "./database/member/"
         for filename in os.listdir(directory):
@@ -335,7 +336,7 @@ def removeImg():
         print(f"Error: {str(e)}")
         return jsonify({'error': str(e)}),500
     
-#--------------------- Machine learning ----------------------------------------------------------------
+#Machine learning
 @app.route('/api/save_fullImg', methods=['POST'])
 def process_image():
     try:
@@ -371,7 +372,7 @@ def process_image():
         out_jpg.save(FullImg_save_path)
 
 
-        #------------------------IMG DETECT ------------------
+        #IMG DETECT
         emotion_result = DeepFace.analyze(img_path=FullImg_save_path, detector_backend='opencv', actions=['emotion'])
         results = []
         for entry in emotion_result:
@@ -419,15 +420,18 @@ def process_image():
                 person_name = "Unknown"
                 person_pid = None
             print(person_name)
-            mycursor.execute('SELECT emotion_data.emotion_id,emotion_data.emotion_data,response_text.response_text FROM `emotion_data` JOIN response_text ON emotion_data.emotion_id = response_text.emotion_id WHERE emotion_data.emotion_data = %s', (dominant_emotion,))
+            mycursor.execute('SELECT IMG_Emotion, emotion_data.emotion_id,emotion_data.emotion_data,response_text.response_text FROM `emotion_data` JOIN response_text ON emotion_data.emotion_id = response_text.emotion_id WHERE emotion_data.emotion_data = %s', (dominant_emotion,))
             emotion_data_result = mycursor.fetchone()
-            print(dominant_emotion)
+            # print(dominant_emotion)
             # print(emotion_data_result)
             response_text = emotion_data_result['response_text']
-            print(response_text)
+            # print(response_text)
+
+            img_emotion = emotion_data_result['IMG_Emotion']
+            img_emotion_base64 = base64.b64encode(img_emotion).decode('utf-8')
             # Insert the new user into the database
             emotion_id = emotion_data_result['emotion_id']
-            print(emotion_id)
+            # print(img_emotion_base64)
             current_datetime = datetime.now()
             date_mysql_format = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
             mycursor.execute("INSERT INTO data_info (pid, emotion_id, DateTime, Full_path, Cut_path) VALUES (%s, %s, %s, %s, %s)",
@@ -438,7 +442,8 @@ def process_image():
                     'dominant_emotion': dominant_emotion,
                     'person_name': person_name,
                     'response_text': response_text,
-                    'base64_image': base64_image
+                    'base64_image': base64_image,
+                    'BLOB': img_emotion_base64
             })
         # print(results)
         return jsonify(results),200
