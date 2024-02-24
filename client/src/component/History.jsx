@@ -3,7 +3,7 @@ import vdoBg from '../assets/video/Kiosk.mp4'
 import UseAuth from './UseAuth';
 import Cookies from 'js-cookie';
 import '../css/History.css'
-
+import Transaction from './Transaction';
 function History() {
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
@@ -40,7 +40,7 @@ function History() {
           <div className='menu'>
             <a href='./' className='home'>
               <li className='Home' >
-                <div className='menu-item' a href='./'>
+                <div className='menu-item' href='./'>
                     <img src='/img/home.gif' className='menu-icon'></img>
                     หน้าหลัก
                 </div>
@@ -92,8 +92,8 @@ function History() {
         </div>
         <div className='info'>   
           <h3 className='text-3xl font-bold'>History</h3>
-          {/* TABLE */}
-          <table></table>
+          <Transaction />
+          
         </div>
       </div>
     </div>

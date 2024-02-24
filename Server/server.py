@@ -335,6 +335,27 @@ def removeImg():
     except Exception as e:
         print(f"Error: {str(e)}")
         return jsonify({'error': str(e)}),500
+
+#transaction
+@app.route('/api/transaction', methods=['GET'])
+def Transaction():
+    try:
+        page = int(request.args.get('page', 0))
+        rows_per_page = int(request.args.get('rowsPerPage', 10))
+
+        # Calculate offset based on page number and rows per page
+        offset = page * rows_per_page
+
+        # Fetch data from database with pagination
+        # mycursor.execute('SELECT * FROM data_info LIMIT %s OFFSET %s', (rows_per_page, offset))
+        # mycursor.execute('SELECT Full_path,Cut_path,person_info.FirstName,person_info.gender,person_info.DateOfBirth,data_info.DateTime,emotion_data.emotion_data FROM `data_info` JOIN emotion_data ON data_info.emotion_id = emotion_data.emotion_id JOIN person_info ON data_info.pid = person_info.pid LIMIT %s OFFSET %s', (rows_per_page, offset))
+        mycursor.execute('SELECT Full_path,Cut_path,person_info.FirstName,person_info.gender,person_info.DateOfBirth,data_info.DateTime,emotion_data.emotion_data FROM `data_info` JOIN emotion_data ON data_info.emotion_id = emotion_data.emotion_id JOIN person_info ON data_info.pid = person_info.pid;')
+        data = mycursor.fetchall()
+        
+        return make_response(jsonify(data), 200)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)}),500
     
 #Machine learning
 @app.route('/api/save_fullImg', methods=['POST'])
