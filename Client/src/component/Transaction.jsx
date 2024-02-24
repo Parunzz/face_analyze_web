@@ -7,10 +7,12 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import { Link } from 'react-router-dom';
 
 const columns = [
     // { id: 'Cut_path',label: 'Small-pic'},
     // { id: 'Full_path',label: 'Full-pic'},
+    { id: 'Data_id',label: 'Data_id'},
     { id: 'FirstName',label: 'Person'},
     { id: 'emotion_data',label: 'Emotion'},
     { id: 'DateOfBirth',label: 'Birth Day'},
@@ -88,10 +90,17 @@ const Transaction = () => {
                                     <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                                         {columns.map((column) => {
                                             const value = row[column.id];
+                                            const Data_id = row['Data_id']
                                             return (
                                                 <TableCell key={column.id} align={column.align}>
                                                     {column.id === 'history'
-                                                        ? <a style={{color:'blue'}} href="">Detail</a>
+                                                        ? 
+                                                        <div>
+                                                            <Link to={`/History/${Data_id}`} style={{ color:"blue" }}>
+                                                                View Details
+                                                            </Link>
+                                                        </div>
+                                                        // <a style={{color:'blue'}} href="">Detail</a>
                                                         : <div></div>}
                                                     {column.format && typeof value === 'number'
                                                         ? column.format(value)

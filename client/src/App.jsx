@@ -11,7 +11,7 @@ import WebcamCapture from './component/CCTV1s.jsx';
 import MemberDetail from './component/MemberDetail';
 import Menu from './component/Menu.jsx'
 import Kiosks from './component/Kiosks.jsx'
-
+import TransactionDetail from './component/TransactionDetail.jsx';
 function App() {
 
   
@@ -26,6 +26,7 @@ function App() {
           <Route path='/member/:pid' element={<MemberDetail />} />
           <Route path='/AddMember' element={<AddMember />} />
           <Route path='/History' element={<History />} />
+          <Route path='/history/:Data_id' element={<TransactionDetail />} />
           <Route path='/Kiosks' element={<Kiosks />} />
           <Route path='/CCTV1s' element={<WebcamCapture />} />  
           <Route path='/Dashboard' element={<Dashboard />}/>
