@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 19, 2024 at 11:23 AM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.0.28
+-- Generation Time: Feb 26, 2024 at 11:58 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -30,6 +30,9 @@ SET time_zone = "+00:00";
 CREATE TABLE `data_info` (
   `Data_id` int(11) NOT NULL,
   `pid` int(11) DEFAULT NULL,
+  `Name` varchar(255) DEFAULT NULL,
+  `Gender` varchar(255) DEFAULT NULL,
+  `Age` int(255) DEFAULT NULL,
   `emotion_id` int(11) NOT NULL,
   `DateTime` datetime NOT NULL,
   `Full_path` varchar(255) NOT NULL,
@@ -82,6 +85,13 @@ CREATE TABLE `person_info` (
   `gender` varchar(255) NOT NULL,
   `DateOfBirth` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `person_info`
+--
+
+INSERT INTO `person_info` (`pid`, `FirstName`, `LastName`, `img_path`, `gender`, `DateOfBirth`) VALUES
+(7, 'Parunyu', 'Anakitbumrung', './database/member/Parunyu/', 'male', '2002-12-18');
 
 -- --------------------------------------------------------
 
@@ -175,7 +185,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `data_info`
 --
 ALTER TABLE `data_info`
-  MODIFY `Data_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=370;
+  MODIFY `Data_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT for table `emotion_data`
@@ -187,7 +197,7 @@ ALTER TABLE `emotion_data`
 -- AUTO_INCREMENT for table `person_info`
 --
 ALTER TABLE `person_info`
-  MODIFY `pid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `pid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `response_text`
