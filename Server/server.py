@@ -363,7 +363,7 @@ def TransactionDetail():
         json_data = request.get_json()
         Data_id = int(json_data.get('Data_id'))
         print(Data_id)
-        mycursor.execute('SELECT * FROM `data_info` JOIN emotion_data ON data_info.emotion_id = emotion_data.emotion_id JOIN person_info ON data_info.pid = person_info.pid WHERE Data_id = %s;',(Data_id,))
+        mycursor.execute('SELECT * FROM `data_info` JOIN emotion_data ON data_info.emotion_id = emotion_data.emotion_id WHERE Data_id = %s;',(Data_id,))
         data = mycursor.fetchall()
         data_row = data[0]  # Assuming there's only one row in the data list
         full_path = data_row['Full_path']
