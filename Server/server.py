@@ -388,8 +388,32 @@ def TransactionDetail():
         print(f"Error: {str(e)}")
         return jsonify({'error': str(e)}),500
         
-    
+
 #Machine learning
+
+@app.route('/api/Detect_face', methods=['POST'])
+def DrawRec():
+    try:
+        json_data = request.get_json()
+        image = json_data.get('image')
+        face_objs = DeepFace.extract_faces(img_path = image, 
+            target_size = (224, 224), 
+            detector_backend = 'opencv',
+            enforce_detection=False
+        )
+        # Convert NumPy arrays to lists only facial_area
+        # for face in face_objs:
+        #     for key in list(face.keys()):
+        #         if key != 'facial_area':
+        #             del face[key]
+        
+        # Filter out keys except 'facial_area' for each face object in face_objs
+        face_objs_filtered = [{key: face[key] for key in face if key == 'facial_area'} for face in face_objs]
+
+        return make_response(jsonify({'face_count': len(face_objs), 'faces': face_objs_filtered}), 200)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)}),500       
 @app.route('/api/save_fullImg', methods=['POST'])
 def process_image():
     try:
