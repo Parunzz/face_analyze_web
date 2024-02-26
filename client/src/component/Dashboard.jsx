@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react';
 import '../css/Dashboard.css';
-
+import vdoBg from '../assets/video/Kiosk.mp4'
+import UseAuth from './UseAuth';
+import Cookies from 'js-cookie';
 
 function Dashboard() {
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
-
+  const handleLogout = () => {
+  Cookies.remove('token');
+  }
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
@@ -28,47 +32,56 @@ function Dashboard() {
     return () => clearInterval(intervalId);
   }, []);
 
+
   return (
     <>
     <div className='container'>
       <div className='left-menu'>
           <div className='logo'></div>
           <div className='menu'>
-            <li className='Home' >
-                <div className='menu-item' a href='./'>
-                    <img src='../../public/img/home.gif' className='menu-icon'></img>
-                    <a href='./' className='home'>หน้าหลัก</a>
+            <a href='./' className='home'>
+              <li className='Home' >
+                <div className='menu-item' href='./'>
+                    <img src='/img/home.gif' className='menu-icon'></img>
+                    หน้าหลัก
                 </div>
-            </li>
-            <li className='CCTV'>
+              </li>
+            </a>
+            <a href='./Camera' className='cctv'>
+              <li className='CCTV'>
                 <div className='menu-item'>
-                    <img src='../../public/img/camera.gif' className='menu-icon'></img>
-                    <a href='./Camera' className='cctv'>กล้องวงจรปิด</a>
+                    <img src='/img/camera.gif' className='menu-icon'></img>
+                    กล้องวงจรปิด
+                </div>
+              </li> 
+            </a>
+            <a href='./History' className='history'>
+                    <li className='History'>
+                    <div className='menu-item'>
+                    <img src='/img/history.gif' className='menu-icon'></img>ประวัติ
                 </div>
             </li>
-            <li className='History'>
-                <div className='menu-item'>
-                    <img src='../../public/img/history.gif' className='menu-icon'></img>
-                    <a href='./History' className='history'>ประวัติ</a>
-                </div>
-            </li>
+            </a>
+            <a href='./Members' className='member'>
             <li className='Member'>
                 <div className='menu-item'>
-                    <img src='../../public/img/profile.gif' className='menu-icon'></img>
-                    <a href='./Members' className='member'>สมาชิก</a>
+                    <img src='/img/profile.gif' className='menu-icon'></img>
+                    สมาชิก
                 </div>
             </li>
-            <li className='Dashboard'>
-                <div className='menu-item'>
-                    <img src='../../public/img/presentation.gif' className='menu-icon'></img>
-                    <a href='./Dashboard' className='dashboard'>สถิติ</a>
-                </div>
-            </li>
+            </a>
+              <a href='./Dashboard' className='dashboard'>
+                <li className='Dashboard'>
+                  <div className='menu-item'>
+                    <img src='/img/presentation.gif' className='menu-icon'></img>
+                  สถิติ
+                  </div>
+              </li>
+            </a>
           </div>
           <div className='setting'>
             <div className='admin_name'>สวัสดี [User] </div>
-            <div className='logout'></div>
-            <div className=''></div>
+            <a href='/Signin' onClick={handleLogout}>ออกจากระบบ</a>
           </div>
       </div>
       <div className='right-responsive'>

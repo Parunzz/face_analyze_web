@@ -335,6 +335,59 @@ def removeImg():
     except Exception as e:
         print(f"Error: {str(e)}")
         return jsonify({'error': str(e)}),500
+
+#transaction
+@app.route('/api/transaction', methods=['GET'])
+def Transaction():
+    try:
+        page = int(request.args.get('page', 0))
+        rows_per_page = int(request.args.get('rowsPerPage', 10))
+
+        # Calculate offset based on page number and rows per page
+        offset = page * rows_per_page
+
+        # Fetch data from database with pagination
+        # mycursor.execute('SELECT * FROM data_info LIMIT %s OFFSET %s', (rows_per_page, offset))
+        # mycursor.execute('SELECT Full_path,Cut_path,person_info.FirstName,person_info.gender,person_info.DateOfBirth,data_info.DateTime,emotion_data.emotion_data FROM `data_info` JOIN emotion_data ON data_info.emotion_id = emotion_data.emotion_id JOIN person_info ON data_info.pid = person_info.pid LIMIT %s OFFSET %s', (rows_per_page, offset))
+        mycursor.execute('SELECT Data_id,Full_path,Cut_path,person_info.FirstName,person_info.gender,person_info.DateOfBirth,data_info.DateTime,emotion_data.emotion_data FROM `data_info` JOIN emotion_data ON data_info.emotion_id = emotion_data.emotion_id JOIN person_info ON data_info.pid = person_info.pid;')
+        data = mycursor.fetchall()
+        
+        return make_response(jsonify(data), 200)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)}),500
+
+@app.route('/api/TransactionDetail',methods=['POST'])
+def TransactionDetail():
+    try:
+        json_data = request.get_json()
+        Data_id = int(json_data.get('Data_id'))
+        print(Data_id)
+        mycursor.execute('SELECT * FROM `data_info` JOIN emotion_data ON data_info.emotion_id = emotion_data.emotion_id JOIN person_info ON data_info.pid = person_info.pid WHERE Data_id = %s;',(Data_id,))
+        data = mycursor.fetchall()
+        data_row = data[0]  # Assuming there's only one row in the data list
+        full_path = data_row['Full_path']
+        cut_path = data_row['Cut_path']
+
+        # Open and read the image files
+        with open(full_path, "rb") as img_file1, open(cut_path, "rb") as img_file2:
+            img_data1 = img_file1.read()
+            img_data2 = img_file2.read()  
+            # Encode the image data as Base64
+            base64_img1 = base64.b64encode(img_data1).decode('utf-8')  # Convert bytes to string
+            base64_img2 = base64.b64encode(img_data2).decode('utf-8')  # Convert bytes to string
+            
+            # Construct the JSON response
+            response_data = {
+                "Data_id": Data_id,
+                "Full_Img": base64_img1,
+                "Cut_Img": base64_img2
+            }
+        return make_response(jsonify(response_data), 200)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)}),500
+        
     
 #Machine learning
 @app.route('/api/save_fullImg', methods=['POST'])
