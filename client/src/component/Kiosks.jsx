@@ -327,6 +327,8 @@ function Camera() {
                                     <img src={`data:image/jpeg;base64,${result.BLOB}`} className='emoji'></img>
                                     <h3 className='Name'>Hello, {result.person_name}</h3>
                                     <h4 className='Text'> {result.response_text} </h4>
+                                    <h4 className='Text'> {result.person_gender} </h4>
+                                    <h4 className='Text'> {result.person_age} </h4>
                                 </div>
                                 // <span>Dominant Emotion: {result.dominant_emotion}</span><br />
                                 // <span>Person Name: {result.person_name}</span><br />

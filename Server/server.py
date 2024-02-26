@@ -349,7 +349,7 @@ def Transaction():
         # Fetch data from database with pagination
         # mycursor.execute('SELECT * FROM data_info LIMIT %s OFFSET %s', (rows_per_page, offset))
         # mycursor.execute('SELECT Full_path,Cut_path,person_info.FirstName,person_info.gender,person_info.DateOfBirth,data_info.DateTime,emotion_data.emotion_data FROM `data_info` JOIN emotion_data ON data_info.emotion_id = emotion_data.emotion_id JOIN person_info ON data_info.pid = person_info.pid LIMIT %s OFFSET %s', (rows_per_page, offset))
-        mycursor.execute('SELECT Data_id,Full_path,Cut_path,person_info.FirstName,person_info.gender,person_info.DateOfBirth,data_info.DateTime,emotion_data.emotion_data FROM `data_info` JOIN emotion_data ON data_info.emotion_id = emotion_data.emotion_id JOIN person_info ON data_info.pid = person_info.pid;')
+        mycursor.execute('SELECT data_info.Data_id,data_info.Name,data_info.Gender,data_info.Age,data_info.DateTime,emotion_data.emotion_data FROM `data_info` JOIN emotion_data ON data_info.emotion_id = emotion_data.emotion_id;')
         data = mycursor.fetchall()
         
         return make_response(jsonify(data), 200)
@@ -461,17 +461,32 @@ def process_image():
             if not person_name_result[0].empty:
                 person_name = person_name_result[0]['identity'][0].split('/')[3]
                 print("ชื่อ : ",person_name)
-                mycursor.execute('SELECT FirstName, pid FROM person_info WHERE FirstName = %s', (person_name,))
+                mycursor.execute('SELECT FirstName,gender,DateOfBirth, pid FROM person_info WHERE FirstName = %s', (person_name,))
                 person_info = mycursor.fetchone()
                 if person_info:
                     person_name = person_info['FirstName']
                     person_pid = person_info['pid']
+                    person_gender = person_info['gender']
+                    person_DateOfBirth = person_info['DateOfBirth']
+                    
+                    person_DateOfBirth = datetime.combine(person_DateOfBirth, datetime.min.time())
+                    # Get the current datetime
+                    current_datetime = datetime.now()
+                    # Calculate the difference between current datetime and date of birth
+                    age_timedelta = current_datetime - person_DateOfBirth
+                    # Convert the timedelta to years (approximate)
+                    person_age = int(age_timedelta.days / 365.25)
+                    print(person_age)
                 else:
                     person_name = "Unknown"
                     person_pid = None
+                    person_gender = None
+                    person_age = None
             else:
                 person_name = "Unknown"
                 person_pid = None
+                person_gender = None
+                person_age = None
             print(person_name)
             mycursor.execute('SELECT IMG_Emotion, emotion_data.emotion_id,emotion_data.emotion_data,response_text.response_text FROM `emotion_data` JOIN response_text ON emotion_data.emotion_id = response_text.emotion_id WHERE emotion_data.emotion_data = %s', (dominant_emotion,))
             emotion_data_result = mycursor.fetchone()
@@ -487,13 +502,15 @@ def process_image():
             # print(img_emotion_base64)
             current_datetime = datetime.now()
             date_mysql_format = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
-            mycursor.execute("INSERT INTO data_info (pid, emotion_id, DateTime, Full_path, Cut_path) VALUES (%s, %s, %s, %s, %s)",
-                            (person_pid, emotion_id, date_mysql_format, FullImg_save_path, small_img_save_path))
+            mycursor.execute("INSERT INTO data_info (Name, Gender, Age, pid, emotion_id, DateTime, Full_path, Cut_path) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+                            (person_name, person_gender, person_age ,person_pid, emotion_id, date_mysql_format, FullImg_save_path, small_img_save_path))
             mydb.commit()
             
             results.append({
                     'dominant_emotion': dominant_emotion,
                     'person_name': person_name,
+                    'person_gender':person_gender,
+                    'person_age':person_age,
                     'response_text': response_text,
                     'base64_image': base64_image,
                     'BLOB': img_emotion_base64
