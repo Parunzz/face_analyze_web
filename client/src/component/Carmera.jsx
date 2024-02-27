@@ -10,7 +10,6 @@ function Camera() {
 
   return (
     <div>
-      <Nav/>
       <h1>Choose Camera</h1>
       <a href="Kiosk">Kiosk</a><br />
       <a href="CCTV1">CCTV</a>
