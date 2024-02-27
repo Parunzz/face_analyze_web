@@ -128,3 +128,22 @@
     align-items: center;
     display: flex;
 }
+
+.icon{
+    width: 100px;
+    margin: auto;
+    margin: 50px auto;
+}
+
+.info{
+    text-align: center;
+}
+
+.logo img {
+    object-fit: cover;
+    transition: transform 2s ease-in-out; /* Added transition for smooth effect */
+  }
+  
+  .logo img:hover {
+    transform: rotate(360deg);
+  }
