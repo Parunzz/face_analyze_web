@@ -66,7 +66,7 @@ const Transaction = () => {
     };
 
     return (
-        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+        <Paper sx={{ width: '97%', overflow: 'hidden', marginTop: '2%', marginLeft: '1.7%' }}>
             <TableContainer sx={{ maxHeight: 540 }}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>

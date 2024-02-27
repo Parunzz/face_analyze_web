@@ -3,6 +3,7 @@ import vdoBg from '../assets/video/Kiosk.mp4'
 import UseAuth from './UseAuth';
 import Cookies from 'js-cookie';
 
+
 function Menu() {
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
@@ -32,10 +33,15 @@ function Menu() {
   }, []);
 
   return (
+
     <>
     <div className='container'>
       <div className='left-menu'>
-          <div className='logo'></div>
+      <div className='logo'>
+            <a href="./">
+              <img src='/img/logo_analyze.png' className='icon'></img>
+            </a>
+          </div>
           <div className='menu'>
             <a href='./' className='home'>
               <li className='Home' >
@@ -104,7 +110,7 @@ function Menu() {
                 โดดเด่นและมีประสิทธิภาพสูง บริษัท Analyze ได้เป็นส่วนสำคัญในการสร้างความสะดวกสบายให้แก่คนทั่วโลกผ่านการปรับใช้ 
                 AI ในหลากหลายด้านด้วยความคิดสร้างสรรค์และการพัฒนาที่ไม่หยุดยั้ง
               </p>
-              <div className='img-section'>
+              <div className='img-section' style={{paddingLeft: '24%'}}>
                 <img src ='/public/img/1.png' className='img-1'></img>
                 <img src='/public/img/1.png' className='img-1'></img>
               </div>
