@@ -13,10 +13,10 @@ const columns = [
     // { id: 'Cut_path',label: 'Small-pic'},
     // { id: 'Full_path',label: 'Full-pic'},
     { id: 'Data_id',label: 'Data_id'},
-    { id: 'FirstName',label: 'Person'},
+    { id: 'Name',label: 'Person'},
     { id: 'emotion_data',label: 'Emotion'},
-    { id: 'DateOfBirth',label: 'Birth Day'},
-    { id: 'gender',label: 'Gender'},
+    { id: 'Age',label: 'Age'},
+    { id: 'Gender',label: 'Gender'},
     {
         id: 'DateTime',
         label: 'Date',
