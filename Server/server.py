@@ -394,8 +394,11 @@ faces = []
 @app.route('/api/Detect_face', methods=['POST'])
 def DrawRec():
     global faces
+    global image 
     NewPerson = ''
     facial_area = []
+    JSON = []
+    index = None
     try:
         json_data = request.get_json()
         image = json_data.get('image')
@@ -405,11 +408,17 @@ def DrawRec():
             enforce_detection=False
         )
         for f in face_objs:
-            facial_area.append(f['facial_area'])
+            # facial_area.append(f['facial_area'])
             if f['confidence'] == 0:
                 faces = []
                 NewPerson = 'False'
                 print("No face detect")
+                result = {
+                    'faces': None,
+                    'NewPerson': NewPerson,
+                    'face_index': None
+                }
+                JSON.append(result)
                 break
             new_face = f['face']
             # Check if the new embedding is close to any existing embedding
@@ -428,15 +437,134 @@ def DrawRec():
             
             if should_append:
                 faces.append(new_face)
+                index = len(faces) - 1
                 NewPerson = 'True'
                 print("New Person.")
             else:
                 print("Same Person.")
                 NewPerson = 'False'
-        return make_response(jsonify({'faces':facial_area,'NewPerson':NewPerson}), 200)
+            result = {
+                'faces': f['facial_area'],
+                'NewPerson': NewPerson,
+                'face_index': index
+            }
+            JSON.append(result)
+        return make_response(jsonify(JSON), 200)
     except Exception as e:
         print(f"Error: {str(e)}")
-        return jsonify({'error': str(e)}),500       
+        return jsonify({'error': str(e)}),500   
+
+@app.route('/api/save_img',methods=['POST'])
+def save_img():
+    try:
+        JSON = []
+        json_data = request.get_json()
+        print( json_data )
+    #save img
+        split_data  = image.split(',')
+        if len(split_data) > 1:
+            encoded_string = split_data[1]
+        else:
+            return jsonify({'error': 'Invalid image data format'}), 400
+
+        # Decode the base64-encoded string
+        bytes_decoded = base64.b64decode(encoded_string)
+
+        # Create an image from the decoded bytes
+        img = Image.open(BytesIO(bytes_decoded))
+
+       # Generate a unique filename using UUID
+        unique_filename = str(uuid.uuid4()) + '.jpg'
+        # Save the processed image with the unique filename
+        folder_path = './database/full_img/'
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+        
+        FullImg_save_path = os.path.join(folder_path, unique_filename)
+        out_jpg = img.convert('RGB')
+        out_jpg.save(FullImg_save_path)
+        for data in json_data:
+            if data['NewPerson'] == 'True':
+                # Convert pixel values to image
+                FaceImage = Image.fromarray((faces[data['face_index']] * 255).astype(np.uint8))
+                # Generate a unique filename using UUID
+                unique_filename = str(uuid.uuid4()) + '.jpg'
+                # Save the processed image with the unique filename
+                folder_path = './database/faces/'
+                if not os.path.exists(folder_path):
+                    os.makedirs(folder_path)
+                
+                faceImg_save_path = os.path.join(folder_path, unique_filename)
+                # Save the image
+                FaceImage.save(faceImg_save_path)
+                emotion_result = DeepFace.analyze(img_path=faces[data['face_index']], detector_backend='opencv', actions=['emotion'],enforce_detection=False)
+                dominant_emotion = emotion_result[0]['dominant_emotion']
+                db_path='./database/member/'
+                if not os.path.exists(db_path):
+                    os.makedirs(db_path)
+                person_name_result = DeepFace.find(img_path=faceImg_save_path, db_path=db_path, enforce_detection=False)
+                if not person_name_result[0].empty:
+                    person_name = person_name_result[0]['identity'][0].split('/')[3]
+                    # print("Name : ",person_name)
+                    mycursor.execute('SELECT FirstName,gender,DateOfBirth, pid FROM person_info WHERE FirstName = %s', (person_name,))
+                    person_info = mycursor.fetchone()
+                    if person_info:
+                        person_name = person_info['FirstName']
+                        person_pid = person_info['pid']
+                        person_gender = person_info['gender']
+                        person_DateOfBirth = person_info['DateOfBirth']
+                        
+                        person_DateOfBirth = datetime.combine(person_DateOfBirth, datetime.min.time())
+                        # Get the current datetime
+                        current_datetime = datetime.now()
+                        # Calculate the difference between current datetime and date of birth
+                        age_timedelta = current_datetime - person_DateOfBirth
+                        # Convert the timedelta to years (approximate)
+                        person_age = int(age_timedelta.days / 365.25)
+                        # print(person_age)
+                    else:
+                        person_name = "Unknown"
+                        person_pid = None
+                        person_gender = None
+                        person_age = None
+                else:
+                    person_name = "Unknown"
+                    person_pid = None
+                    person_gender = None
+                    person_age = None
+                # print(person_name)
+                mycursor.execute('SELECT IMG_Emotion, emotion_data.emotion_id,emotion_data.emotion_data,response_text.response_text FROM `emotion_data` JOIN response_text ON emotion_data.emotion_id = response_text.emotion_id WHERE emotion_data.emotion_data = %s', (dominant_emotion,))
+                emotion_data_result = mycursor.fetchone()
+                response_text = emotion_data_result['response_text']
+                # print(response_text)
+
+                img_emotion = emotion_data_result['IMG_Emotion']
+                img_emotion_base64 = base64.b64encode(img_emotion).decode('utf-8')
+                # Insert the new user into the database
+                emotion_id = emotion_data_result['emotion_id']
+                # print(img_emotion_base64)
+                current_datetime = datetime.now()
+                date_mysql_format = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
+                mycursor.execute("INSERT INTO data_info (Name, Gender, Age, pid, emotion_id, DateTime, Full_path, Cut_path) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+                                (person_name, person_gender, person_age ,person_pid, emotion_id, date_mysql_format, FullImg_save_path, faceImg_save_path))
+                mydb.commit()
+
+                results = {
+                    'emotion_result':dominant_emotion,
+                    'person_name': person_name,
+                    'person_gender':person_gender,
+                    'person_age':person_age,
+                    'response_text': response_text,
+                    # 'base64_image': base64_image,
+                    'BLOB': img_emotion_base64
+                }
+                JSON.append(results)
+        return jsonify(JSON),200
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)}),500   
+
+    
 @app.route('/api/save_fullImg', methods=['POST'])
 def process_image():
     try:
