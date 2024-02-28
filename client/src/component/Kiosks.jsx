@@ -179,7 +179,7 @@ function Camera() {
 
         setInterval(() => {
             detect();
-        }, 1000);
+        }, 3000);
         // Cleanup function to clear the interval when component unmounts
         return () => clearInterval(intervalId);
     }, []);
@@ -221,8 +221,8 @@ function Camera() {
                         {Array.isArray(response) ? (
                             response.map((result, index) => (
                                 <div className='box1' key={index}>
-                                    {/* <img src={`data:image/jpeg;base64,${result.base64_image}`} className='emoji'></img> */}
-                                    <img src={`data:image/jpeg;base64,${result.BLOB}`} className='emoji'></img>
+                                    <img src={`data:image/jpeg;base64,${result.base64_image}`} className='emoji'></img>
+                                    {/* <img src={`data:image/jpeg;base64,${result.BLOB}`} className='emoji'></img> */}
                                     <h3 className='Name'>Hello, {result.person_name}</h3>
                                     <h4 className='Text'> {result.response_text} </h4>
                                     <h4 className='Text'> {result.person_gender} </h4>
