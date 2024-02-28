@@ -14,7 +14,7 @@ export function drawRect(faces, ctx) {
   faces.forEach((face) => {
     // Extract box coordinates
     // const { xMin, yMin, width, height } = face.box;
-    const { x, y, w, h } = face.facial_area;
+    const { x, y, w, h } = face;
     // Set styling
     ctx.strokeStyle = "rgba(255, 255, 255, 0.743)";
     ctx.lineWidth = 5;

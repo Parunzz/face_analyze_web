@@ -390,27 +390,72 @@ def TransactionDetail():
         
 
 #Machine learning
-
+embedding = []
 @app.route('/api/Detect_face', methods=['POST'])
 def DrawRec():
+    global embedding
+    NewPerson = ''
+    facial_area = []
     try:
         json_data = request.get_json()
         image = json_data.get('image')
-        face_objs = DeepFace.extract_faces(img_path = image, 
-            target_size = (224, 224), 
-            detector_backend = 'opencv',
-            enforce_detection=False
+        # face_objs = DeepFace.extract_faces(img_path = image, 
+        #     target_size = (500, 500), 
+        #     detector_backend = 'opencv',
+        #     enforce_detection=False
+        # )
+        embedding_objs = DeepFace.represent(
+            img_path = image,
+            enforce_detection=False,
+            model_name='OpenFace'
         )
+        for e in embedding_objs:
+            new_embedding = e['embedding']
+            new_facial_area = e['facial_area']
+            facial_area.append(new_facial_area)
+            # Check if the new embedding is close to any existing embedding
+            # should_append = True
+            # for old_embedding in embedding:
+            #     distance = np.linalg.norm(np.array(new_embedding) - np.array(old_embedding))
+            #     if distance <= 0.55:
+            #         should_append = False
+            #         NewPerson = 'False'
+            #         break
+            
+            # if should_append:
+            #     embedding.append(new_embedding)
+            #     NewPerson = 'True'
+            #     print("New Person.")
+            # else:
+            #     print("Same Person.")
+            #     NewPerson = 'False'
+        
         # Convert NumPy arrays to lists only facial_area
         # for face in face_objs:
         #     for key in list(face.keys()):
         #         if key != 'facial_area':
         #             del face[key]
-        
-        # Filter out keys except 'facial_area' for each face object in face_objs
-        face_objs_filtered = [{key: face[key] for key in face if key == 'facial_area'} for face in face_objs]
-
-        return make_response(jsonify({'face_count': len(face_objs), 'faces': face_objs_filtered}), 200)
+        # for face_obj in face_objs:
+            # same_face = False
+            # for i, face in enumerate(faces):
+            #     result = DeepFace.verify(img1_path=face,  # Use the image data for the first face
+            #              img2_path=face_obj['face'],  # Use the image data for the second face
+            #              model_name="VGG-Face",
+            #              distance_metric='euclidean_l2',enforce_detection=False
+            #     )
+            #     if result['verified']:
+            #         same_face = True
+            #         del faces[i]
+            #         id -= 1
+            #         break
+            # if not same_face:
+            #     faces.append(face_obj['face'])
+            #     id += 1   
+            # facial_area.append(face_obj['facial_area'])
+        # print(id)    
+        return make_response(jsonify({'faces':facial_area,'NewPerson':NewPerson}), 200)
+        return make_response(jsonify(embedding_objs), 200)
+        return make_response(jsonify({'face_count': len(face_objs), 'faces': facial_area }), 200)
     except Exception as e:
         print(f"Error: {str(e)}")
         return jsonify({'error': str(e)}),500       
