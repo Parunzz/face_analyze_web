@@ -127,7 +127,7 @@ function Camera() {
             // Handle the API response as needed
             const responseInfo = await response.json();
             if (response.ok) {
-                // console.log(responseInfo.faces);
+                console.log(responseInfo);
                 const canvas = canvasRef.current;
                 const ctx = canvas.getContext("2d");
                 drawRect(responseInfo.faces, ctx);
@@ -181,7 +181,7 @@ function Camera() {
 
         setInterval(() => {
             detect();
-        }, 1000);
+        }, 2500);
         // Cleanup function to clear the interval when component unmounts
         return () => clearInterval(intervalId);
     }, []);
