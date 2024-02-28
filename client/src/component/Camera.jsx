@@ -8,18 +8,18 @@ function Camera() {
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
   const handleLogout = () => {
-  Cookies.remove('token');
+    Cookies.remove('token');
   }
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
       const hours = now.getHours().toString().padStart(2, '0');
-      const minutes = now.getMinutes().toString().padStart(2, '0'); 
+      const minutes = now.getMinutes().toString().padStart(2, '0');
       const seconds = now.getSeconds().toString().padStart(2, '0');
       const month = now.toLocaleString('default', { month: 'long' }); // Get full month name
       const date = now.getDate();
       const year = now.getFullYear();
-      
+
       setCurrentTime(`${hours}:${minutes}:${seconds}`);
       setCurrentDate(`${date} ${month} ${year}`);
     };
@@ -34,47 +34,51 @@ function Camera() {
 
   return (
     <>
-    <div className='container'>
-      <div className='left-menu'>
-          <div className='logo'></div>
+      <div className='container'>
+        <div className='left-menu'>
+          <div className='logo'>
+            <a href="./">
+              <img src='/img/logo_analyze.png' className='icon'></img>
+            </a>
+          </div>
           <div className='menu'>
             <a href='./' className='home'>
               <li className='Home' >
                 <div className='menu-item' href='./'>
-                    <img src='/img/home.gif' className='menu-icon'></img>
-                    หน้าหลัก
+                  <img src='/img/home.gif' className='menu-icon'></img>
+                  หน้าหลัก
                 </div>
               </li>
             </a>
             <a href='./Camera' className='cctv'>
               <li className='CCTV'>
                 <div className='menu-item'>
-                    <img src='/img/camera.gif' className='menu-icon'></img>
-                    กล้องวงจรปิด
+                  <img src='/img/camera.gif' className='menu-icon'></img>
+                  กล้องวงจรปิด
                 </div>
-              </li> 
+              </li>
             </a>
             <a href='./History' className='history'>
-                    <li className='History'>
-                    <div className='menu-item'>
-                    <img src='/img/history.gif' className='menu-icon'></img>ประวัติ
+              <li className='History'>
+                <div className='menu-item'>
+                  <img src='/img/history.gif' className='menu-icon'></img>ประวัติ
                 </div>
-            </li>
+              </li>
             </a>
             <a href='./Members' className='member'>
-            <li className='Member'>
+              <li className='Member'>
                 <div className='menu-item'>
-                    <img src='/img/profile.gif' className='menu-icon'></img>
-                    สมาชิก
+                  <img src='/img/profile.gif' className='menu-icon'></img>
+                  สมาชิก
                 </div>
-            </li>
+              </li>
             </a>
-              <a href='./Dashboard' className='dashboard'>
-                <li className='Dashboard'>
-                  <div className='menu-item'>
-                    <img src='/img/presentation.gif' className='menu-icon'></img>
-                    สถิติ
-                  </div>
+            <a href='./Dashboard' className='dashboard'>
+              <li className='Dashboard'>
+                <div className='menu-item'>
+                  <img src='/img/presentation.gif' className='menu-icon'></img>
+                  สถิติ
+                </div>
               </li>
             </a>
           </div>
@@ -82,28 +86,28 @@ function Camera() {
             <div className='admin_name'>สวัสดี [User] </div>
             <a href='/Signin' onClick={handleLogout}>ออกจากระบบ</a>
           </div>
-      </div>
+        </div>
 
-      <div className='right-responsive'>
-        <div className='top-menu'>
-          <div className='data'>
-            <div className='date text-white'>{currentDate}</div>
-            <div className='time text-white'>{currentTime}</div>
+        <div className='right-responsive'>
+          <div className='top-menu'>
+            <div className='data'>
+              <div className='date text-white'>{currentDate}</div>
+              <div className='time text-white'>{currentTime}</div>
+            </div>
           </div>
-        </div>  
 
-        <div className='info'>   
-          <h1 className='text-3xl font-bold'>กล้องวงจรปิด</h1>
-          <a href="Kiosks">Kiosk</a><br />
-          <a href="CCTV1s">CCTV</a>
+          <div className='info'>
+            <h1 className='text-3xl font-bold' style={{ paddingBottom: '2%'}}>กล้องวงจรปิด</h1>
+            <a href="Kiosks" style={{paddingTop: '2%'}}>Kiosk</a>
+            <img src="" alt="" />
+          </div>
+          <a href='' className='add-button'>
+            <div className="add">
+              <h1 className='add-text'> + </h1>
+            </div>
+          </a>
         </div>
-        <a href='' className='add-button'>
-        <div className="add">
-            <h1 className='add-text'> + </h1>
-        </div>
-        </a>  
       </div>
-    </div>
     </>
   );
 }
