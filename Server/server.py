@@ -362,7 +362,7 @@ def TransactionDetail():
     try:
         json_data = request.get_json()
         Data_id = int(json_data.get('Data_id'))
-        print(Data_id)
+        # print(Data_id)
         mycursor.execute('SELECT * FROM `data_info` JOIN emotion_data ON data_info.emotion_id = emotion_data.emotion_id WHERE Data_id = %s;',(Data_id,))
         data = mycursor.fetchall()
         data_row = data[0]  # Assuming there's only one row in the data list
@@ -497,6 +497,10 @@ def save_img():
                 faceImg_save_path = os.path.join(folder_path, unique_filename)
                 # Save the image
                 FaceImage.save(faceImg_save_path)
+                # Convert the small image to base64
+                with open(faceImg_save_path, "rb") as image_file:
+                    base64_image = base64.b64encode(image_file.read()).decode('utf-8')
+                # Emotion
                 emotion_result = DeepFace.analyze(img_path=faces[data['face_index']], detector_backend='opencv', actions=['emotion'],enforce_detection=False)
                 dominant_emotion = emotion_result[0]['dominant_emotion']
                 db_path='./database/member/'
@@ -555,7 +559,7 @@ def save_img():
                     'person_gender':person_gender,
                     'person_age':person_age,
                     'response_text': response_text,
-                    # 'base64_image': base64_image,
+                    'base64_image': base64_image,
                     'BLOB': img_emotion_base64
                 }
                 JSON.append(results)
