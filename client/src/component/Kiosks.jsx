@@ -101,9 +101,9 @@ function Camera() {
             else {
                 // setresponseData(responseInfo)
                 // console.log("response Error",responseData);
-                setInterval(() => {
-                    sendApi(video, videoWidth, videoHeight, faces);
-                }, 1000);
+                // setInterval(() => {
+                //     sendApi(video, videoWidth, videoHeight, faces);
+                // }, 1000);
 
             }
             
@@ -137,90 +137,127 @@ function Camera() {
             const faces = await net.estimateFaces(video, estimationConfig);
             // console.log(faces)
             // Function to calculate the Euclidean distance between two points
-            function euclideanDistance(point1, point2) {
-                return Math.sqrt(Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2));
-            }
+            // function euclideanDistance(point1, point2) {
+            //     return Math.sqrt(Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2));
+            // }
 
-            // Function to check if keypoints belong to the same person
-            function isSamePerson(oldKeypoints, newKeypoints, threshold) {
-                // Check if both old and new keypoints have the same length
-                if (oldKeypoints.length !== newKeypoints.length) {
-                    return false;
-                }
+            // // Function to check if keypoints belong to the same person
+            // function isSamePerson(oldKeypoints, newKeypoints, threshold) {
+            //     // Check if both old and new keypoints have the same length
+            //     if (oldKeypoints.length !== newKeypoints.length) {
+            //         return false;
+            //     }
 
-                // Iterate through corresponding keypoints and check their distances
-                for (let i = 0; i < oldKeypoints.length; i++) {
-                    const distance = euclideanDistance(oldKeypoints[i], newKeypoints[i]);
-                    // console.log("dis : ", distance);
-                    if (distance > threshold) {
-                        return false;
-                    }
-                }
-                // If all distances are within the threshold, consider them to be the same person
-                // console.log("SAME");
-                return true;
-            }
+            //     // Iterate through corresponding keypoints and check their distances
+            //     for (let i = 0; i < oldKeypoints.length; i++) {
+            //         const distance = euclideanDistance(oldKeypoints[i], newKeypoints[i]);
+            //         // console.log("dis : ", distance);
+            //         if (distance > threshold) {
+            //             return false;
+            //         }
+            //     }
+            //     // If all distances are within the threshold, consider them to be the same person
+            //     // console.log("SAME");
+            //     return true;
+            // }
 
-            // Function to track persons and preserve their identities
-            function trackPersons(detections, trackedPersons) {
-                let newTrackedPersons = [];
-                let newPersonId = 1; // Initialize the ID counter
+            // // Function to track persons and preserve their identities
+            // function trackPersons(detections, trackedPersons) {
+            //     let newTrackedPersons = [];
+            //     let newPersonId = 1; // Initialize the ID counter
 
-                // Loop through each prediction
-                detections.forEach(prediction => {
-                    // Extract keypoints
-                    const keypoints = prediction.keypoints;
+            //     // Loop through each prediction
+            //     detections.forEach(prediction => {
+            //         // Extract keypoints
+            //         const keypoints = prediction.keypoints;
 
-                    // Check if keypoints match any existing person
-                    let matchedPerson = null;
-                    for (let i = 0; i < trackedPersons.length; i++) {
-                        if (isSamePerson(trackedPersons[i].keypoints, keypoints, 1)) {
-                            matchedPerson = trackedPersons[i];
-                            break;
-                        }
-                    }
+            //         // Check if keypoints match any existing person
+            //         let matchedPerson = null;
+            //         for (let i = 0; i < trackedPersons.length; i++) {
+            //             if (isSamePerson(trackedPersons[i].keypoints, keypoints, 1)) {
+            //                 matchedPerson = trackedPersons[i];
+            //                 break;
+            //             }
+            //         }
 
-                    if (matchedPerson !== null) {
-                        // Key points matched with an existing person
-                        // Update keypoints and preserve ID
-                        matchedPerson.keypoints = keypoints;
-                        newTrackedPersons.push(matchedPerson);
-                    } else {
-                        // Key points did not match any existing person
-                        // Create a new person entry with a new ID
-                        newTrackedPersons.push({ id: newPersonId, keypoints: keypoints });
-                        newPersonId++; // Increment the ID counter
+            //         if (matchedPerson !== null) {
+            //             // Key points matched with an existing person
+            //             // Update keypoints and preserve ID
+            //             matchedPerson.keypoints = keypoints;
+            //             newTrackedPersons.push(matchedPerson);
+            //         } else {
+            //             // Key points did not match any existing person
+            //             // Create a new person entry with a new ID
+            //             newTrackedPersons.push({ id: newPersonId, keypoints: keypoints });
+            //             newPersonId++; // Increment the ID counter
                         
-                    }
-                });
+            //         }
+            //     });
 
-                return newTrackedPersons;
-            }
-
-
+            //     return newTrackedPersons;
+            // }
 
 
-            trackedPersons = trackPersons(faces, trackedPersons);
-            // console.log("Tracked persons:", trackedPersons);
-            if (trackedPersons.length === 0) {
-                // console.log("No face");
-                seenIds = [];
-            } else {
-                // Loop through each tracked person and print their ID
-                trackedPersons.forEach(face => {
-                    // console.log("ID:", face.id);
-                    // Check if the current ID is not in the list of seen IDs
-                    if (!seenIds.includes(face.id)) {
-                        console.log("New"); // Print "New" if the ID is new
-                        seenIds.push(face.id); // Add the current ID to the list of seen IDs
-                        sendApi(video, videoWidth, videoHeight, faces);
-                    }
-                });
-            }
+
+
+            // trackedPersons = trackPersons(faces, trackedPersons);
+            // // console.log("Tracked persons:", trackedPersons);
+            // if (trackedPersons.length === 0) {
+            //     // console.log("No face");
+            //     seenIds = [];
+            // } else {
+            //     // Loop through each tracked person and print their ID
+            //     trackedPersons.forEach(face => {
+            //         // console.log("ID:", face.id);
+            //         // Check if the current ID is not in the list of seen IDs
+            //         if (!seenIds.includes(face.id)) {
+            //             console.log("New"); // Print "New" if the ID is new
+            //             seenIds.push(face.id); // Add the current ID to the list of seen IDs
+            //             sendApi(video, videoWidth, videoHeight, faces);
+            //         }
+            //     });
+            // }
             // Draw mesh
             const ctx = canvasRef.current.getContext("2d");
             drawRect(faces, ctx, trackedPersons);
-            
+            // Check if 'face' is detected
+            const noFaceDetected = !faces || faces.length === 0;
+            if (!noFaceDetected && isCaptureEnabled) {
+                isCaptureEnabled = false
+                const facescreenshot = getFaceScreenshot(video, videoWidth, videoHeight, faces[0]);
+                setImageSrc(facescreenshot);
+                const screenshot = getScreenshot(video, videoWidth, videoHeight);
+                const response = await fetch('http://localhost:3001/api/save_fullImg', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        image: screenshot,
+                    }),
+                });
+
+                // Handle the API response as needed
+                const responseInfo = await response.json();
+                if (response.ok) {
+                    setresponseData(responseInfo)
+                    console.log(responseInfo);
+                }
+                else {
+                    setresponseData(responseInfo)
+                    console.log("response Error");
+                }
+
+
+                setTimeout(() => {
+                    isCaptureEnabled = true;
+                    setImageSrc(null);
+                }, 5000);
+            }
+            else if (noFaceDetected) {
+                isCaptureEnabled = true
+                setImageSrc(null);
+            }
         }
     };
     useEffect(() => {
@@ -286,18 +323,12 @@ function Camera() {
                         {Array.isArray(responseData) ? (
                             responseData.map((result, index) => (
                                 <div className='box1' key={index}>
-                                    <img src='/img/smile.png' className='emoji'></img>
+                                    {/* <img src={`data:image/jpeg;base64,${result.base64_image}`} className='emoji'></img> */}
+                                    <img src={`data:image/jpeg;base64,${result.BLOB}`} className='emoji'></img>
                                     <h3 className='Name'>Hello, {result.person_name}</h3>
                                     <h4 className='Text'> {result.response_text} </h4>
-                                    {/* {result.base64_image && (
-                                        <img
-                                            src={`data:image/jpeg;base64,${result.base64_image}`}
-                                            alt="Detected Face"
-                                            width={50}
-                                            height={50}
-                                            style={{ left:300,display:'flex',position:'absolute',top:30 }}
-                                        />
-                                    )} */}
+                                    <h4 className='Text'> {result.person_gender} </h4>
+                                    <h4 className='Text'> {result.person_age} </h4>
                                 </div>
                                 // <span>Dominant Emotion: {result.dominant_emotion}</span><br />
                                 // <span>Person Name: {result.person_name}</span><br />

@@ -19,11 +19,16 @@ body
     background-color: rgb(255, 255, 255);
     /* flex: 0 0 18rem; */
     /* overflow-y: auto; */
-    display: block;
     width: 15%;
     position: fixed;
     height: 100vh;
     z-index: 999;
+}
+
+.icon{
+    width: 100px;
+    margin: auto;
+    margin: 50px auto;
 }
 
 .right-responsive
@@ -88,7 +93,7 @@ body
 {
     align-items: center;
     display: block;
-    padding-top: 200px;
+    padding-top: 2px;
     /* padding-left: 50px;
     padding-right: 50px; */
     /* padding-left: 2rem; */

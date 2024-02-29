@@ -21,8 +21,8 @@ function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
-            <Link color="inherit" href="https://mui.com/">
-                Your Website
+            <Link color="inherit" href="/">
+                Analyze
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -86,7 +86,7 @@ export default function AddMember() {
                 console.log('Add member successfully');
                 setLoading(false);
                 window.alert(`Add member successfully`);
-                navigate('/Member');
+                navigate('/Members');
                 // Handle success, e.g., redirect to a different page
             } else {
                 setLoading(false);
@@ -172,7 +172,7 @@ export default function AddMember() {
                         </LoadingButton>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="/Member" variant="body2">
+                                <Link href="/Members" variant="body2">
                                     Back
                                 </Link>
                             </Grid>

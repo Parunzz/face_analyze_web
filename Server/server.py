@@ -335,6 +335,59 @@ def removeImg():
     except Exception as e:
         print(f"Error: {str(e)}")
         return jsonify({'error': str(e)}),500
+
+#transaction
+@app.route('/api/transaction', methods=['GET'])
+def Transaction():
+    try:
+        page = int(request.args.get('page', 0))
+        rows_per_page = int(request.args.get('rowsPerPage', 10))
+
+        # Calculate offset based on page number and rows per page
+        offset = page * rows_per_page
+
+        # Fetch data from database with pagination
+        # mycursor.execute('SELECT * FROM data_info LIMIT %s OFFSET %s', (rows_per_page, offset))
+        # mycursor.execute('SELECT Full_path,Cut_path,person_info.FirstName,person_info.gender,person_info.DateOfBirth,data_info.DateTime,emotion_data.emotion_data FROM `data_info` JOIN emotion_data ON data_info.emotion_id = emotion_data.emotion_id JOIN person_info ON data_info.pid = person_info.pid LIMIT %s OFFSET %s', (rows_per_page, offset))
+        mycursor.execute('SELECT data_info.Data_id,data_info.Name,data_info.Gender,data_info.Age,data_info.DateTime,emotion_data.emotion_data FROM `data_info` JOIN emotion_data ON data_info.emotion_id = emotion_data.emotion_id;')
+        data = mycursor.fetchall()
+        
+        return make_response(jsonify(data), 200)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)}),500
+
+@app.route('/api/TransactionDetail',methods=['POST'])
+def TransactionDetail():
+    try:
+        json_data = request.get_json()
+        Data_id = int(json_data.get('Data_id'))
+        print(Data_id)
+        mycursor.execute('SELECT * FROM `data_info` JOIN emotion_data ON data_info.emotion_id = emotion_data.emotion_id WHERE Data_id = %s;',(Data_id,))
+        data = mycursor.fetchall()
+        data_row = data[0]  # Assuming there's only one row in the data list
+        full_path = data_row['Full_path']
+        cut_path = data_row['Cut_path']
+
+        # Open and read the image files
+        with open(full_path, "rb") as img_file1, open(cut_path, "rb") as img_file2:
+            img_data1 = img_file1.read()
+            img_data2 = img_file2.read()  
+            # Encode the image data as Base64
+            base64_img1 = base64.b64encode(img_data1).decode('utf-8')  # Convert bytes to string
+            base64_img2 = base64.b64encode(img_data2).decode('utf-8')  # Convert bytes to string
+            
+            # Construct the JSON response
+            response_data = {
+                "Data_id": Data_id,
+                "Full_Img": base64_img1,
+                "Cut_Img": base64_img2
+            }
+        return make_response(jsonify(response_data), 200)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)}),500
+        
     
 #Machine learning
 @app.route('/api/save_fullImg', methods=['POST'])
@@ -408,38 +461,59 @@ def process_image():
             if not person_name_result[0].empty:
                 person_name = person_name_result[0]['identity'][0].split('/')[3]
                 print("ชื่อ : ",person_name)
-                mycursor.execute('SELECT FirstName, pid FROM person_info WHERE FirstName = %s', (person_name,))
+                mycursor.execute('SELECT FirstName,gender,DateOfBirth, pid FROM person_info WHERE FirstName = %s', (person_name,))
                 person_info = mycursor.fetchone()
                 if person_info:
                     person_name = person_info['FirstName']
                     person_pid = person_info['pid']
+                    person_gender = person_info['gender']
+                    person_DateOfBirth = person_info['DateOfBirth']
+                    
+                    person_DateOfBirth = datetime.combine(person_DateOfBirth, datetime.min.time())
+                    # Get the current datetime
+                    current_datetime = datetime.now()
+                    # Calculate the difference between current datetime and date of birth
+                    age_timedelta = current_datetime - person_DateOfBirth
+                    # Convert the timedelta to years (approximate)
+                    person_age = int(age_timedelta.days / 365.25)
+                    print(person_age)
                 else:
                     person_name = "Unknown"
                     person_pid = None
+                    person_gender = None
+                    person_age = None
             else:
                 person_name = "Unknown"
                 person_pid = None
+                person_gender = None
+                person_age = None
             print(person_name)
-            mycursor.execute('SELECT emotion_data.emotion_id,emotion_data.emotion_data,response_text.response_text FROM `emotion_data` JOIN response_text ON emotion_data.emotion_id = response_text.emotion_id WHERE emotion_data.emotion_data = %s', (dominant_emotion,))
+            mycursor.execute('SELECT IMG_Emotion, emotion_data.emotion_id,emotion_data.emotion_data,response_text.response_text FROM `emotion_data` JOIN response_text ON emotion_data.emotion_id = response_text.emotion_id WHERE emotion_data.emotion_data = %s', (dominant_emotion,))
             emotion_data_result = mycursor.fetchone()
-            print(dominant_emotion)
+            # print(dominant_emotion)
             # print(emotion_data_result)
             response_text = emotion_data_result['response_text']
-            print(response_text)
+            # print(response_text)
+
+            img_emotion = emotion_data_result['IMG_Emotion']
+            img_emotion_base64 = base64.b64encode(img_emotion).decode('utf-8')
             # Insert the new user into the database
             emotion_id = emotion_data_result['emotion_id']
-            print(emotion_id)
+            # print(img_emotion_base64)
             current_datetime = datetime.now()
             date_mysql_format = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
-            mycursor.execute("INSERT INTO data_info (pid, emotion_id, DateTime, Full_path, Cut_path) VALUES (%s, %s, %s, %s, %s)",
-                            (person_pid, emotion_id, date_mysql_format, FullImg_save_path, small_img_save_path))
+            mycursor.execute("INSERT INTO data_info (Name, Gender, Age, pid, emotion_id, DateTime, Full_path, Cut_path) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+                            (person_name, person_gender, person_age ,person_pid, emotion_id, date_mysql_format, FullImg_save_path, small_img_save_path))
             mydb.commit()
             
             results.append({
                     'dominant_emotion': dominant_emotion,
                     'person_name': person_name,
+                    'person_gender':person_gender,
+                    'person_age':person_age,
                     'response_text': response_text,
-                    'base64_image': base64_image
+                    'base64_image': base64_image,
+                    'BLOB': img_emotion_base64
             })
         # print(results)
         return jsonify(results),200

@@ -27,10 +27,10 @@ export function drawRect(faces, ctx, trackedPersons) {
     ctx.stroke();
     
     // Draw ID for the corresponding tracked person
-    const trackedPerson = trackedPersons[index];
-    if (trackedPerson) {
-        ctx.fillText("ID: " + trackedPerson.id, xMin, yMin - 10);
-    }
+    // const trackedPerson = trackedPersons[index];
+    // if (trackedPerson) {
+    //     ctx.fillText("ID: " + trackedPerson.id, xMin, yMin - 10);
+    // }
     
 });
 };
