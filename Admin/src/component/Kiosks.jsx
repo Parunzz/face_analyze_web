@@ -19,6 +19,7 @@ function Camera() {
     const [isCameraOn, setIsCameraOn] = useState(true);
     const [imageSrc, setImageSrc] = useState(null);
     const [responseData, setresponseData] = useState([]);
+    const [response, setresponse] = useState([]);
     let isCaptureEnabled = true
 
     const [currentTime, setCurrentTime] = useState('');
@@ -76,13 +77,32 @@ function Camera() {
 
         return canvas.toDataURL(); // returns a base64-encoded data URL
     };
-    const sendApi = (video, videoWidth, videoHeight, faces) =>{
-        setTimeout(async () => {
-            console.log("detect")
-            const facescreenshot = getFaceScreenshot(video, videoWidth, videoHeight, faces[0]);
-            setImageSrc(facescreenshot);
+    const sendApi = async (video, videoWidth, videoHeight, responseData) => {
+        try {
+            console.log(responseData);
             const screenshot = getScreenshot(video, videoWidth, videoHeight);
-            const response = await fetch('http://localhost:3001/api/save_fullImg', {
+            const response = await fetch('http://localhost:3001/api/save_img', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(responseData),
+            });
+    
+            // Handle the API response as needed
+            const responseInfo = await response.json();
+            if (response.ok) {
+                setresponse(responseInfo);
+            }
+        } catch (error) {
+            console.error('Error sending API request:', error);
+        }
+    };
+    
+    const sendDetectApi = async (video, videoWidth, videoHeight) => {
+        try {
+            const screenshot = getScreenshot(video, videoWidth, videoHeight);
+            const response = await fetch('http://localhost:3001/api/Detect_face', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -92,26 +112,23 @@ function Camera() {
                 }),
             });
 
-            // Handle the API response as needed
-            const responseInfo = await response.json();
-            if (response.ok) {
-                setresponseData(responseInfo)
-                // console.log(responseInfo);
+            if (!response.ok) {
+                throw new Error('Failed to fetch data');
             }
-            else {
-                // setresponseData(responseInfo)
-                // console.log("response Error",responseData);
-                // setInterval(() => {
-                //     sendApi(video, videoWidth, videoHeight, faces);
-                // }, 1000);
 
-            }
-            
-        }, 0);
-    }
+            const responseInfo = await response.json();
+            const canvas = canvasRef.current;
+            const ctx = canvas.getContext("2d");
+            drawRect(responseInfo, ctx);
+            return responseInfo;
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            // Handle error gracefully, e.g., display an error message to the user
+        }
+    };
     let seenIds = [];
     let trackedPersons = [];
-    const detect = async (net) => {
+    const detect = async () => {
         // Check data is available
         if (
             typeof webcamRef.current !== "undefined" &&
@@ -131,132 +148,13 @@ function Camera() {
             canvasRef.current.width = videoWidth;
             canvasRef.current.height = videoHeight;
 
-            // Make Detections
-            // const faces = await net.detect(video);
-            const estimationConfig = { flipHorizontal: false };
-            const faces = await net.estimateFaces(video, estimationConfig);
-            // console.log(faces)
-            // Function to calculate the Euclidean distance between two points
-            // function euclideanDistance(point1, point2) {
-            //     return Math.sqrt(Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2));
-            // }
-
-            // // Function to check if keypoints belong to the same person
-            // function isSamePerson(oldKeypoints, newKeypoints, threshold) {
-            //     // Check if both old and new keypoints have the same length
-            //     if (oldKeypoints.length !== newKeypoints.length) {
-            //         return false;
-            //     }
-
-            //     // Iterate through corresponding keypoints and check their distances
-            //     for (let i = 0; i < oldKeypoints.length; i++) {
-            //         const distance = euclideanDistance(oldKeypoints[i], newKeypoints[i]);
-            //         // console.log("dis : ", distance);
-            //         if (distance > threshold) {
-            //             return false;
-            //         }
-            //     }
-            //     // If all distances are within the threshold, consider them to be the same person
-            //     // console.log("SAME");
-            //     return true;
-            // }
-
-            // // Function to track persons and preserve their identities
-            // function trackPersons(detections, trackedPersons) {
-            //     let newTrackedPersons = [];
-            //     let newPersonId = 1; // Initialize the ID counter
-
-            //     // Loop through each prediction
-            //     detections.forEach(prediction => {
-            //         // Extract keypoints
-            //         const keypoints = prediction.keypoints;
-
-            //         // Check if keypoints match any existing person
-            //         let matchedPerson = null;
-            //         for (let i = 0; i < trackedPersons.length; i++) {
-            //             if (isSamePerson(trackedPersons[i].keypoints, keypoints, 1)) {
-            //                 matchedPerson = trackedPersons[i];
-            //                 break;
-            //             }
-            //         }
-
-            //         if (matchedPerson !== null) {
-            //             // Key points matched with an existing person
-            //             // Update keypoints and preserve ID
-            //             matchedPerson.keypoints = keypoints;
-            //             newTrackedPersons.push(matchedPerson);
-            //         } else {
-            //             // Key points did not match any existing person
-            //             // Create a new person entry with a new ID
-            //             newTrackedPersons.push({ id: newPersonId, keypoints: keypoints });
-            //             newPersonId++; // Increment the ID counter
-                        
-            //         }
-            //     });
-
-            //     return newTrackedPersons;
-            // }
-
-
-
-
-            // trackedPersons = trackPersons(faces, trackedPersons);
-            // // console.log("Tracked persons:", trackedPersons);
-            // if (trackedPersons.length === 0) {
-            //     // console.log("No face");
-            //     seenIds = [];
-            // } else {
-            //     // Loop through each tracked person and print their ID
-            //     trackedPersons.forEach(face => {
-            //         // console.log("ID:", face.id);
-            //         // Check if the current ID is not in the list of seen IDs
-            //         if (!seenIds.includes(face.id)) {
-            //             console.log("New"); // Print "New" if the ID is new
-            //             seenIds.push(face.id); // Add the current ID to the list of seen IDs
-            //             sendApi(video, videoWidth, videoHeight, faces);
-            //         }
-            //     });
-            // }
-            // Draw mesh
-            const ctx = canvasRef.current.getContext("2d");
-            drawRect(faces, ctx, trackedPersons);
-            // Check if 'face' is detected
-            const noFaceDetected = !faces || faces.length === 0;
-            if (!noFaceDetected && isCaptureEnabled) {
-                isCaptureEnabled = false
-                const facescreenshot = getFaceScreenshot(video, videoWidth, videoHeight, faces[0]);
-                setImageSrc(facescreenshot);
-                const screenshot = getScreenshot(video, videoWidth, videoHeight);
-                const response = await fetch('http://localhost:3001/api/save_fullImg', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        image: screenshot,
-                    }),
-                });
-
-                // Handle the API response as needed
-                const responseInfo = await response.json();
-                if (response.ok) {
-                    setresponseData(responseInfo)
-                    console.log(responseInfo);
+            const r = await sendDetectApi(video, videoWidth, videoHeight);
+            for (let index = 0; index < r.length; index++) {
+                // console.log(r[index].NewPerson)
+                if (r[index].NewPerson == 'True') {
+                    console.log("emotion")
+                    sendApi(video, videoWidth, videoHeight, r);
                 }
-                else {
-                    setresponseData(responseInfo)
-                    console.log("response Error");
-                }
-
-
-                setTimeout(() => {
-                    isCaptureEnabled = true;
-                    setImageSrc(null);
-                }, 5000);
-            }
-            else if (noFaceDetected) {
-                isCaptureEnabled = true
-                setImageSrc(null);
             }
         }
     };
@@ -279,9 +177,9 @@ function Camera() {
         updateTime();
         const intervalId = setInterval(updateTime, 1000);
 
-        loadModel();
-
-
+        setInterval(() => {
+            detect();
+        }, 3000);
         // Cleanup function to clear the interval when component unmounts
         return () => clearInterval(intervalId);
     }, []);
@@ -291,7 +189,7 @@ function Camera() {
             <div className='container-camera'>
                 <div className='info-data-cam'>
                     <div className='shadows'>
-                        
+
                     </div>
                     <div className='web-cam-section'>
                         <div className='web-cam'>
@@ -313,18 +211,18 @@ function Camera() {
                                     width: 'calc(100vh * ${aspectRatio})',
                                     height: '100%',
                                     pointerEvents: "none",
-                                    roundRect:(10,10,40,0),
+                                    roundRect: (10, 10, 40, 0),
                                 }}
                             />
                         </div>
                         <div className='times'>
-                        <div className='time text-white'>{currentTime}</div>
+                            <div className='time text-white'>{currentTime}</div>
                         </div>
-                        {Array.isArray(responseData) ? (
-                            responseData.map((result, index) => (
+                        {Array.isArray(response) ? (
+                            response.map((result, index) => (
                                 <div className='box1' key={index}>
-                                    {/* <img src={`data:image/jpeg;base64,${result.base64_image}`} className='emoji'></img> */}
-                                    <img src={`data:image/jpeg;base64,${result.BLOB}`} className='emoji'></img>
+                                    <img src={`data:image/jpeg;base64,${result.base64_image}`} className='emoji'></img>
+                                    {/* <img src={`data:image/jpeg;base64,${result.BLOB}`} className='emoji'></img> */}
                                     <h3 className='Name'>Hello, {result.person_name}</h3>
                                     <h4 className='Text'> {result.response_text} </h4>
                                     <h4 className='Text'> {result.person_gender} </h4>

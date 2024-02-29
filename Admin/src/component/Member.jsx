@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Nav from './Nav';
 import Search from './Search';
 import { Box, Container, Button } from '@mui/material';
 import Fab from '@mui/material/Fab';
