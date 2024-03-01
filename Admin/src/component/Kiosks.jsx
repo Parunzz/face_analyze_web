@@ -179,7 +179,7 @@ function Camera() {
 
         setInterval(() => {
             detect();
-        }, 3000);
+        }, 1000);
         // Cleanup function to clear the interval when component unmounts
         return () => clearInterval(intervalId);
     }, []);

@@ -1,9 +1,9 @@
 version: '3'
 services:
   client:
-    build: ./Client
+    build: ./Admin
     ports:
-      - "5173:5173"
+      - "2154:2154"
     depends_on:
       - flask-server
       - db

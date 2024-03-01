@@ -90,8 +90,6 @@ CREATE TABLE `person_info` (
 -- Dumping data for table `person_info`
 --
 
-INSERT INTO `person_info` (`pid`, `FirstName`, `LastName`, `img_path`, `gender`, `DateOfBirth`) VALUES
-(7, 'Parunyu', 'Anakitbumrung', './database/member/Parunyu/', 'male', '2002-12-18');
 
 -- --------------------------------------------------------
 
