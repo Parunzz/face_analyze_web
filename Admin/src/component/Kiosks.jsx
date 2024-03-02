@@ -227,12 +227,12 @@ function Camera() {
                                 {response.map((result, index) => (
                                     <li key={index}>
                                         <div className='box1'>
-                                            {/* <img src={`data:image/jpeg;base64,${result.base64_image}`} className='emoji' alt={`Emoji ${index}`} /> */}
+                                            <img src={`data:image/jpeg;base64,${result.base64_image}`} className='emoji' alt={`Emoji ${index}`} />
                                             <img src={`data:image/jpeg;base64,${result.BLOB}`} className='emoji' alt={`Emoji ${index}`} />
                                             <h3 className='Name'>{result.person_name}</h3>
-                                            <h4 className='Text'> {result.response_text}, </h4>
-                                            <h4 className='Text'> {result.person_gender}, </h4>
-                                            <h4 className='Text'> {result.person_age} years old</h4>
+                                            <h4 className='Text'> {result.response_text}</h4>
+                                            <h4 className='Text'> {result.person_gender}</h4>
+                                            <h4 className='Text'> {result.person_age}</h4>
                                         </div>
 
                                     </li>

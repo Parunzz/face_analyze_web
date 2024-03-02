@@ -404,7 +404,7 @@ def DrawRec():
         image = json_data.get('image')
         face_objs = DeepFace.extract_faces(img_path = image, 
             target_size = (500, 500), 
-            detector_backend = 'opencv',
+            detector_backend = 'ssd',
             enforce_detection=False
         )
         for f in face_objs:
