@@ -20,6 +20,7 @@ function Camera() {
     const [imageSrc, setImageSrc] = useState(null);
     const [responseData, setresponseData] = useState([]);
     const [response, setresponse] = useState([]);
+    const [Response, setResponse] = useState([]);
     let isCaptureEnabled = true
 
     const [currentTime, setCurrentTime] = useState('');
@@ -79,7 +80,7 @@ function Camera() {
     };
     const sendApi = async (video, videoWidth, videoHeight, responseData) => {
         try {
-            console.log(responseData);
+            // console.log(responseData);
             const screenshot = getScreenshot(video, videoWidth, videoHeight);
             const response = await fetch('http://localhost:3001/api/save_img', {
                 method: 'POST',
@@ -88,9 +89,10 @@ function Camera() {
                 },
                 body: JSON.stringify(responseData),
             });
-    
+
             // Handle the API response as needed
             const responseInfo = await response.json();
+            console.log(responseInfo)
             if (response.ok) {
                 setresponse(responseInfo);
             }
@@ -98,7 +100,7 @@ function Camera() {
             console.error('Error sending API request:', error);
         }
     };
-    
+
     const sendDetectApi = async (video, videoWidth, videoHeight) => {
         try {
             const screenshot = getScreenshot(video, videoWidth, videoHeight);
@@ -149,6 +151,7 @@ function Camera() {
             canvasRef.current.height = videoHeight;
 
             const r = await sendDetectApi(video, videoWidth, videoHeight);
+            setResponse(r);
             for (let index = 0; index < r.length; index++) {
                 // console.log(r[index].NewPerson)
                 if (r[index].NewPerson == 'True') {
@@ -179,7 +182,7 @@ function Camera() {
 
         setInterval(() => {
             detect();
-        }, 3000);
+        }, 1000);
         // Cleanup function to clear the interval when component unmounts
         return () => clearInterval(intervalId);
     }, []);
@@ -219,20 +222,22 @@ function Camera() {
                             <div className='time text-white'>{currentTime}</div>
                         </div>
                         {Array.isArray(response) ? (
-                            response.map((result, index) => (
-                                <div className='box1' key={index}>
-                                    <img src={`data:image/jpeg;base64,${result.base64_image}`} className='emoji'></img>
-                                    {/* <img src={`data:image/jpeg;base64,${result.BLOB}`} className='emoji'></img> */}
-                                    <h3 className='Name'>Hello, {result.person_name}</h3>
-                                    <h4 className='Text'> {result.response_text} </h4>
-                                    <h4 className='Text'> {result.person_gender} </h4>
-                                    <h4 className='Text'> {result.person_age} </h4>
-                                </div>
-                                // <span>Dominant Emotion: {result.dominant_emotion}</span><br />
-                                // <span>Person Name: {result.person_name}</span><br />
-                                // <span>Response Text: {result.response_text}</span>
 
-                            ))
+                            <ul>
+                                {response.map((result, index) => (
+                                    <li key={index}>
+                                        <div className='box1'>
+                                            {/* <img src={`data:image/jpeg;base64,${result.base64_image}`} className='emoji' alt={`Emoji ${index}`} /> */}
+                                            <img src={`data:image/jpeg;base64,${result.BLOB}`} className='emoji' alt={`Emoji ${index}`} />
+                                            <h3 className='Name'>{result.person_name}</h3>
+                                            <h4 className='Text'> {result.response_text}, </h4>
+                                            <h4 className='Text'> {result.person_gender}, </h4>
+                                            <h4 className='Text'> {result.person_age} years old</h4>
+                                        </div>
+
+                                    </li>
+                                ))}
+                            </ul>
                         ) : (
 
                             <div className='box1'>

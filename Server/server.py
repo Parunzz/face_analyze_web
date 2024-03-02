@@ -26,11 +26,11 @@ CORS(app, supports_credentials=True)
 
 
 ## FOR DEV ENV ###
-mydb = mysql.connector.connect(host="localhost",user="root",password="",db="deepface",connect_timeout=100)
+# mydb = mysql.connector.connect(host="localhost",user="root",password="",db="deepface",connect_timeout=100)
 ### FOR Docker ###
 #mydb = mysql.connector.connect(host="db",user="admin",password="admin",db="deepface",connect_timeout=10000)
 ### FOR NETWORK
-# mydb = mysql.connector.connect(host="192.168.1.53",user="zen",password="zen",db="deepface",connect_timeout=100)
+mydb = mysql.connector.connect(host="192.168.1.53",user="zen",password="zen",db="deepface",connect_timeout=100)
 mycursor = mydb.cursor(dictionary=True)
 
 @app.route("/")
@@ -381,7 +381,7 @@ def TransactionDetail():
             response_data = {
                 "Data_id": Data_id,
                 "Full_Img": base64_img1,
-                "Cut_Img": base64_img2
+                "Cut_Img": base64_img2,
             }
         return make_response(jsonify(response_data), 200)
     except Exception as e:
@@ -424,11 +424,14 @@ def DrawRec():
             # Check if the new embedding is close to any existing embedding
             should_append = True
             for old_face in faces:
-                result = DeepFace.verify(img1_path=new_face,  # Use the image data for the first face
-                                        img2_path=old_face,  # Use the image data for the second face
-                                        model_name="VGG-Face",
-                                        distance_metric='euclidean_l2',
-                                        enforce_detection=False)
+                result = DeepFace.verify(
+                    img1_path=new_face,  # Use the image data for the first face
+                    img2_path=old_face,  # Use the image data for the second face
+                    model_name="SFace",
+                    detector_backend='yunet',
+                    distance_metric='euclidean_l2',
+                    enforce_detection=False
+                )
                 verified = result['verified']
                 if verified:
                     should_append = False
@@ -459,7 +462,7 @@ def save_img():
     try:
         JSON = []
         json_data = request.get_json()
-        print( json_data )
+        # print( json_data )
     #save img
         split_data  = image.split(',')
         if len(split_data) > 1:
@@ -501,8 +504,9 @@ def save_img():
                 with open(faceImg_save_path, "rb") as image_file:
                     base64_image = base64.b64encode(image_file.read()).decode('utf-8')
                 # Emotion
-                emotion_result = DeepFace.analyze(img_path=faces[data['face_index']], detector_backend='opencv', actions=['emotion'],enforce_detection=False)
+                emotion_result = DeepFace.analyze(img_path=faceImg_save_path, detector_backend='opencv', actions=['emotion'],enforce_detection=False)
                 dominant_emotion = emotion_result[0]['dominant_emotion']
+                print(dominant_emotion)
                 db_path='./database/member/'
                 if not os.path.exists(db_path):
                     os.makedirs(db_path)

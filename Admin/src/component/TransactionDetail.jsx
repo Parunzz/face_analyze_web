@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
+import "../css/Historydetail.css"
 
 export default function TransactionDetail() {
     const { Data_id } = useParams();
@@ -18,7 +19,7 @@ export default function TransactionDetail() {
             });
             if (response.ok) {
                 const data = await response.json();
-                
+                console.log(data)
                 setCUTIMG(data.Cut_Img)
                 setFULLIMG(data.Full_Img)
             }
@@ -32,10 +33,17 @@ export default function TransactionDetail() {
     }, [Data_id]); // Fetch member detail whenever pid changes
 
     return (
-        <div>
-            TransactionDetail + {Data_id}
+        <div class = "mybackground">
+        <div class = "historypicture">
+            <h1>Transaction Detail</h1>
+            <div class = "img1">
             <img src={`data:image/jpeg;base64, ${FullIMG}`} alt="Full Image" />
+            </div>
+            <div class = "img2">
             <img src={`data:image/jpeg;base64, ${CUTIMG}`} alt="Full Image" />
+            </div>
+     
+        </div>
         </div>
     )
 }
