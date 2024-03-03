@@ -155,3 +155,63 @@
   .logo img:hover {
     transform: rotate(360deg);
   }
+
+a.Kiosk
+{
+    width: 300px;
+    height: 400px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 40px;
+    position: relative;
+    box-shadow: 0px 12px 12px #42424221;
+    margin: 50px;
+    object-fit: cover;
+    display: block;
+    overflow:hidden;
+}
+
+.Kiosk-text
+{
+    position: absolute;
+    color: black;
+    align-items: center;
+    text-align: center;
+    display: block;
+    z-index: 205;
+    top: 350px ;
+    background-color: rgba(255, 255, 255, 0.767);
+    height: 50px;
+    width: 300px;
+    backdrop-filter: blur(10px);
+}
+
+.Kiosk-img
+{
+    position: absolute;
+    height: 460px;
+    /* width: 400px; */
+    /* overflow:hidden; */
+    /* opacity: 20%; */
+    z-index: 201;
+    transition: transform 0.5s ease;
+}
+
+.Kiosk:hover .Kiosk-img {
+    transform: scale(1.2);
+}
+
+.Kiosk-img-1
+{
+    height: 400px;
+    position: absolute;
+    /* filter: blur(22px); */
+    opacity: 42%;
+    
+    object-fit:cover;
+    z-index: 200;
+    transition: opacity 0.5s ease;
+}
+
+.Kiosk:hover .Kiosk-img-1 {
+    opacity: 60%; /* Adjust opacity on hover */
+}
