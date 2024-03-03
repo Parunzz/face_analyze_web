@@ -26,11 +26,11 @@ CORS(app, supports_credentials=True)
 
 
 ## FOR DEV ENV ###
-# mydb = mysql.connector.connect(host="localhost",user="root",password="",db="deepface",connect_timeout=100)
+mydb = mysql.connector.connect(host="localhost",user="root",password="",db="deepface",connect_timeout=100)
 ### FOR Docker ###
 #mydb = mysql.connector.connect(host="db",user="admin",password="admin",db="deepface",connect_timeout=10000)
 ### FOR NETWORK
-mydb = mysql.connector.connect(host="192.168.1.53",user="zen",password="zen",db="deepface",connect_timeout=100)
+# mydb = mysql.connector.connect(host="192.168.1.53",user="zen",password="zen",db="deepface",connect_timeout=100)
 mycursor = mydb.cursor(dictionary=True)
 
 @app.route("/")
@@ -391,17 +391,26 @@ def TransactionDetail():
 
 #Machine learning
 faces = []
+No_faceDetect = 0
 @app.route('/api/Detect_face', methods=['POST'])
 def DrawRec():
     global faces
     global image 
+    global No_faceDetect
     NewPerson = ''
     facial_area = []
     JSON = []
     index = None
     try:
-        json_data = request.get_json()
-        image = json_data.get('image')
+        # if 'image' not in request.files:
+        #     return jsonify({'error': 'No image found in the request'}), 400
+        # json_data = request.get_json()
+        # image = json_data.get('image')
+
+        image_file  = request.files['image']
+        image_data = image_file.read()
+        base64_string = base64.b64encode(image_data).decode('utf-8')
+        image = f"data:image/png;base64,{base64_string}"
         face_objs = DeepFace.extract_faces(img_path = image, 
             target_size = (500, 500), 
             detector_backend = 'ssd',
@@ -410,9 +419,13 @@ def DrawRec():
         for f in face_objs:
             # facial_area.append(f['facial_area'])
             if f['confidence'] == 0:
-                faces = []
+                if No_faceDetect == 10:
+                    faces = []
+                    No_faceDetect = 0
+                else:
+                    No_faceDetect += 1
                 NewPerson = 'False'
-                print("No face detect")
+                print("No face detect --------------------------")
                 result = {
                     'faces': None,
                     'NewPerson': NewPerson,
