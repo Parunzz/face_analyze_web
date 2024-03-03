@@ -4,6 +4,7 @@ import vdoBg from '../assets/video/Kiosk.mp4'
 import UseAuth from './UseAuth';
 import Cookies from 'js-cookie';
 
+
 function Dashboard() {
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
@@ -100,26 +101,7 @@ function Dashboard() {
               <h3 className='text-2xl font-semibold'>DASHBOARD</h3>
             </div>
             <div className='data-info'>
-              <div className='User-Detect'>
-                <div className='data-box-title font-semibold'>
-                  USER DETECT
-                  {/* change */}
-                  <div className='text-4xl font-bold detail text-green-600'>548</div>
-                </div>
-                <div className='data-box-title font-semibold'>
-                  STRANGER DETECT
-                  {/* changse */}
-                  <div className='text-4xl font-bold detail text-red-600'>25</div>
-                </div>
-                <div className='SearchBar'>
-                  <input className='Search '></input>
-                </div>
-              </div>
-            </div>
-            <div className='table-line'>
-              <div className='table'>
-              </div>
-              <div className='table-1'></div>
+              
             </div>
 
           </div>

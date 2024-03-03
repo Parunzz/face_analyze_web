@@ -7,7 +7,6 @@ import Members from './component/Members';
 import Dashboard from './component/Dashboard';
 import AddMember from './component/AddMember';
 import History from './component/History.jsx';
-import WebcamCapture from './component/CCTV1s.jsx';
 import MemberDetail from './component/MemberDetail';
 import Menu from './component/Menu.jsx'
 import Kiosks from './component/Kiosks.jsx'
@@ -28,7 +27,6 @@ function App() {
           <Route path='/History' element={<History />} />
           <Route path='/history/:Data_id' element={<TransactionDetail />} />
           <Route path='/Kiosks' element={<Kiosks />} />
-          <Route path='/CCTV1s' element={<WebcamCapture />} />  
           <Route path='/Dashboard' element={<Dashboard />}/>
       </Routes>
     </BrowserRouter>
