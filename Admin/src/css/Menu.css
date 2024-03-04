@@ -114,6 +114,7 @@ body
     padding: 5px;
     margin-bottom: 45px;
     padding: 10px;
+    transition: transform 0.3s ease;
 }
 
 .menu-item:hover
@@ -121,6 +122,7 @@ body
     background-color: rgb(180, 180, 180);
     border-color: rgba(0, 0, 0, 0.781);
     border-radius: 5px;
+    transform: scale(1.08);
 }
 
 .menu-item img
