@@ -519,13 +519,13 @@ def save_img():
                 with open(faceImg_save_path, "rb") as image_file:
                     base64_image = base64.b64encode(image_file.read()).decode('utf-8')
                 # Emotion
-                emotion_result = DeepFace.analyze(img_path=faceImg_save_path, detector_backend='opencv', actions=['emotion'],enforce_detection=False)
+                emotion_result = DeepFace.analyze(img_path=faceImg_save_path, detector_backend='yunet', actions=['emotion'],enforce_detection=False)
                 dominant_emotion = emotion_result[0]['dominant_emotion']
                 print(dominant_emotion)
                 db_path='./database/member/'
                 if not os.path.exists(db_path):
                     os.makedirs(db_path)
-                person_name_result = DeepFace.find(img_path=faceImg_save_path, db_path=db_path, enforce_detection=False)
+                person_name_result = DeepFace.find(img_path=faceImg_save_path, db_path=db_path, enforce_detection=False, detector_backend='yunet', distance_metric='euclidean_l2',model_name="SFace")
                 if not person_name_result[0].empty:
                     person_name = person_name_result[0]['identity'][0].split('/')[3]
                     # print("Name : ",person_name)
