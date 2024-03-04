@@ -4,9 +4,24 @@ import vdoBg from '../assets/video/Kiosk.mp4'
 import UseAuth from './UseAuth';
 import Cookies from 'js-cookie';
 
+
 function Dashboard() {
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
+  const [statistics, setStatistics] = useState([]);
+
+  useEffect(() => {
+    const fetchStatistics = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/api/statistics');
+            setStatistics(response.data);
+        } catch (error) {
+            console.error('Error fetching statistics:', error);
+        }
+    };
+
+    fetchStatistics();
+}, []);
   const handleLogout = () => {
     Cookies.remove('token');
   }
@@ -31,6 +46,8 @@ function Dashboard() {
     // Cleanup function to clear the interval when component unmounts
     return () => clearInterval(intervalId);
   }, []);
+
+
 
 
   return (
@@ -97,30 +114,17 @@ function Dashboard() {
           </div>
           <div className='info'>
             <div className='title'>
-              <h3 className='text-2xl font-semibold'>DASHBOARD</h3>
+              <h3 className='text-3xl font-bold'>Dashboard</h3>
             </div>
             <div className='data-info'>
-              <div className='User-Detect'>
-                <div className='data-box-title font-semibold'>
-                  USER DETECT
-                  {/* change */}
-                  <div className='text-4xl font-bold detail text-green-600'>548</div>
-                </div>
-                <div className='data-box-title font-semibold'>
-                  STRANGER DETECT
-                  {/* changse */}
-                  <div className='text-4xl font-bold detail text-red-600'>25</div>
-                </div>
-                <div className='SearchBar'>
-                  <input className='Search '></input>
-                </div>
-              </div>
-            </div>
-            <div className='table-line'>
-              <div className='table'>
-              </div>
-              <div className='table-1'></div>
-            </div>
+   {statistics.map((statistic, index) => (
+       <div key={index} className='statistic-item'>
+           {/* แสดงข้อมูลสถิติที่ได้จาก backend */}
+           <h4>{statistic.title}</h4>
+           <p>{statistic.value}</p>
+       </div>
+   ))}
+</div>
 
           </div>
         </div>
