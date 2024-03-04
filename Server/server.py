@@ -114,7 +114,7 @@ def AddMember():
                 os.remove(file_path)  # Remove the file
                 print(f"Removed: {file_path}")
   
-        DeepFace.find(img_path=member_path, db_path='./database/member/', enforce_detection=False)
+        DeepFace.find(img_path=member_path, db_path='./database/member/', enforce_detection=False, detector_backend='yunet', distance_metric='euclidean_l2',model_name="SFace")
         # Insert the new user into the database
         mycursor.execute("INSERT INTO person_info (FirstName, LastName , gender , DateOfBirth, img_path) VALUES (%s, %s, %s, %s, %s)", (AddfirstName, AddlastName , Addgender ,formatted_date, folder_path))
         mydb.commit()
@@ -174,8 +174,7 @@ def UpdateMember():
                     os.remove(file_path)  # Remove the file
                     print(f"Removed: {file_path}")
                 
-            DeepFace.find(img_path=member_path, db_path='./database/member/', enforce_detection=False)
-    
+            DeepFace.find(img_path=member_path, db_path='./database/member/', enforce_detection=False, detector_backend='yunet', distance_metric='euclidean_l2',model_name="SFace")
         
         # Insert the new user into the database
         mycursor.execute("UPDATE person_info SET FirstName = %s, LastName = %s, gender = %s, DateOfBirth = %s, img_path = %s WHERE pid = %s", (AddfirstName, AddlastName, Addgender, formatted_date, new_folder_path, pid))
