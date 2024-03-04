@@ -73,7 +73,7 @@
     padding-top: 15px;
     /* padding-left: 50px; */
     display: block;
-    margin-bottom: 2%;
+    margin-bottom: 11%;
     font-weight: bold;
 }
 
@@ -81,9 +81,9 @@
 {
     /* display: block; */
     display: block;
-    margin-top: 1.5%;
-    margin-left: 1%;
-    /* translate: -180%; */
+    margin-top: 5%;
+    margin-left: 1.7%;
+    translate: -110%;
 }
 
 .emoji
