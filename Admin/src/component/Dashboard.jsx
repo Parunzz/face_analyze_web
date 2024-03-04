@@ -114,7 +114,8 @@ function Dashboard() {
           </div>
           <div className='info'>
             <div className='title'>
-              <h3 className='text-3xl font-bold'>Dashboard</h3>
+              <h3 className='text-3xl font-bold'>แผงควบคุม
+</h3>
             </div>
             <div className='data-info'>
    {statistics.map((statistic, index) => (
