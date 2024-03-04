@@ -220,18 +220,19 @@ function Camera() {
                         </div>
                         {Array.isArray(response) ? (
                             response.map((result, index) => (
-                                <div className='box1' key={index}>
-                                    <img src={`data:image/jpeg;base64,${result.base64_image}`} className='emoji'></img>
-                                    {/* <img src={`data:image/jpeg;base64,${result.BLOB}`} className='emoji'></img> */}
-                                    <h3 className='Name'>Hello, {result.person_name}</h3>
-                                    <h4 className='Text'> {result.response_text} </h4>
-                                    <h4 className='Text'> {result.person_gender} </h4>
-                                    <h4 className='Text'> {result.person_age} </h4>
+                                <div className={`box1 ${response.length > 0 ? 'show' : ''}`}>
+                                    {/* <img src={`data:image/jpeg;base64,${result.base64_image}`} className='emoji'></img> */}
+                                    <img src={`data:image/jpeg;base64,${result.BLOB}`} className='emoji' alt={'Emoji ${index}'} />
+                                    <div className='Text-section'>
+                                        <h3 className='Name'>สวัสดี, {result.person_name}</h3> 
+                                        <h4 className='Text'> {result.response_text} </h4>
+                                    </div>
+                                    {/* <h4 className='Text'> {result.person_gender} </h4> */}
+                                    {/* <h4 className='Text'> {result.person_age} </h4> */}
                                 </div>
                                 // <span>Dominant Emotion: {result.dominant_emotion}</span><br />
                                 // <span>Person Name: {result.person_name}</span><br />
                                 // <span>Response Text: {result.response_text}</span>
-
                             ))
                         ) : (
 
