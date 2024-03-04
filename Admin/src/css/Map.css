@@ -1,0 +1,17 @@
+.bg
+{
+    position: absolute;
+    height: 100vh;
+    width: 100%;
+    opacity: 80%;
+}
+
+.info-homes
+{
+    height: 100vh;
+}
+
+.map
+{
+    padding: 200px;
+}

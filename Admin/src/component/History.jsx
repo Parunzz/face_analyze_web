@@ -95,7 +95,7 @@ function History() {
             </div>
           </div>
           <div className='info'>
-            <h3 className='text-3xl font-bold'>History</h3>
+            <h3 className='text-3xl font-bold'>ประวัติ</h3>
             <Transaction />
 
           </div>
