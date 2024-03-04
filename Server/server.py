@@ -347,8 +347,8 @@ def Transaction():
 
         # Fetch data from database with pagination
         # mycursor.execute('SELECT * FROM data_info LIMIT %s OFFSET %s', (rows_per_page, offset))
-        # mycursor.execute('SELECT Full_path,Cut_path,person_info.FirstName,person_info.gender,person_info.DateOfBirth,data_info.DateTime,emotion_data.emotion_data FROM `data_info` JOIN emotion_data ON data_info.emotion_id = emotion_data.emotion_id JOIN person_info ON data_info.pid = person_info.pid LIMIT %s OFFSET %s', (rows_per_page, offset))
-        mycursor.execute('SELECT data_info.Data_id,data_info.Name,data_info.Gender,data_info.Age,data_info.DateTime,emotion_data.emotion_data FROM `data_info` JOIN emotion_data ON data_info.emotion_id = emotion_data.emotion_id;')
+        # mycursor.execute('SELECT data_info.Data_id,data_info.Name,data_info.Gender,data_info.Age,data_info.DateTime,emotion_data.emotion_data,data_info.place FROM `data_info` JOIN emotion_data ON data_info.emotion_id = emotion_data.emotion_id ORDER BY data_info.DateTime DESC LIMIT %s OFFSET %s;', (rows_per_page, offset))
+        mycursor.execute('SELECT data_info.Data_id,data_info.Name,data_info.Gender,data_info.Age,data_info.DateTime,emotion_data.emotion_data,data_info.place FROM `data_info` JOIN emotion_data ON data_info.emotion_id = emotion_data.emotion_id ORDER BY data_info.DateTime DESC;')
         data = mycursor.fetchall()
         
         return make_response(jsonify(data), 200)
@@ -388,15 +388,83 @@ def TransactionDetail():
     except Exception as e:
         print(f"Error: {str(e)}")
         return jsonify({'error': str(e)}),500
+    
+@app.route('/api/FindPerson',methods=['POST'])
+def FindPerson():
+    try:
+        json_data = request.get_json()
+        Data_id = int(json_data.get('Data_id'))
+        base64_string = json_data.get('FaceImg')
+        image = f"data:image/png;base64,{base64_string}"
+        db_path = './database/full_img/'
+        if not os.path.exists(db_path):
+            os.makedirs(db_path)
+        find_result = DeepFace.find(img_path=image, db_path=db_path, enforce_detection=False, detector_backend='yunet', distance_metric='euclidean_l2',model_name="SFace")
+        # print('Path : ',find_result)
+        if not find_result[0].empty:
+            img_paths = find_result[0]['identity'].tolist() 
+            first_10_img_paths = img_paths[:10]
+            # print('name',img_path)
+        else:
+            img_paths = []
+        base64_images = []
+        for img_path in first_10_img_paths:
+            with open(img_path, "rb") as img_file:
+                base64_image = base64.b64encode(img_file.read()).decode("utf-8")
+                base64_images.append(base64_image)
+        response_data = {
+            'find_result':base64_images
+        }
+        return make_response(jsonify(response_data), 200)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)}),500
+    
+@app.route('/api/Update',methods=['POST'])
+def UpdateModel():
+    try:
+        json_data = request.get_json()
+        Data_id = int(json_data.get('Data_id'))
+        base64_string = json_data.get('FaceImg')
+        image = f"data:image/png;base64,{base64_string}"
+        db_path = './database/full_img/'
+        if not os.path.exists(db_path):
+            os.makedirs(db_path)
+        for filename in os.listdir(db_path):
+                if filename.endswith(".pkl"):
+                    file_path = os.path.join(db_path, filename)  # Get the full path of the file
+                    os.remove(file_path)  # Remove the file
+                    print(f"Removed: {file_path}")
+        find_result = DeepFace.find(img_path=image, db_path=db_path, enforce_detection=False, detector_backend='yunet', distance_metric='euclidean_l2',model_name="SFace")
+        # print('Path : ',find_result)
+        if not find_result[0].empty:
+            img_paths = find_result[0]['identity'].tolist() 
+            first_10_img_paths = img_paths[:10]
+            # print('name',img_path)
+        else:
+            img_paths = []
+        base64_images = []
+        for img_path in first_10_img_paths:
+            with open(img_path, "rb") as img_file:
+                base64_image = base64.b64encode(img_file.read()).decode("utf-8")
+                base64_images.append(base64_image)
+        response_data = {
+            'find_result':base64_images
+        }
+        return make_response(jsonify(response_data), 200)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)}),500
         
 
 #Machine learning
 faces = []
+old_image = ''
 No_faceDetect = 0
 @app.route('/api/Detect_face', methods=['POST'])
 def DrawRec():
     global faces
-    global image 
+    global old_image 
     global No_faceDetect
     NewPerson = ''
     facial_area = []
@@ -457,6 +525,7 @@ def DrawRec():
                 index = len(faces) - 1
                 NewPerson = 'True'
                 print("New Person.")
+                old_image = image
             else:
                 print("Same Person.")
                 NewPerson = 'False'
@@ -478,7 +547,7 @@ def save_img():
         json_data = request.get_json()
         # print( json_data )
     #save img
-        split_data  = image.split(',')
+        split_data  = old_image.split(',')
         if len(split_data) > 1:
             encoded_string = split_data[1]
         else:
