@@ -26,11 +26,11 @@ CORS(app, supports_credentials=True)
 
 
 ## FOR DEV ENV ###
-# mydb = mysql.connector.connect(host="localhost",user="root",password="",db="deepface",connect_timeout=100)
+mydb = mysql.connector.connect(host="localhost",user="root",password="",db="deepface",connect_timeout=100)
 ### FOR Docker ###
 #mydb = mysql.connector.connect(host="db",user="admin",password="admin",db="deepface",connect_timeout=10000)
 ### FOR NETWORK
-mydb = mysql.connector.connect(host="192.168.1.53",user="zen",password="zen",db="deepface",connect_timeout=100)
+# mydb = mysql.connector.connect(host="192.168.1.53",user="zen",password="zen",db="deepface",connect_timeout=100)
 mycursor = mydb.cursor(dictionary=True)
 
 @app.route("/")
@@ -363,12 +363,13 @@ def TransactionDetail():
         json_data = request.get_json()
         Data_id = int(json_data.get('Data_id'))
         # print(Data_id)
-        mycursor.execute('SELECT * FROM `data_info` JOIN emotion_data ON data_info.emotion_id = emotion_data.emotion_id WHERE Data_id = %s;',(Data_id,))
+        # mycursor.execute('SELECT * FROM `data_info` JOIN emotion_data ON data_info.emotion_id = emotion_data.emotion_id WHERE Data_id = %s;',(Data_id,))
+        mycursor.execute('SELECT data_info.Name,data_info.Gender,data_info.Age,data_info.DateTime,data_info.Full_path,data_info.Cut_path,data_info.place,emotion_data.emotion_data FROM `data_info` JOIN emotion_data ON data_info.emotion_id = emotion_data.emotion_id WHERE Data_id = %s;',(Data_id,))
         data = mycursor.fetchall()
         data_row = data[0]  # Assuming there's only one row in the data list
         full_path = data_row['Full_path']
         cut_path = data_row['Cut_path']
-
+        # print(data_row)
         # Open and read the image files
         with open(full_path, "rb") as img_file1, open(cut_path, "rb") as img_file2:
             img_data1 = img_file1.read()
@@ -382,6 +383,7 @@ def TransactionDetail():
                 "Data_id": Data_id,
                 "Full_Img": base64_img1,
                 "Cut_Img": base64_img2,
+                "Data":data_row
             }
         return make_response(jsonify(response_data), 200)
     except Exception as e:
@@ -584,140 +586,6 @@ def save_img():
     except Exception as e:
         print(f"Error: {str(e)}")
         return jsonify({'error': str(e)}),500   
-
-    
-@app.route('/api/save_fullImg', methods=['POST'])
-def process_image():
-    try:
-        # Get the JSON payload from the request
-        json_data = request.get_json()
-        #print('Received JSON:', json_data)
-
-        # Extract the base64-encoded string from the 'data' field
-        image_data = json_data.get('image', '')
-        split_data  = image_data.split(',')
-        if len(split_data) > 1:
-            encoded_string = split_data[1]
-        else:
-            # print('Invalid image data format:', image_data)
-            # Handle the case where the split did not produce the expected number of elements
-            return jsonify({'error': 'Invalid image data format'}), 400
-
-        # Decode the base64-encoded string
-        bytes_decoded = base64.b64decode(encoded_string)
-
-        # Create an image from the decoded bytes
-        img = Image.open(BytesIO(bytes_decoded))
-
-       # Generate a unique filename using UUID
-        unique_filename = str(uuid.uuid4()) + '.jpg'
-        # Save the processed image with the unique filename
-        folder_path = './database/full_img/'
-        if not os.path.exists(folder_path):
-            os.makedirs(folder_path)
-        
-        FullImg_save_path = os.path.join(folder_path, unique_filename)
-        out_jpg = img.convert('RGB')
-        out_jpg.save(FullImg_save_path)
-
-
-        #IMG DETECT
-        emotion_result = DeepFace.analyze(img_path=FullImg_save_path, detector_backend='opencv', actions=['emotion'])
-        results = []
-        for entry in emotion_result:
-            # Load image
-            image = Image.open(FullImg_save_path)
-
-            # Extract face region
-            x, y, w, h = entry['region']['x'], entry['region']['y'], entry['region']['w'], entry['region']['h']
-            face_region = image.crop((x, y, x + w, y + h))
-            
-            # Generate a unique filename for each face
-            unique_filename = str(uuid.uuid4()) + '.jpg'
-            folder_path = './database/faces/'
-            if not os.path.exists(folder_path):
-                os.makedirs(folder_path)
-            small_img_save_path = os.path.join(folder_path, unique_filename)
-
-            # Save the cropped face region to the specified folder
-            face_region.save(small_img_save_path)
-            
-            # Convert the small image to base64
-            with open(small_img_save_path, "rb") as image_file:
-                base64_image = base64.b64encode(image_file.read()).decode('utf-8')
-
-            dominant_emotion = entry['dominant_emotion']
-
-            #find member
-            db_path='./database/member/'
-            if not os.path.exists(db_path):
-                os.makedirs(db_path)
-            person_name_result = DeepFace.find(img_path=small_img_save_path, db_path=db_path, enforce_detection=False)
-            print(person_name_result)
-            if not person_name_result[0].empty:
-                person_name = person_name_result[0]['identity'][0].split('/')[3]
-                print("ชื่อ : ",person_name)
-                mycursor.execute('SELECT FirstName,gender,DateOfBirth, pid FROM person_info WHERE FirstName = %s', (person_name,))
-                person_info = mycursor.fetchone()
-                if person_info:
-                    person_name = person_info['FirstName']
-                    person_pid = person_info['pid']
-                    person_gender = person_info['gender']
-                    person_DateOfBirth = person_info['DateOfBirth']
-                    
-                    person_DateOfBirth = datetime.combine(person_DateOfBirth, datetime.min.time())
-                    # Get the current datetime
-                    current_datetime = datetime.now()
-                    # Calculate the difference between current datetime and date of birth
-                    age_timedelta = current_datetime - person_DateOfBirth
-                    # Convert the timedelta to years (approximate)
-                    person_age = int(age_timedelta.days / 365.25)
-                    print(person_age)
-                else:
-                    person_name = "Unknown"
-                    person_pid = None
-                    person_gender = None
-                    person_age = None
-            else:
-                person_name = "Unknown"
-                person_pid = None
-                person_gender = None
-                person_age = None
-            print(person_name)
-            mycursor.execute('SELECT IMG_Emotion, emotion_data.emotion_id,emotion_data.emotion_data,response_text.response_text FROM `emotion_data` JOIN response_text ON emotion_data.emotion_id = response_text.emotion_id WHERE emotion_data.emotion_data = %s', (dominant_emotion,))
-            emotion_data_result = mycursor.fetchone()
-            # print(dominant_emotion)
-            # print(emotion_data_result)
-            response_text = emotion_data_result['response_text']
-            # print(response_text)
-
-            img_emotion = emotion_data_result['IMG_Emotion']
-            img_emotion_base64 = base64.b64encode(img_emotion).decode('utf-8')
-            # Insert the new user into the database
-            emotion_id = emotion_data_result['emotion_id']
-            # print(img_emotion_base64)
-            current_datetime = datetime.now()
-            date_mysql_format = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
-            mycursor.execute("INSERT INTO data_info (Name, Gender, Age, pid, emotion_id, DateTime, Full_path, Cut_path) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
-                            (person_name, person_gender, person_age ,person_pid, emotion_id, date_mysql_format, FullImg_save_path, small_img_save_path))
-            mydb.commit()
-            
-            results.append({
-                    'dominant_emotion': dominant_emotion,
-                    'person_name': person_name,
-                    'person_gender':person_gender,
-                    'person_age':person_age,
-                    'response_text': response_text,
-                    'base64_image': base64_image,
-                    'BLOB': img_emotion_base64
-            })
-        # print(results)
-        return jsonify(results),200
-
-    except Exception as e:
-        print("error",e)
-        return jsonify({'error': str(e), 'dominant_emotion': "Error", 'person_name': 'unknown','response_text': 'หาไม่เจอ'}), 404
-
 
 
 ## MAIN ##
