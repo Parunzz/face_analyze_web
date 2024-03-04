@@ -201,24 +201,27 @@ function Camera() {
                             <div className='time text-white'>{currentTime}</div>
                         </div>
                         {Array.isArray(response) ? (
-
                             <ul>
                                 {response.map((result, index) => (
                                     <li key={index}>
                                         <div className='box1'>
-                                            <img src={`data:image/jpeg;base64,${result.base64_image}`} className='emoji' alt={`Emoji ${index}`} />
-                                            {/* <img src={`data:image/jpeg;base64,${result.BLOB}`} className='emoji' alt={`Emoji ${index}`} /> */}
+                                            <img src={`data:image/jpeg;base64,${result.BLOB}`} className='emoji' alt={`Emoji ${index}`} />
                                             <h3 className='Name'>{result.person_name}</h3>
-                                            <h4 className='Text'> {result.response_text}</h4>
-                                            <h4 className='Text'> {result.person_gender}</h4>
-                                            <h4 className='Text'> {result.person_age}</h4>
-                                        </div>
+                                            <h4 className='Text'>{result.response_text}</h4>
 
+                                            {/* เพิ่มเงื่อนไขเพื่อตรวจสอบว่ามีข้อมูลในฐานข้อมูลหรือไม่ */}
+                                            {result.person_gender && (
+                                                <h4 className='Text'>เพศ: {result.person_gender}</h4>
+                                            )}
+
+                                            {result.person_age && (
+                                                <h4 className='Text'>อายุ: {result.person_age} ปี</h4>
+                                            )}
+                                        </div>
                                     </li>
                                 ))}
                             </ul>
                         ) : (
-
                             <div className='box1'>
                                 <h3 className='Name'>Don't find face</h3>
                             </div>
