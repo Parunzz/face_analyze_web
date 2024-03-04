@@ -11,6 +11,7 @@ import MemberDetail from './component/MemberDetail';
 import Menu from './component/Menu.jsx'
 import Kiosks from './component/Kiosks.jsx'
 import TransactionDetail from './component/TransactionDetail.jsx';
+import Map from './component/Map.jsx';
 function App() {
 
   
@@ -28,6 +29,7 @@ function App() {
           <Route path='/history/:Data_id' element={<TransactionDetail />} />
           <Route path='/Kiosks' element={<Kiosks />} />
           <Route path='/Dashboard' element={<Dashboard />}/>
+          <Route path='/Map' element={<Map />}/>
       </Routes>
     </BrowserRouter>
   )
