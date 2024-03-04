@@ -183,10 +183,18 @@ video
 {
     padding-bottom: 50px;
 }
+
+.Introduce-section.introduce-visible {
+    opacity: 1;
+    transform: translateY(0); /* Move back to original position */
+}
+
 .Introduce-section
 {
     padding-top: 150px;
     padding: 200px;
+    transform: translateY(50px); /* Initially move down by 50px */
+    transition: opacity 0.5s ease, transform 0.5s ease; /* Added transitions for smooth effect */
 }
 
 .img-section

@@ -57,7 +57,7 @@
     background-color: rgba(255, 255, 255, 0.743);
     backdrop-filter: blur(6px);
     position: absolute;
-    display: flex   ;
+    display: flex;
     align-items: center;
     border-radius: 40px;
     bottom: 120px;
@@ -70,7 +70,7 @@
 .Name
 {
     font-size: 24px;
-    padding-top: 15px;
+    /* padding-top: 15px; */
     /* padding-left: 50px; */
     display: block;
     margin-bottom: 2%;
@@ -88,7 +88,7 @@
 
 .emoji
 {
-    width: 80px;
+    width: 20%;
     align-items: center ;
     display: flex;
     justify-content: center;
@@ -97,6 +97,13 @@
     border-radius: 10px;
 }
 
+.Text-section
+{
+    width: 70%;
+    padding-right: 4px;
+    padding-top: 5px;
+
+}
 .times
 {
     position: absolute;
