@@ -15,7 +15,7 @@ from werkzeug.security import check_password_hash
 from datetime import timedelta
 import jwt
 from datetime import datetime
-import threading
+import io
 
 
 
@@ -483,13 +483,14 @@ def DrawRec():
         image = f"data:image/png;base64,{base64_string}"
         face_objs = DeepFace.extract_faces(img_path = image, 
             target_size = (500, 500), 
-            detector_backend = 'ssd',
+            detector_backend = 'opencv',
             enforce_detection=False
         )
+        should_append = True
         for f in face_objs:
             # facial_area.append(f['facial_area'])
             if f['confidence'] == 0:
-                if No_faceDetect == 10:
+                if No_faceDetect == 5:
                     faces = []
                     No_faceDetect = 0
                 else:
@@ -501,17 +502,18 @@ def DrawRec():
                     'NewPerson': NewPerson,
                     'face_index': None
                 }
+                should_append = False
                 JSON.append(result)
                 break
             new_face = f['face']
             # Check if the new embedding is close to any existing embedding
-            should_append = True
+            
             for old_face in faces:
                 result = DeepFace.verify(
                     img1_path=new_face,  # Use the image data for the first face
                     img2_path=old_face,  # Use the image data for the second face
                     model_name="SFace",
-                    detector_backend='ssd',
+                    detector_backend='opencv',
                     distance_metric='euclidean_l2',
                     enforce_detection=False
                 )
@@ -536,6 +538,12 @@ def DrawRec():
                 'face_index': index
             }
             JSON.append(result)
+        if should_append:
+            # print(faces[index])
+            face_image_base64 = base64.b64encode(faces[index].tobytes()).decode('utf-8')
+            face_image_base64 = f"data:image/png;base64,{face_image_base64}"
+            result['image'] = image
+            result['face_img'] = face_image_base64
         return make_response(jsonify(JSON), 200)
     except Exception as e:
         print(f"Error: {str(e)}")
@@ -546,9 +554,12 @@ def save_img():
     try:
         JSON = []
         json_data = request.get_json()
-        # print( json_data )
+        print( json_data )
+        image = json_data.get('image')
+        face_img = json_data.get('face_img')
+        # print(image)
     #save img
-        split_data  = old_image.split(',')
+        split_data  = image.split(',')
         if len(split_data) > 1:
             encoded_string = split_data[1]
         else:
