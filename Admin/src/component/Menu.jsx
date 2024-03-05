@@ -7,10 +7,31 @@ import Cookies from 'js-cookie';
 function Menu() {
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
+  const [showIntroduce, setShowIntroduce] = useState(false);
   const handleLogout = () => {
   Cookies.remove('token');
   }
   useEffect(() => {
+
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const introduceSection = document.querySelector('.Introduce-section');
+
+      if (introduceSection) {
+        const introduceSectionTop = introduceSection.getBoundingClientRect().top;
+
+        // If the top of the introduce section is within the viewport, show it
+        if (introduceSectionTop < windowHeight) {
+          setShowIntroduce(true);
+        } else {
+          setShowIntroduce(false);
+        }
+      }
+    };
+
+  
+
     const updateTime = () => {
       const now = new Date();
       const hours = now.getHours().toString().padStart(2, '0');
@@ -30,6 +51,12 @@ function Menu() {
 
     // Cleanup function to clear the interval when component unmounts
     return () => clearInterval(intervalId);
+    window.addEventListener('scroll', handleScroll);
+
+    // Clean up the event listener on component unmount
+    return () => {
+    window.removeEventListener('scroll', handleScroll);}
+    
   }, []);
 
   return (

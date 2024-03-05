@@ -42,7 +42,7 @@ function Member() {
     }, []); // Empty dependency array means this effect runs once when the component mounts
   return (
     <div>
-      <h1 className='text-3xl font-bold' style={{ paddingBottom: '1%' }}>Member</h1>
+      <h1 className='text-3xl font-bold' style={{ paddingBottom: '1%' }}>สมาชิก</h1>
       <Container maxWidth="lg">
           <Fab color="primary" aria-label="add" href='AddMember' sx={{marginLeft: '95%', marginBottom: '-6%'}}>
             <AddIcon />

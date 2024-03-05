@@ -6,13 +6,6 @@ import '../css/Camera.css';
 import Webcam from "react-webcam";
 import { drawRect } from "./utilities";
 
-// Register WebGL backend.
-import * as tf from "@tensorflow/tfjs";
-import '@mediapipe/face_detection';
-import '@tensorflow/tfjs-core';
-import '@tensorflow/tfjs-backend-webgl';
-import * as faceDetection from '@tensorflow-models/face-detection';
-
 function Camera() {
     const webcamRef = useRef(null);
     const canvasRef = useRef(null);
@@ -20,6 +13,7 @@ function Camera() {
     const [imageSrc, setImageSrc] = useState(null);
     const [responseData, setresponseData] = useState([]);
     const [response, setresponse] = useState([]);
+    const [Response, setResponse] = useState([]);
     let isCaptureEnabled = true
 
     const [currentTime, setCurrentTime] = useState('');
@@ -28,59 +22,47 @@ function Camera() {
     const handleLogout = () => {
         Cookies.remove('token');
     }
-    const loadModel = async () => {
-        // const net = await cocossd.load();
-        try {
-            const model = faceDetection.SupportedModels.MediaPipeFaceDetector;
-            const detectorConfig = {
-                runtime: 'tfjs',
-                maxFaces: '10',
-                // runtime: 'mediapipe', // or 'tfjs'
-                // solutionPath: 'node_modules/@mediapipe/face_detection/',
-            }
-            const net = await faceDetection.createDetector(model, detectorConfig);
-            console.log("Face detection model loaded.");
-
-            //  Loop and detect hands
-            setInterval(() => {
-                detect(net);
-            }, 500);
-
-        } catch (error) {
-            console.error("Error loading or using the face detection model:", error);
-        }
-    };
+    // const getScreenshot = (video, width, height) => {
+    //     const canvas = document.createElement('canvas');
+    //     canvas.width = width;
+    //     canvas.height = height;
+    //     const ctx = canvas.getContext('2d');
+    //     ctx.drawImage(video, 0, 0, width, height);
+    //     return canvas.toDataURL(); // returns a base64-encoded data URL
+    // };
     const getScreenshot = (video, width, height) => {
         const canvas = document.createElement('canvas');
         canvas.width = width;
         canvas.height = height;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(video, 0, 0, width, height);
-        return canvas.toDataURL(); // returns a base64-encoded data URL
-    };
-    const getFaceScreenshot = (video, width, height, face) => {
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
 
-        // Check if the face object and its box property are defined
-        if (face && face.box) {
-            // Extract box coordinates from the face
-            const { xMin, xMax, yMin, yMax } = face.box;
-            // Draw only the region within the face bounding box
-            ctx.drawImage(video, xMin, yMin, xMax - xMin, yMax - yMin, 0, 0, width, height);
-        } else {
-            // If the face or its box property is undefined, draw the entire video frame
-            ctx.drawImage(video, 0, 0, width, height);
+        // Convert base64 to Blob
+        const base64Data = canvas.toDataURL('image/jpeg');
+        const blob = dataURItoBlob(base64Data);
+
+        return blob;
+    };
+
+    // Function to convert base64 to Blob
+    function dataURItoBlob(dataURI) {
+        // Convert base64 to binary
+        const byteString = atob(dataURI.split(',')[1]);
+        const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+        // Create Blob object
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
         }
+        return new Blob([ab], { type: mimeString });
+    }
 
-        return canvas.toDataURL(); // returns a base64-encoded data URL
-    };
     const sendApi = async (video, videoWidth, videoHeight, responseData) => {
         try {
-            console.log(responseData);
-            const screenshot = getScreenshot(video, videoWidth, videoHeight);
+            // console.log(responseData);
+            // const screenshot = getScreenshot(video, videoWidth, videoHeight);
             const response = await fetch('http://localhost:3001/api/save_img', {
                 method: 'POST',
                 headers: {
@@ -88,9 +70,10 @@ function Camera() {
                 },
                 body: JSON.stringify(responseData),
             });
-    
+
             // Handle the API response as needed
             const responseInfo = await response.json();
+            console.log(responseInfo)
             if (response.ok) {
                 setresponse(responseInfo);
             }
@@ -98,18 +81,18 @@ function Camera() {
             console.error('Error sending API request:', error);
         }
     };
-    
+
     const sendDetectApi = async (video, videoWidth, videoHeight) => {
         try {
             const screenshot = getScreenshot(video, videoWidth, videoHeight);
+            // Create a FormData object
+            const formData = new FormData();
+            // Append the image data to FormData
+            formData.append('image', screenshot, 'screenshot.jpg');
+            console.log(formData)
             const response = await fetch('http://localhost:3001/api/Detect_face', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    image: screenshot,
-                }),
+                body: formData,
             });
 
             if (!response.ok) {
@@ -126,8 +109,6 @@ function Camera() {
             // Handle error gracefully, e.g., display an error message to the user
         }
     };
-    let seenIds = [];
-    let trackedPersons = [];
     const detect = async () => {
         // Check data is available
         if (
@@ -149,6 +130,7 @@ function Camera() {
             canvasRef.current.height = videoHeight;
 
             const r = await sendDetectApi(video, videoWidth, videoHeight);
+            setResponse(r);
             for (let index = 0; index < r.length; index++) {
                 // console.log(r[index].NewPerson)
                 if (r[index].NewPerson == 'True') {
@@ -179,7 +161,7 @@ function Camera() {
 
         setInterval(() => {
             detect();
-        }, 1000);
+        }, 500);
         // Cleanup function to clear the interval when component unmounts
         return () => clearInterval(intervalId);
     }, []);
@@ -219,22 +201,28 @@ function Camera() {
                             <div className='time text-white'>{currentTime}</div>
                         </div>
                         {Array.isArray(response) ? (
-                            response.map((result, index) => (
-                                <div className='box1' key={index}>
-                                    <img src={`data:image/jpeg;base64,${result.base64_image}`} className='emoji'></img>
-                                    {/* <img src={`data:image/jpeg;base64,${result.BLOB}`} className='emoji'></img> */}
-                                    <h3 className='Name'>Hello, {result.person_name}</h3>
-                                    <h4 className='Text'> {result.response_text} </h4>
-                                    <h4 className='Text'> {result.person_gender} </h4>
-                                    <h4 className='Text'> {result.person_age} </h4>
-                                </div>
-                                // <span>Dominant Emotion: {result.dominant_emotion}</span><br />
-                                // <span>Person Name: {result.person_name}</span><br />
-                                // <span>Response Text: {result.response_text}</span>
+                            <ul>
+                                {response.map((result, index) => (
+                                    <li key={index}>
+                                        <div className='box1'>
+                                        <img src={`data:image/jpeg;base64,${result.base64_image}`} className='emoji' alt={`Emoji ${index}`} />
+                                            {/* <img src={`data:image/jpeg;base64,${result.BLOB}`} className='emoji' alt={`Emoji ${index}`} /> */}
+                                            <h3 className='Name'>{result.person_name}</h3>
+                                            <h4 className='Text'>{result.response_text}</h4>
 
-                            ))
+                                            {/* เพิ่มเงื่อนไขเพื่อตรวจสอบว่ามีข้อมูลในฐานข้อมูลหรือไม่ */}
+                                            {result.person_gender && (
+                                                <h4 className='Text'>เพศ: {result.person_gender}</h4>
+                                            )}
+
+                                            {result.person_age && (
+                                                <h4 className='Text'>อายุ: {result.person_age} ปี</h4>
+                                            )}
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
                         ) : (
-
                             <div className='box1'>
                                 <h3 className='Name'>Don't find face</h3>
                             </div>
