@@ -239,3 +239,12 @@
   .Kiosk:hover .Kiosk-img-1 {
       opacity: 60%; /* Adjust opacity on hover */
   }
+
+
+.camera-section
+{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

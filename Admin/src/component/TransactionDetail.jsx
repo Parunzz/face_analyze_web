@@ -118,9 +118,7 @@ export default function TransactionDetail() {
                 <Button style={{ display: 'flex', alignItems: 'center' }} variant="contained" size="large" onClick={FindPerson}>
                     FIND
                 </Button>
-                <Button style={{ display: 'flex', alignItems: 'center' }} variant="contained" size="large" onClick={Update}>
-                    Update
-                </Button>
+                <Button style={{ display: 'flex', alignItems: 'center' }} variant="contained" size="large" onClick={Update}>Update</Button>
                 <div class="img1">
                     <img src={`data:image/jpeg;base64, ${FullIMG}`} alt="Full Image" />
                 </div>

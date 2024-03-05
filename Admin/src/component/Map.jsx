@@ -102,19 +102,19 @@ function Members() {
           </div>
           <div className='info-homes'>
             <img src='/img/map-bg.png ' className='bg'></img>
-          <div className='map'>
-            <div >
-                <div style={{display:'inline'}} className="1">1 FLOOR</div>
-                <div style={{display:'inline',marginLeft:'50%'}} className="6">6 FLOOR</div><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />ควย<br /><br /><br /><br />
-                <div style={{display:'inline'}} className="2">2 FLOOR</div>
-                <div style={{display:'inline',marginLeft:'50%'}} className="3">3 FLOOR</div>
+          <div className='map-section'>
+            <div className='map'>
+                <div style={{display:'inline' }} className="1 text" >1 FLOOR</div>
+                <div style={{display:'inline',marginLeft:'50%'}} className="6 text">6 FLOOR</div><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />ควย<br /><br /><br /><br />
+                <div style={{display:'inline'}} className="2 text">2 FLOOR</div>
+                <div style={{display:'inline',marginLeft:'50%' }} className="3 text">3 FLOOR</div>
             </div>
-            <LineTo  from="1" to="2" delay="0" borderWidth="10px"/>
-            <LineTo  from="1" to="3" delay="0"/>
-            <LineTo  from="1" to="6" delay="0"/>
-            <LineTo  from="2" to="6" delay="0"/>
-            <LineTo  from="2" to="3" delay="0"/>
-            <LineTo  from="3" to="6" delay="0"/>
+            <LineTo  from="1" to="2" delay="0" borderWidth="7px" borderColor='#383838' borderStyle='dashed '/>
+            <LineTo  from="1" to="3" delay="0" borderWidth="7px" borderColor='#383838' borderStyle='dashed'/>
+            <LineTo  from="1" to="6" delay="0" borderWidth="7px" borderColor='#383838' borderStyle='dashed'/>
+            <LineTo  from="2" to="6" delay="0" borderWidth="7px" borderColor='#383838' borderStyle='dashed'/>
+            <LineTo  from="2" to="3" delay="0" borderWidth="7px" borderColor='#383838' borderStyle='dashed'/>
+            <LineTo  from="3" to="6" delay="0" borderWidth="7px" borderColor='#383838' borderStyle='dashed'/>
         </div>
           </div>
         </div>

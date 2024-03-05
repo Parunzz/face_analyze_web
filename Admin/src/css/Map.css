@@ -11,7 +11,24 @@
     height: 100vh;
 }
 
-.map
+.map-section
 {
     padding: 200px;
+    padding-left: 750px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.map
+{
+    width: 100%;
+    display:block;
+}
+
+.text
+{
+    color: black;
+    
 }
