@@ -12,6 +12,8 @@ import Menu from './component/Menu.jsx'
 import Kiosks from './component/Kiosks.jsx'
 import TransactionDetail from './component/TransactionDetail.jsx';
 import Map from './component/Map.jsx';
+import KiosksTest from './component/KiosksTest.jsx'
+
 function App() {
 
   
@@ -30,6 +32,7 @@ function App() {
           <Route path='/Kiosks' element={<Kiosks />} />
           <Route path='/Dashboard' element={<Dashboard />}/>
           <Route path='/Map' element={<Map />}/>
+          <Route path='/KiosksTest' element={<KiosksTest />}/>
       </Routes>
     </BrowserRouter>
   )
