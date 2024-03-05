@@ -114,7 +114,7 @@ def AddMember():
                 os.remove(file_path)  # Remove the file
                 print(f"Removed: {file_path}")
   
-        DeepFace.find(img_path=member_path, db_path='./database/member/', enforce_detection=False, detector_backend='yunet', distance_metric='euclidean_l2',model_name="SFace")
+        DeepFace.find(img_path=member_path, db_path='./database/member/', enforce_detection=False, detector_backend='ssd', distance_metric='euclidean_l2',model_name="SFace")
         # Insert the new user into the database
         mycursor.execute("INSERT INTO person_info (FirstName, LastName , gender , DateOfBirth, img_path) VALUES (%s, %s, %s, %s, %s)", (AddfirstName, AddlastName , Addgender ,formatted_date, folder_path))
         mydb.commit()
@@ -174,7 +174,7 @@ def UpdateMember():
                     os.remove(file_path)  # Remove the file
                     print(f"Removed: {file_path}")
                 
-            DeepFace.find(img_path=member_path, db_path='./database/member/', enforce_detection=False, detector_backend='yunet', distance_metric='euclidean_l2',model_name="SFace")
+            DeepFace.find(img_path=member_path, db_path='./database/member/', enforce_detection=False, detector_backend='ssd', distance_metric='euclidean_l2',model_name="SFace")
         
         # Insert the new user into the database
         mycursor.execute("UPDATE person_info SET FirstName = %s, LastName = %s, gender = %s, DateOfBirth = %s, img_path = %s WHERE pid = %s", (AddfirstName, AddlastName, Addgender, formatted_date, new_folder_path, pid))
@@ -399,7 +399,7 @@ def FindPerson():
         db_path = './database/full_img/'
         if not os.path.exists(db_path):
             os.makedirs(db_path)
-        find_result = DeepFace.find(img_path=image, db_path=db_path, enforce_detection=False, detector_backend='yunet', distance_metric='euclidean_l2',model_name="SFace")
+        find_result = DeepFace.find(img_path=image, db_path=db_path, enforce_detection=False, detector_backend='ssd', distance_metric='euclidean_l2',model_name="SFace")
         # print('Path : ',find_result)
         if not find_result[0].empty:
             img_paths = find_result[0]['identity'].tolist() 
@@ -435,7 +435,7 @@ def UpdateModel():
                     file_path = os.path.join(db_path, filename)  # Get the full path of the file
                     os.remove(file_path)  # Remove the file
                     print(f"Removed: {file_path}")
-        find_result = DeepFace.find(img_path=image, db_path=db_path, enforce_detection=False, detector_backend='yunet', distance_metric='euclidean_l2',model_name="SFace")
+        find_result = DeepFace.find(img_path=image, db_path=db_path, enforce_detection=False, detector_backend='ssd', distance_metric='euclidean_l2',model_name="SFace")
         # print('Path : ',find_result)
         if not find_result[0].empty:
             img_paths = find_result[0]['identity'].tolist() 
@@ -510,7 +510,7 @@ def DrawRec():
                     img1_path=new_face,  # Use the image data for the first face
                     img2_path=old_face,  # Use the image data for the second face
                     model_name="SFace",
-                    detector_backend='yunet',
+                    detector_backend='ssd',
                     distance_metric='euclidean_l2',
                     enforce_detection=False
                 )
@@ -587,13 +587,13 @@ def save_img():
                 with open(faceImg_save_path, "rb") as image_file:
                     base64_image = base64.b64encode(image_file.read()).decode('utf-8')
                 # Emotion
-                emotion_result = DeepFace.analyze(img_path=faceImg_save_path, detector_backend='yunet', actions=['emotion'],enforce_detection=False)
+                emotion_result = DeepFace.analyze(img_path=faceImg_save_path, detector_backend='opencv', actions=['emotion'],enforce_detection=False)
                 dominant_emotion = emotion_result[0]['dominant_emotion']
                 print(dominant_emotion)
                 db_path='./database/member/'
                 if not os.path.exists(db_path):
                     os.makedirs(db_path)
-                person_name_result = DeepFace.find(img_path=faceImg_save_path, db_path=db_path, enforce_detection=False, detector_backend='yunet', distance_metric='euclidean_l2',model_name="SFace")
+                person_name_result = DeepFace.find(img_path=faceImg_save_path, db_path=db_path, enforce_detection=False, detector_backend='opencv', distance_metric='euclidean_l2',model_name="SFace")
                 if not person_name_result[0].empty:
                     person_name = person_name_result[0]['identity'][0].split('/')[3]
                     # print("Name : ",person_name)
