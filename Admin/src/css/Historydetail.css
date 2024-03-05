@@ -1,0 +1,50 @@
+
+
+.historypicture{
+    background-color: rgb(81, 81, 81);
+    width: 800px;
+    height:  600px;
+    margin: 50px auto;
+    margin: 0 px;
+   border-radius: 20px;
+}
+
+.historypicture h1{
+    font-weight: bold;
+    text-align:  center;
+    font-size: 30px;
+    color: white;
+    transform: translateY(100%);
+   
+}
+
+.img1{
+    width: 300px;
+    height: 300px;
+    margin: 100px 70px;
+    position: relative;
+    
+    /* display: flex;
+    align-items: flex-end; */
+}
+
+.img1 img{
+    width: 300px;
+    height: 400px;
+}
+
+.img2{
+    width: 500px;
+    height: 500px;
+    margin: -350px 450px;
+    position: relative;
+    /* background-color: red; */
+    /* display: flex;
+    align-items: flex-end; */
+
+}
+
+.img2 img{
+    width: 300px;
+    height: 300px;
+}

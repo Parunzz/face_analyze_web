@@ -52,43 +52,58 @@
 
 .box1
 {
-    width: 450px;
+    width: 470px;
     height: 100px;
     background-color: rgba(255, 255, 255, 0.743);
     backdrop-filter: blur(6px);
     position: absolute;
-    display: flex   ;
+    display: flex;
     align-items: center;
     border-radius: 40px;
     bottom: 120px;
     box-shadow: 0px 10px 10px #0000001e;
     z-index: 998;
+    translate: -107%;
+    font-size: 20px;
 }
+
 .Name
 {
     font-size: 24px;
-    padding-top: 15px;
+    /* padding-top: 15px; */
     /* padding-left: 50px; */
     display: block;
+    margin-bottom: 2%;
+    font-weight: bold;
 }
 
 .Text
 {
     /* display: block; */
     display: block;
-
+    margin-top: 1.5%;
+    margin-left: 1%;
+    /* translate: -180%; */
 }
 
 .emoji
 {
-    width: 80px;
+    width: 20%;
     align-items: center ;
     display: flex;
     justify-content: center;
     height: 80px;
     margin-left: 15px;
+    border-radius: 10px;
 }
 
+.Text-section
+{
+    width: 70%;
+    padding-right: 4px;
+    padding-top: 5px;
+
+}
 .times
 {
     position: absolute;
@@ -146,4 +161,81 @@
   
   .logo img:hover {
     transform: rotate(360deg);
+  }
+
+  a.Kiosk
+  {
+      width: 300px;
+      height: 400px;
+      background-color: rgb(255, 255, 255);
+      /* border-radius: 40px; */
+      position: relative;
+      box-shadow: 0px 12px 12px #42424221;
+      margin: 50px;
+      object-fit: cover;
+      display: block;
+      overflow:hidden;
+  }
+  
+  
+  
+  .Kiosk-text
+  {
+      font-size: larger;
+      font-weight: 500;
+      position: absolute;
+      color: black;
+      padding: 10px;
+      align-items: center;
+      text-align: center;
+      display: block;
+      z-index: 205;
+      top: 400px ;
+      background-color: rgba(255, 255, 255, 0.767);
+      height: 50px;
+      width: 300px;
+      backdrop-filter: blur(10px);
+      transition: transform 0.8s;
+  
+  }
+  
+  .Kiosk-text:hover
+  {
+      transform: rotateY('35');
+  }
+  
+  .Kiosk-img
+  {
+      position: absolute;
+      height: 460px;
+      /* width: 400px; */
+      /* overflow:hidden; */
+      /* opacity: 20%; */
+      z-index: 201;
+      transition: transform 0.5s ease;
+  }
+  
+  .Kiosk:hover .Kiosk-img {
+      transform: scale(1.2);
+  }
+  
+  .Kiosk:hover .Kiosk-text {
+      transform:translateY(-50px)
+  }
+  
+  
+  .Kiosk-img-1
+  {
+      height: 400px;
+      position: absolute;
+      /* filter: blur(22px); */
+      opacity: 42%;
+      
+      object-fit:cover;
+      z-index: 200;
+      transition: opacity 0.2s ease;
+  }
+  
+  .Kiosk:hover .Kiosk-img-1 {
+      opacity: 60%; /* Adjust opacity on hover */
   }

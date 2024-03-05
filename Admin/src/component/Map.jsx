@@ -1,10 +1,15 @@
 import { useState, useEffect } from 'react';
-import vdoBg from '../assets/video/Kiosk.mp4'
+import Member from './Member'
 import UseAuth from './UseAuth';
-import Cookies from 'js-cookie';
-import '../css/History.css'
-import Transaction from './Transaction';
-function History() {
+import Cookies from 'js-cookie';;
+import { SteppedLineTo  } from 'react-lineto';
+import LineTo from 'react-lineto';
+import '../css/Map.css'
+
+
+
+function Members() {
+
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
   const handleLogout = () => {
@@ -31,6 +36,7 @@ function History() {
     // Cleanup function to clear the interval when component unmounts
     return () => clearInterval(intervalId);
   }, []);
+
 
   return (
     <>
@@ -94,10 +100,22 @@ function History() {
               <div className='time text-white'>{currentTime}</div>
             </div>
           </div>
-          <div className='info'>
-            <h3 className='text-3xl font-bold'>ประวัติ</h3>
-            <Transaction />
-
+          <div className='info-homes'>
+            <img src='/img/map-bg.png ' className='bg'></img>
+          <div className='map'>
+            <div >
+                <div style={{display:'inline'}} className="1">1 FLOOR</div>
+                <div style={{display:'inline',marginLeft:'50%'}} className="6">6 FLOOR</div><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />ควย<br /><br /><br /><br />
+                <div style={{display:'inline'}} className="2">2 FLOOR</div>
+                <div style={{display:'inline',marginLeft:'50%'}} className="3">3 FLOOR</div>
+            </div>
+            <LineTo  from="1" to="2" delay="0" borderWidth="10px"/>
+            <LineTo  from="1" to="3" delay="0"/>
+            <LineTo  from="1" to="6" delay="0"/>
+            <LineTo  from="2" to="6" delay="0"/>
+            <LineTo  from="2" to="3" delay="0"/>
+            <LineTo  from="3" to="6" delay="0"/>
+        </div>
           </div>
         </div>
       </div>
@@ -105,4 +123,4 @@ function History() {
   );
 }
 
-export default History;
+export default Members;
