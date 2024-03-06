@@ -58,7 +58,7 @@ function Camera() {
 
     const sendApi = async (video, videoWidth, videoHeight, responseData) => {
         try {
-            // console.log(responseData);
+            console.log(responseData);
             // const screenshot = getScreenshot(video, videoWidth, videoHeight);
             // const response = await fetch('http://192.168.1.40:3001/api/save_img', {
             const response = await fetch('http://localhost:3001/api/save_img', {
@@ -73,6 +73,7 @@ function Camera() {
             const responseInfo = await response.json();
             // console.log(responseInfo)
             if (response.ok) {
+                console.log(responseInfo)
                 setresponse(responseInfo);
             }
         } catch (error) {
@@ -130,7 +131,7 @@ function Camera() {
             canvasRef.current.height = videoHeight;
 
             const r = await sendDetectApi(video, videoWidth, videoHeight);
-            console.log(r)
+            // console.log(r)
             setResponse(r);
             for (let index = 0; index < r.length; index++) {
                 // console.log(r[index].NewPerson)
@@ -180,7 +181,7 @@ function Camera() {
                                 ref={webcamRef}
                                 muted={true}
                                 screenshotFormat="image/jpeg"
-                                height={16} width={9}
+                                height={3840 } width={2160}
                                 className='webcams'
                                 videoConstraints={{ aspectRatio: aspectRatio }} />
                             <canvas
@@ -206,8 +207,8 @@ function Camera() {
                                 {response.map((result, index) => (
                                     <li key={index}>
                                         <div className='box1'>
-                                            <img src={`data:image/jpeg;base64,${result.base64_image}`} className='emoji' alt={`Emoji ${index}`} />
-                                            {/* <img src={`data:image/jpeg;base64,${result.BLOB}`} className='emoji' alt={`Emoji ${index}`} /> */}
+                                            <img src={result.base64_image} className='emoji' alt={`Emoji ${index}`} />
+                                            <img src={`data:image/jpeg;base64,${result.BLOB}`} className='emoji' alt={`Emoji ${index}`} />
                                             <h3 className='Name'>{result.person_name}</h3>
                                             <h4 className='Text'>{result.response_text}</h4>
 
