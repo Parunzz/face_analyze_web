@@ -400,7 +400,7 @@ def FindPerson():
         db_path = './database/full_img/'
         if not os.path.exists(db_path):
             os.makedirs(db_path)
-        find_result = DeepFace.find(img_path=image, db_path=db_path, enforce_detection=False, detector_backend='ssd', distance_metric='euclidean_l2',model_name="SFace")
+        find_result = DeepFace.find(img_path=image, db_path=db_path, enforce_detection=False, detector_backend='opencv', distance_metric='euclidean_l2',model_name="SFace")
         # print('Path : ',find_result)
         if not find_result[0].empty:
             img_paths = find_result[0]['identity'].tolist() 
@@ -436,7 +436,7 @@ def UpdateModel():
                     file_path = os.path.join(db_path, filename)  # Get the full path of the file
                     os.remove(file_path)  # Remove the file
                     print(f"Removed: {file_path}")
-        find_result = DeepFace.find(img_path=image, db_path=db_path, enforce_detection=False, detector_backend='ssd', distance_metric='euclidean_l2',model_name="SFace")
+        find_result = DeepFace.find(img_path=image, db_path=db_path, enforce_detection=False, detector_backend='opencv', distance_metric='euclidean_l2',model_name="SFace")
         # print('Path : ',find_result)
         if not find_result[0].empty:
             img_paths = find_result[0]['identity'].tolist() 
