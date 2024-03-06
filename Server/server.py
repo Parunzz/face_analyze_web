@@ -562,8 +562,10 @@ def save_img():
     try:
         JSON = []
         json_data = request.get_json()
-
-        for data in json_data:
+        responseData = json_data.get('responseData')
+        place = json_data.get('place')
+        print(place)
+        for data in responseData:
             if data['NewPerson'] == 'True':
                 # Extract base64 strings from JSON data
                 image_base64 = data['full_image']
@@ -647,8 +649,8 @@ def save_img():
                 # print(img_emotion_base64)
                 current_datetime = datetime.now()
                 date_mysql_format = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
-                mycursor.execute("INSERT INTO data_info (Name, Gender, Age, pid, emotion_id, DateTime, Full_path, Cut_path) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
-                                (person_name, person_gender, person_age ,person_pid, emotion_id, date_mysql_format, FullImg_save_path, faceImg_save_path))
+                mycursor.execute("INSERT INTO data_info (Name, Gender, Age, pid, emotion_id, DateTime, Full_path, Cut_path, place) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                                (person_name, person_gender, person_age ,person_pid, emotion_id, date_mysql_format, FullImg_save_path, faceImg_save_path, place))
                 mydb.commit()
 
                 results = {
