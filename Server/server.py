@@ -223,6 +223,23 @@ def image_to_base64(file_path):
     except Exception as e:
         print(f"Error reading file {file_path}: {e}")
         return None
+@app.route('/Map', methods=['POST'])
+def Map():
+    try:
+        data = request.json
+        pid = int(data.get('pid'))
+        
+        # Fetch member details
+        mycursor.execute('SELECT place FROM data_info WHERE pid = %s', (pid,))
+        place = mycursor.fetchall()
+        print(place)
+
+        return make_response(jsonify(place), 200)
+
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+    
 @app.route('/Memberdetail', methods=['POST'])
 def Memberdetail():
     try:

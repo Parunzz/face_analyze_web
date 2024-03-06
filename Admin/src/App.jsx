@@ -29,7 +29,7 @@ function App() {
           <Route path='/history/:Data_id' element={<TransactionDetail />} />
           <Route path='/Kiosks' element={<Kiosks />} />
           <Route path='/Dashboard' element={<Dashboard />}/>
-          <Route path='/Map' element={<Map />}/>
+          <Route path='/Map/:pid' element={<Map />}/>
       </Routes>
     </BrowserRouter>
   )
