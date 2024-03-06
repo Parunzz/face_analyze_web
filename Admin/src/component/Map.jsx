@@ -104,10 +104,10 @@ function Members() {
             <img src='/img/map-bg.png ' className='bg'></img>
           <div className='map'>
             <div >
-                <div style={{display:'inline'}} className="1">1 FLOOR</div>
-                <div style={{display:'inline',marginLeft:'50%'}} className="6">6 FLOOR</div><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />ควย<br /><br /><br /><br />
-                <div style={{display:'inline'}} className="2">2 FLOOR</div>
-                <div style={{display:'inline',marginLeft:'50%'}} className="3">3 FLOOR</div>
+                <div style={{display:'inline', paddingBottom: '5%'}} className="1">1 FLOOR</div>
+                <div style={{display:'inline',marginLeft:'50%', paddingBottom: '5%'}} className="6">6 FLOOR</div><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />ควย<br /><br /><br /><br />
+                <div style={{display:'inline', paddingTop: '5%'}} className="2">2 FLOOR</div>
+                <div style={{display:'inline',marginLeft:'50%', paddingTop: '5%'}} className="3">3 FLOOR</div>
             </div>
             <LineTo  from="1" to="2" delay="0" borderWidth="10px"/>
             <LineTo  from="1" to="3" delay="0"/>
@@ -115,6 +115,9 @@ function Members() {
             <LineTo  from="2" to="6" delay="0"/>
             <LineTo  from="2" to="3" delay="0"/>
             <LineTo  from="3" to="6" delay="0"/>
+        </div>
+        <div style={{marginLeft: '17.4%', marginTop: '-33%', position: 'fixed', width: '200px', height: '200px'}}>
+          <img src="/img/location2.gif" alt="" />
         </div>
           </div>
         </div>
