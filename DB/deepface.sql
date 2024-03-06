@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 26, 2024 at 11:58 AM
+-- Generation Time: Mar 05, 2024 at 03:54 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -85,11 +85,6 @@ CREATE TABLE `person_info` (
   `gender` varchar(255) NOT NULL,
   `DateOfBirth` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `person_info`
---
-
 
 -- --------------------------------------------------------
 
@@ -183,7 +178,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `data_info`
 --
 ALTER TABLE `data_info`
-  MODIFY `Data_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `Data_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `emotion_data`
@@ -218,7 +213,7 @@ ALTER TABLE `user`
 --
 ALTER TABLE `data_info`
   ADD CONSTRAINT `emotion` FOREIGN KEY (`emotion_id`) REFERENCES `emotion_data` (`emotion_id`),
-  ADD CONSTRAINT `pid` FOREIGN KEY (`pid`) REFERENCES `person_info` (`pid`);
+  ADD CONSTRAINT `pid` FOREIGN KEY (`pid`) REFERENCES `person_info` (`pid`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `response_text`

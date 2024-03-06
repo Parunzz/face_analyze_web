@@ -76,7 +76,7 @@ const MemberDetail = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log(data)
-                navigate('/Member');
+                navigate('/Members');
             }
             else {
                 console.log("Response Error")
