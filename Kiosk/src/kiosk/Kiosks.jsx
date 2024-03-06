@@ -1,8 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
-import vdoBg from '../assets/video/Kiosk.mp4'
-import UseAuth from './UseAuth';
-import Cookies from 'js-cookie';
-import '../css/Camera.css';
+import './Camera.css';
 import Webcam from "react-webcam";
 import { drawRect } from "./utilities";
 
@@ -61,8 +58,9 @@ function Camera() {
 
     const sendApi = async (video, videoWidth, videoHeight, responseData) => {
         try {
-            // console.log(responseData);
+            console.log(responseData);
             // const screenshot = getScreenshot(video, videoWidth, videoHeight);
+            // const response = await fetch('http://192.168.1.40:3001/api/save_img', {
             const response = await fetch('http://localhost:3001/api/save_img', {
                 method: 'POST',
                 headers: {
@@ -73,8 +71,9 @@ function Camera() {
 
             // Handle the API response as needed
             const responseInfo = await response.json();
-            console.log(responseInfo)
+            // console.log(responseInfo)
             if (response.ok) {
+                console.log(responseInfo)
                 setresponse(responseInfo);
             }
         } catch (error) {
@@ -89,7 +88,8 @@ function Camera() {
             const formData = new FormData();
             // Append the image data to FormData
             formData.append('image', screenshot, 'screenshot.jpg');
-            console.log(formData)
+
+            // Make the API request
             const response = await fetch('http://localhost:3001/api/Detect_face', {
                 method: 'POST',
                 body: formData,
@@ -109,6 +109,7 @@ function Camera() {
             // Handle error gracefully, e.g., display an error message to the user
         }
     };
+
     const detect = async () => {
         // Check data is available
         if (
@@ -130,11 +131,12 @@ function Camera() {
             canvasRef.current.height = videoHeight;
 
             const r = await sendDetectApi(video, videoWidth, videoHeight);
+            // console.log(r)
             setResponse(r);
             for (let index = 0; index < r.length; index++) {
                 // console.log(r[index].NewPerson)
                 if (r[index].NewPerson == 'True') {
-                    console.log("emotion")
+                    // console.log("emotion")
                     sendApi(video, videoWidth, videoHeight, r);
                 }
             }
@@ -161,7 +163,7 @@ function Camera() {
 
         setInterval(() => {
             detect();
-        }, 500);
+        }, 1000);
         // Cleanup function to clear the interval when component unmounts
         return () => clearInterval(intervalId);
     }, []);
@@ -179,7 +181,7 @@ function Camera() {
                                 ref={webcamRef}
                                 muted={true}
                                 screenshotFormat="image/jpeg"
-                                height={16} width={9}
+                                height={3840 } width={2160}
                                 className='webcams'
                                 videoConstraints={{ aspectRatio: aspectRatio }} />
                             <canvas
@@ -205,9 +207,8 @@ function Camera() {
                                 {response.map((result, index) => (
                                     <li key={index}>
                                         <div className='box1'>
-                                            {/* <img src={`data:image/jpeg;base64,${result.base64_image}`} className='emoji' alt={`Emoji ${index}`} /> */}
                                             <img src={result.base64_image} className='emoji' alt={`Emoji ${index}`} />
-                                            {/* <img src={`data:image/jpeg;base64,${result.BLOB}`} className='emoji' alt={`Emoji ${index}`} /> */}
+                                            <img src={`data:image/jpeg;base64,${result.BLOB}`} className='emoji' alt={`Emoji ${index}`} />
                                             <h3 className='Name'>{result.person_name}</h3>
                                             <h4 className='Text'>{result.response_text}</h4>
 

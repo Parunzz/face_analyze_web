@@ -24,6 +24,7 @@ const columns = [
         // align: 'right',
         format: (value) => value.toLocaleString('en-US'),
     },
+    { id: 'place',label: 'Place'},
     { id: 'history',label: 'History Detail'},
 ];
 
@@ -35,11 +36,12 @@ const Transaction = () => {
     useEffect(() => {
         // Fetch data from API when component mounts
         fetchData();
-    }, [page, rowsPerPage]);
+    }, []);
 
     const fetchData = async () => {
         try {
             // Make API request
+            console.log("api")
             // const response = await fetch(`/api/transaction`);
             const response = await fetch(`http://localhost:3001/api/transaction?page=${page}&rowsPerPage=${rowsPerPage}`, {
                 method: 'GET',
@@ -67,7 +69,7 @@ const Transaction = () => {
 
     return (
         <Paper sx={{ width: '97%', overflow: 'hidden', marginTop: '2%', marginLeft: '1.7%' }}>
-            <TableContainer sx={{ maxHeight: 2520 }}>
+            <TableContainer sx={{ maxHeight: 540 }}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
                         <TableRow>
