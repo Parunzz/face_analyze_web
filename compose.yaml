@@ -3,7 +3,7 @@ services:
   client:
     build: ./Client
     ports:
-      - "5173:5173"
+      - "2112:2112"
     depends_on:
       - flask-server
       - db
