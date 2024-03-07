@@ -230,11 +230,16 @@ def Map():
         pid = int(data.get('pid'))
         
         # Fetch member details
-        mycursor.execute('SELECT place FROM data_info WHERE pid = %s', (pid,))
-        place = mycursor.fetchall()
-        print(place)
+        mycursor.execute('SELECT place,DateTime FROM data_info WHERE pid = %s;', (pid,))
+        data = mycursor.fetchall()
+        Transaction_data = []
 
-        return make_response(jsonify(place), 200)
+        for i in data:
+            Transaction_data.append({
+                'Transaction_data':i
+            })
+
+        return jsonify(Transaction_data), 200
 
     except Exception as e:
         print(f"Error: {str(e)}")
