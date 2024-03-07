@@ -76,7 +76,7 @@ const MemberDetail = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log(data)
-                navigate('/Member');
+                navigate('/Members');
             }
             else {
                 console.log("Response Error")
@@ -234,10 +234,17 @@ const MemberDetail = () => {
                                         </Grid>
                                         <Grid container item xs={12} sm={6} justifyContent="flex-end">
                                             <Grid item>
-                                                <Link href="/Members" variant="body2">
+                                                <Link href="/Members" variant="body2" >
                                                     Back
                                                 </Link>
                                             </Grid>
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <Button variant="contained" color="success">
+                                                <Link href={`/Map/${pid}`} variant="body2" style={{ color: 'white' }}>
+                                                    MAP
+                                                </Link>
+                                            </Button>
                                         </Grid>
                                         <Grid item xs={12} sm={12}>
                                             <LoadingButton
