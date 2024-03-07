@@ -99,13 +99,18 @@ function Camera() {
           <div className='info'>
             <h1 className='text-3xl font-bold' style={{ paddingBottom: '2%'}}>กล้องวงจรปิด</h1>
             {/* <a href="Kiosks" >Kiosk</a> */}
-
-            <a href="Kiosks" className='Kiosk' >
-              <img src='/img/Kiosk.png' className='Kiosk-img'></img>
-              <img src='/img/Kiosk-bg.png' className='Kiosk-img-1'></img>
-              <h3 className='Kiosk-text'>Kiosk</h3>
-
-            </a>
+            <div className='camera-section'>
+              <a href="Kiosks" className='Kiosk' >
+                <img src='/img/Kiosk.png' className='Kiosk-img'></img>
+                <img src='/img/Kiosk-bg.png' className='Kiosk-img-1'></img>
+                <h3 className='Kiosk-text'>Kiosk</h3>
+              </a>
+              <a href="Kiosks" className='Kiosk' >
+                {/* <img src='/img/cctv.png' className='Kiosk-img'></img> */}
+                <img src='/img/cctv-bg.png' className='Kiosk-img-1'></img>
+                <h3 className='Kiosk-text'>Camera</h3>
+              </a>
+            </div>
             <img src="" alt="" />
           </div>
           <a href='' className='add-button'>
