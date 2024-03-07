@@ -129,18 +129,21 @@ function Menu() {
               <video src={vdoBg} autoPlay loop muted/>
             </div>
           </div>
-          <div className='Introduce-section'>
-              <h3 className='text-3xl font-bold title	'>What is Analyze Company</h3>
-              <p className='paragraph text-xl'>
-                บริษัท Analyze เป็นผู้นำด้านนวัตกรรมและเทคโนโลยีที่ตั้งคติที่จะเปลี่ยนแปลงโลกด้วยการใช้ประโยชน์จากปัญญาประดิษฐ์ 
-                (Artificial Intelligence: AI) ให้กับสังคมและธุรกิจต่างๆ ทั่วโลก ด้วยการนำเสนอและพัฒนาเทคโนโลยี AI ที่
-                โดดเด่นและมีประสิทธิภาพสูง บริษัท Analyze ได้เป็นส่วนสำคัญในการสร้างความสะดวกสบายให้แก่คนทั่วโลกผ่านการปรับใช้ 
-                AI ในหลากหลายด้านด้วยความคิดสร้างสรรค์และการพัฒนาที่ไม่หยุดยั้ง
-              </p>
-              <div className='img-section' style={{paddingLeft: '24%'}}>
-                <img src ='/public/img/1.png' className='img-1'></img>
-                <img src='/public/img/1.png' className='img-1'></img>
-              </div>
+          <div className='Introduces'>
+            <div className='Intro-bar'>
+                <div className='bar-security'>
+                  <img src='/img/bar/eye.png' className='bar-icon'></img>
+                  <h3 className='bar-text'>This security is the best</h3>
+                </div>
+                <div className='bar-security'>
+                  <img src='/img/bar/facerecognition.png' className='bar-icon'></img>
+                  <h3 className='bar-text'>This security is the best</h3>
+                </div>
+                <div className='bar-security'>
+                  <img src='/img/bar/secure.png' className='bar-icon'></img>
+                  <h3 className='bar-text'>This security is the best</h3>
+                </div>
+            </div>              
           </div>
         </div>
       </div>
