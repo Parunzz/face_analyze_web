@@ -7,17 +7,22 @@ import LineTo from 'react-lineto';
 import '../css/Map.css'
 import { useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
-
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 function Members() {
   const { pid } = useParams();
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
   const [responseData, setresponseData] = useState([]);
-  const [date, setDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(dayjs());
   const handleLogout = () => {
     Cookies.remove('token');
   }
+  const handleDateChange = (newDate) => {
+    setSelectedDate(newDate);
+  };
   const fetchMemberDetail = async () => {
     try {
       const response = await fetch('http://localhost:3001/Map', {
@@ -27,11 +32,11 @@ function Members() {
         },
         // cross cross-origin requests.
         credentials: 'include',
-        body: JSON.stringify({ pid: pid }),
+        body: JSON.stringify({ pid: pid, pickdate: selectedDate.format('YYYY-MM-DD') }),
       });
       if (response.ok) {
         const data = await response.json();
-        // console.log(data)
+        console.log(data)
         setresponseData(data)
       }
       else {
@@ -44,7 +49,7 @@ function Members() {
   };
   useEffect(() => {
     fetchMemberDetail();
-  }, [pid]);
+  }, [pid, selectedDate]);
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
@@ -75,31 +80,27 @@ function Members() {
 
   const renderLineToComponents = () => {
     if (responseData && responseData.length > 0) {
-      const today = dayjs().format('YYYY-MM-DD');
       return linesData.map((line, index) => {
         const { from, to } = line;
-        let borderWidth = 2; // Default border width
+        let borderWidth = '2px'; // Default border width
         let borderColor = 'red'
-        const delayValue = 0;
-        // Filter transaction data for today's date
-        const todayTransactions = responseData.filter(item => {
-          const transactionDate = dayjs(item.Transaction_data.DateTime).format('YYYY-MM-DD');
-          return transactionDate === today;
-        });
-        // Extract places for transactions that occurred today
-        const placesToday = todayTransactions.map(item => item.Transaction_data.place);
-
-        if (placesToday.includes(from) && placesToday.includes(to)) {
-          borderWidth = 10;
+        // Check if responseData contains the place for this line and increase border if found
+        const places = responseData.map(item => item.place);
+        if (places.includes(from) && places.includes(to)) {
+          borderWidth = '10px';
           borderColor = 'green';
         }
 
-        return <LineTo key={index} from={from} to={to} delay={delayValue} borderWidth={borderWidth} borderColor={borderColor} />;
+        return <LineTo key={index} from={from} to={to} delay="0" borderWidth={borderWidth} borderColor={borderColor} />;
       });
     } else {
-      return null; // Return null if responseData is empty or not yet available
+      return linesData.map((line, index) => {
+        const { from, to } = line;
+        return <LineTo key={index} from={from} to={to} delay="0" borderWidth="2px" borderColor="red" />;
+      });
     }
   };
+
 
 
   return (
@@ -167,6 +168,17 @@ function Members() {
           <div className='info-homes'>
             <img src='/img/map-bg.png ' className='bg'></img>
             <div className='map'>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  value={selectedDate}
+                  onChange={handleDateChange}
+                  name="mydate"
+                  id="mydate"
+                  label="Map Date"
+                  disableFuture
+                  sx={{ width: 400 }}
+                />
+              </LocalizationProvider>
               <div >
                 <div style={{ display: 'inline' }} className="1floor_main">1 floor main</div>
                 <div style={{ display: 'inline', marginLeft: '50%' }} className="1floor_back">1 floor back</div><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />

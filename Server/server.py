@@ -82,7 +82,7 @@ def AddMember():
         image_data = data.get('imgUpload')
 
         # Check if the user already exists
-        mycursor.execute("SELECT * FROM person_info WHERE FirstName = %s AND LastName = %s", (AddfirstName, AddlastName))
+        mycursor.execute("SELECT * FROM person_info WHERE FirstName = %s AND LastName = %s;", (AddfirstName, AddlastName))
         existing_user = mycursor.fetchone()
 
         if existing_user:
@@ -117,7 +117,7 @@ def AddMember():
   
         DeepFace.find(img_path=member_path, db_path='./database/member/', enforce_detection=False, detector_backend='ssd', distance_metric='euclidean_l2',model_name="SFace")
         # Insert the new user into the database
-        mycursor.execute("INSERT INTO person_info (FirstName, LastName , gender , DateOfBirth, img_path) VALUES (%s, %s, %s, %s, %s)", (AddfirstName, AddlastName , Addgender ,formatted_date, folder_path))
+        mycursor.execute("INSERT INTO person_info (FirstName, LastName , gender , DateOfBirth, img_path) VALUES (%s, %s, %s, %s, %s);", (AddfirstName, AddlastName , Addgender ,formatted_date, folder_path))
         mydb.commit()
 
         return make_response(jsonify({'message': 'Add Member successfully'}), 200)
@@ -140,7 +140,7 @@ def UpdateMember():
         date_object = datetime.strptime(Addmydate, '%m/%d/%Y')
         formatted_date = date_object.strftime('%Y-%m-%d')
 
-        mycursor.execute("SELECT FirstName FROM person_info WHERE pid = %s", (pid,))
+        mycursor.execute("SELECT FirstName FROM person_info WHERE pid = %s;", (pid,))
 
         FirstName = mycursor.fetchone()
 
@@ -178,7 +178,7 @@ def UpdateMember():
             DeepFace.find(img_path=member_path, db_path='./database/member/', enforce_detection=False, detector_backend='ssd', distance_metric='euclidean_l2',model_name="SFace")
         
         # Insert the new user into the database
-        mycursor.execute("UPDATE person_info SET FirstName = %s, LastName = %s, gender = %s, DateOfBirth = %s, img_path = %s WHERE pid = %s", (AddfirstName, AddlastName, Addgender, formatted_date, new_folder_path, pid))
+        mycursor.execute("UPDATE person_info SET FirstName = %s, LastName = %s, gender = %s, DateOfBirth = %s, img_path = %s WHERE pid = %s;", (AddfirstName, AddlastName, Addgender, formatted_date, new_folder_path, pid))
         mydb.commit()
         
 
@@ -199,7 +199,7 @@ def signin():
     password = data.get('password')
 
     # mycursor.execute('SELECT Username, Password FROM user WHERE Username=%s AND Password=%s', (username, password))
-    mycursor.execute('SELECT Username, Password FROM user WHERE Username=%s AND Password=%s', (username, password))
+    mycursor.execute('SELECT Username, Password FROM user WHERE Username=%s AND Password=%s;', (username, password))
 
     user = mycursor.fetchone()
 
@@ -228,18 +228,16 @@ def Map():
     try:
         data = request.json
         pid = int(data.get('pid'))
-        
+        pickdate = data.get('pickdate')
+        date_object = datetime.strptime(pickdate, '%Y-%m-%d')
+        formatted_date = date_object.strftime('%Y-%m-%d')
+        print(formatted_date)
         # Fetch member details
-        mycursor.execute('SELECT place,DateTime FROM data_info WHERE pid = %s;', (pid,))
-        data = mycursor.fetchall()
-        Transaction_data = []
+        mycursor.execute('SELECT place FROM data_info WHERE pid = %s AND DATE(DateTime) = %s;', (pid, formatted_date))
+        place = mycursor.fetchall()
 
-        for i in data:
-            Transaction_data.append({
-                'Transaction_data':i
-            })
-
-        return jsonify(Transaction_data), 200
+        print(place)
+        return jsonify(place), 200
 
     except Exception as e:
         print(f"Error: {str(e)}")
@@ -252,7 +250,7 @@ def Memberdetail():
         pid = int(data.get('pid'))
         
         # Fetch member details
-        mycursor.execute('SELECT * FROM person_info WHERE pid = %s', (pid,))
+        mycursor.execute('SELECT * FROM person_info WHERE pid = (%s);', (pid,))
         member_info = mycursor.fetchall()
 
         if not member_info:
@@ -282,7 +280,7 @@ def Memberdetail():
 @app.route('/getMember', methods=['GET'])
 def getMember():
     try:
-        mycursor.execute('SELECT FirstName,LastName,pid FROM person_info')
+        mycursor.execute('SELECT FirstName,LastName,pid FROM person_info;')
         data = mycursor.fetchall()
         return make_response(jsonify({'Member': data }), 200)
     except Exception as e:
@@ -313,7 +311,7 @@ def removeMember():
         pid = data.get('pid')
 
         # Check if the person with the given PID exists before deleting
-        mycursor.execute('SELECT * FROM person_info WHERE pid = %s', (pid,))
+        mycursor.execute('SELECT * FROM person_info WHERE pid = %s;', (pid,))
         person = mycursor.fetchone()
 
         if not person:
@@ -323,7 +321,7 @@ def removeMember():
         image_filename = person['img_path'] 
         folder_path = f'./database/member/{person["FirstName"]}/'
         # Perform deletion from the database
-        mycursor.execute('DELETE FROM person_info WHERE `person_info`.`pid` = %s', (pid,))
+        mycursor.execute('DELETE FROM person_info WHERE `person_info`.`pid` = %s;', (pid,))
         mydb.commit()
         # Remove the associated image file from the server file system
         if os.path.exists(image_filename):
@@ -632,7 +630,7 @@ def save_img():
                 if not person_name_result[0].empty:
                     person_name = person_name_result[0]['identity'][0].split('/')[3]
                     # print("Name : ",person_name)
-                    mycursor.execute('SELECT FirstName,gender,DateOfBirth, pid FROM person_info WHERE FirstName = %s', (person_name,))
+                    mycursor.execute('SELECT FirstName,gender,DateOfBirth, pid FROM person_info WHERE FirstName = %s;', (person_name,))
                     person_info = mycursor.fetchone()
                     if person_info:
                         person_name = person_info['FirstName']
@@ -659,7 +657,7 @@ def save_img():
                     person_gender = None
                     person_age = None
                 # print(person_name)
-                mycursor.execute('SELECT IMG_Emotion, emotion_data.emotion_id,emotion_data.emotion_data,response_text.response_text FROM `emotion_data` JOIN response_text ON emotion_data.emotion_id = response_text.emotion_id WHERE emotion_data.emotion_data = %s', (dominant_emotion,))
+                mycursor.execute('SELECT IMG_Emotion, emotion_data.emotion_id,emotion_data.emotion_data,response_text.response_text FROM `emotion_data` JOIN response_text ON emotion_data.emotion_id = response_text.emotion_id WHERE emotion_data.emotion_data = %s;', (dominant_emotion,))
                 emotion_data_result = mycursor.fetchone()
                 response_text = emotion_data_result['response_text']
                 # print(response_text)
@@ -671,7 +669,7 @@ def save_img():
                 # print(img_emotion_base64)
                 current_datetime = datetime.now()
                 date_mysql_format = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
-                mycursor.execute("INSERT INTO data_info (Name, Gender, Age, pid, emotion_id, DateTime, Full_path, Cut_path, place) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                mycursor.execute("INSERT INTO data_info (Name, Gender, Age, pid, emotion_id, DateTime, Full_path, Cut_path, place) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);",
                                 (person_name, person_gender, person_age ,person_pid, emotion_id, date_mysql_format, FullImg_save_path, faceImg_save_path, place))
                 mydb.commit()
 
