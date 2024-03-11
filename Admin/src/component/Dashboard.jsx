@@ -9,7 +9,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { axisClasses } from '@mui/x-charts';
-import emailjs from '@emailjs/browser';
+import html2canvas from 'html2canvas';
 
 function Dashboard() {
   const [currentTime, setCurrentTime] = useState('');
@@ -186,6 +186,56 @@ function Dashboard() {
     return () => clearInterval(intervalId);
   }, []);
 
+  // email
+  const [recipientEmail, setRecipientEmail] = useState('');
+  const [subject, setSubject] = useState('');
+  const [messageBody, setMessageBody] = useState('');
+  const [image, setImage] = useState(null);
+  const captureScreenshot = async () => {
+    try {
+      const canvas = await html2canvas(document.body); // Capture screenshot of the entire body
+      return canvas.toDataURL(); // Convert screenshot to data URL
+    } catch (error) {
+      console.error('Error capturing screenshot:', error);
+      return null;
+    }
+  };
+  const handleSubmit = async (event) => {
+    try {
+      event.preventDefault();
+      // Capture screenshot
+      const screenshotDataUrl = await captureScreenshot();
+  
+      // Create form data
+      const formData = new FormData();
+      formData.append('recipient_email', recipientEmail);
+      formData.append('subject', subject);
+      formData.append('message_body', messageBody);
+      
+      // Append screenshot data
+      if (screenshotDataUrl) {
+        formData.append('image', screenshotDataUrl);
+      }
+  
+      // Send API request
+      const response = await fetch('http://localhost:3001/send_email', {
+        method: 'POST',
+        body: formData,
+      });
+  
+      if (response.ok) {
+        console.log('Email sent successfully');
+        window.alert('Email sent successfully');
+      } else {
+        window.alert('Error during sending email');
+      }
+    } catch (error) {
+      console.error('Error during sending email:', error);
+      window.alert('Error during sending email', error);
+    }
+  };
+  
+
   return (
     <>
       <div className='container'>
@@ -335,34 +385,53 @@ function Dashboard() {
                 )
                 }
               </div>
-              <div className='Members' style={{ display: 'inline-block', width: '100%' }}>
+              <div className='Members' style={{ display: 'inline-block', width: '50%' }}>
+                {/* <h1 style={{ textAlign: 'center' }}>Male vs Female</h1> */}
                 {genderData.length > 0 ? (
-                  <div>
-                    <h1 style={{ textAlign: 'center' }}>male female</h1>
-                    {/* {console.log(genderData.map(entry => entry.HourlyDateTime))} */}
-                    <BarChart
-                      series={[
-                        { data: genderData.map(entry => entry.Male), label: 'Male' },
-                        { data: genderData.map(entry => entry.Female), label: 'Female' },
-                        { data: genderData.map(entry => entry.Unknown), label: 'Unknown' },
-                      ]}
-                      xAxis={[{ scaleType: 'band', data: genderData.map(entry => entry.HourlyDateTime.split(' ')[1].slice(0, 5)) }]} // Ensure the x-axis type is set to "band"
-                      {...BarchartSetting}
-                    />
-
-                  </div>
-                ) : (
                   <BarChart
-                    width={500}
-                    height={300}
                     series={[
-                      { data: [0], label: 'Male' },
-                      { data: [0], label: 'Female' },
-                      { data: [0], label: 'Unknown' },
+                      { data: genderData.map(entry => entry.Male), label: 'Male' },
+                      { data: genderData.map(entry => entry.Female), label: 'Female' },
+                      { data: genderData.map(entry => entry.Unknown), label: 'Unknown' },
                     ]}
-                    xAxis={[{ scaleType: 'band', data: genderData.map(entry => entry.HourlyDateTime.split(' ')[1].slice(0, 5)) }]} // Ensure the x-axis type is set to "band"
+                    xAxis={[{ scaleType: 'band', data: genderData.map(entry => entry.HourlyDateTime.split(' ')[1].slice(0, 5)) }]}
+                    {...BarchartSetting}
                   />
+                ) : (
+                  <div style={{ textAlign: 'center', marginTop: '20px' }}>No data available</div>
                 )}
+              </div>
+
+              <div className='Members' style={{ display: 'inline-block', width: '50%' }}>
+                <form onSubmit={handleSubmit}>
+                  <input
+                    style={{ textAlign: 'center', margin: '10px' }}
+                    type="email"
+                    placeholder="Recipient Email"
+                    value={recipientEmail}
+                    onChange={(e) => setRecipientEmail(e.target.value)}
+                    required
+                  />
+                  <br />
+                  <input
+                    style={{ textAlign: 'center', margin: '10px' }}
+                    type="text"
+                    placeholder="Subject"
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                    required
+                  />
+                  <br />
+                  <textarea
+                    style={{ textAlign: 'center', margin: '10px' }}
+                    placeholder="Message Body"
+                    value={messageBody}
+                    onChange={(e) => setMessageBody(e.target.value)}
+                    required
+                  ></textarea>
+                  <br />
+                  <button type="submit">Send Email</button>
+                </form>
               </div>
             </div>
 
