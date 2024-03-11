@@ -12,8 +12,12 @@ import Menu from './component/Menu.jsx'
 import Kiosks from './component/Kiosks.jsx'
 import TransactionDetail from './component/TransactionDetail.jsx';
 import Map from './component/Map.jsx';
+<<<<<<< HEAD
 import Test from './component/Test.jsx';
 
+=======
+import KiosksTest from './component/KiosksTest.jsx'
+>>>>>>> 50347eff65a5136bad76c8dbdfb45ca0e089fbbf
 
 function App() {
 
@@ -32,8 +36,13 @@ function App() {
           <Route path='/history/:Data_id' element={<TransactionDetail />} />
           <Route path='/Kiosks' element={<Kiosks />} />
           <Route path='/Dashboard' element={<Dashboard />}/>
+<<<<<<< HEAD
           <Route path='/Map/:pid' element={<Map />}/>
           <Route path='/Test' element={<Test/>}/>
+=======
+          <Route path='/Map' element={<Map />}/>
+          <Route path='/KiosksTest' element={<KiosksTest />}/>
+>>>>>>> 50347eff65a5136bad76c8dbdfb45ca0e089fbbf
       </Routes>
     </BrowserRouter>
   )
