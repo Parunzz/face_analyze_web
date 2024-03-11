@@ -3,7 +3,25 @@ import './Camera.css';
 import Webcam from "react-webcam";
 import { drawRect } from "./utilities";
 
+// Define a function to save input value to local storage
+const saveInputValueToLocalStorage = (value) => {
+    localStorage.setItem('place', value);
+};
+
+// Define a function to load input value from local storage
+const loadInputValueFromLocalStorage = () => {
+    return localStorage.getItem('place') || '';
+};
 function Camera() {
+    const [inputValue, setInputValue] = useState(loadInputValueFromLocalStorage());
+
+    // Function to handle input change
+    const handleInputChange = (event) => {
+        const newValue = event.target.value;
+        setInputValue(newValue);
+        saveInputValueToLocalStorage(newValue);
+    };
+
     const webcamRef = useRef(null);
     const canvasRef = useRef(null);
     const [isCameraOn, setIsCameraOn] = useState(true);
@@ -19,14 +37,7 @@ function Camera() {
     const handleLogout = () => {
         Cookies.remove('token');
     }
-    // const getScreenshot = (video, width, height) => {
-    //     const canvas = document.createElement('canvas');
-    //     canvas.width = width;
-    //     canvas.height = height;
-    //     const ctx = canvas.getContext('2d');
-    //     ctx.drawImage(video, 0, 0, width, height);
-    //     return canvas.toDataURL(); // returns a base64-encoded data URL
-    // };
+
     const getScreenshot = (video, width, height) => {
         const canvas = document.createElement('canvas');
         canvas.width = width;
@@ -58,6 +69,7 @@ function Camera() {
 
     const sendApi = async (video, videoWidth, videoHeight, responseData) => {
         try {
+            const place = document.getElementById('place').value;
             console.log(responseData);
             // const screenshot = getScreenshot(video, videoWidth, videoHeight);
             // const response = await fetch('http://192.168.1.40:3001/api/save_img', {
@@ -66,7 +78,7 @@ function Camera() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(responseData),
+                body: JSON.stringify({'responseData':responseData,'place':place}),
             });
 
             // Handle the API response as needed
@@ -171,6 +183,28 @@ function Camera() {
     return (
         <>
             <div className='container-camera'>
+                <div style={{
+                    margin: '10px',
+                    display: 'flex',
+                    position: 'absolute',
+                    top: 0, zIndex: '1000',
+                    color: 'white'
+                }}>
+                    <input type="text"
+                        name="place"
+                        id="place"
+                        value={inputValue}
+                        onChange={handleInputChange}
+                        style={{
+                            backgroundColor: 'transparent',
+                            color: 'white',
+                            border: 'none',
+                            borderBottom: '1px solid white',
+                            textAlign: 'center',
+                            fontSize: '30px'
+                        }}
+                    />
+                </div>
                 <div className='info-data-cam'>
                     <div className='shadows'>
 
@@ -181,7 +215,7 @@ function Camera() {
                                 ref={webcamRef}
                                 muted={true}
                                 screenshotFormat="image/jpeg"
-                                height={3840 } width={2160}
+                                height={3840} width={2160}
                                 className='webcams'
                                 videoConstraints={{ aspectRatio: aspectRatio }} />
                             <canvas

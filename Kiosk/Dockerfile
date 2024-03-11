@@ -2,7 +2,7 @@
 FROM node:21-alpine3.18
 
 # Set the working directory in the container
-WORKDIR /usr/src/admin
+WORKDIR /usr/src/kiosk
 
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
