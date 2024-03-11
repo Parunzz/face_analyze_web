@@ -108,12 +108,12 @@ function Members() {
       <div className='container'>
         <div className='left-menu'>
           <div className='logo'>
-            <a href="./">
+            <a href="/">
               <img src='/img/logo_analyze.png' className='icon'></img>
             </a>
           </div>
           <div className='menu'>
-            <a href='./' className='home'>
+            <a href='/' className='home'>
               <li className='Home' >
                 <div className='menu-item' href='./'>
                   <img src='/img/home.gif' className='menu-icon'></img>
@@ -121,7 +121,7 @@ function Members() {
                 </div>
               </li>
             </a>
-            <a href='./Camera' className='cctv'>
+            <a href='/Camera' className='cctv'>
               <li className='CCTV'>
                 <div className='menu-item'>
                   <img src='/img/camera.gif' className='menu-icon'></img>
@@ -129,14 +129,14 @@ function Members() {
                 </div>
               </li>
             </a>
-            <a href='./History' className='history'>
+            <a href='/History' className='history'>
               <li className='History'>
                 <div className='menu-item'>
                   <img src='/img/history.gif' className='menu-icon'></img>ประวัติ
                 </div>
               </li>
             </a>
-            <a href='./Members' className='member'>
+            <a href='/Members' className='member'>
               <li className='Member'>
                 <div className='menu-item'>
                   <img src='/img/profile.gif' className='menu-icon'></img>
@@ -144,7 +144,7 @@ function Members() {
                 </div>
               </li>
             </a>
-            <a href='./Dashboard' className='dashboard'>
+            <a href='/Dashboard' className='dashboard'>
               <li className='Dashboard'>
                 <div className='menu-item'>
                   <img src='/img/presentation.gif' className='menu-icon'></img>
