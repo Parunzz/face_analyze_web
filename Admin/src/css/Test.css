@@ -1,0 +1,23 @@
+.Container
+{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+}
+
+.Button
+{
+    margin-top: 33vh;
+    width: 250px;
+    height: 250px;
+    border-radius: 400px;
+    background-color: rgb(91, 91, 91);
+}
+
+.Button:hover
+{
+    background-color: rgb(71, 71, 71);
+
+}

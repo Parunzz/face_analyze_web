@@ -12,6 +12,9 @@ import Menu from './component/Menu.jsx'
 import Kiosks from './component/Kiosks.jsx'
 import TransactionDetail from './component/TransactionDetail.jsx';
 import Map from './component/Map.jsx';
+import Test from './component/Test.jsx';
+
+
 function App() {
 
   
@@ -30,6 +33,7 @@ function App() {
           <Route path='/Kiosks' element={<Kiosks />} />
           <Route path='/Dashboard' element={<Dashboard />}/>
           <Route path='/Map/:pid' element={<Map />}/>
+          <Route path='/Test' element={<Test/>}/>
       </Routes>
     </BrowserRouter>
   )
