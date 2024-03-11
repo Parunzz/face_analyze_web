@@ -16,27 +16,63 @@ from datetime import timedelta
 import jwt
 from datetime import datetime
 import io
+from flask_mail import Mail, Message
 
 
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
+app.config['MAIL_SERVER'] = 'smtp.googlemail.com'  # Update with your SMTP server
+app.config['MAIL_PORT'] = 587  # Update with your SMTP port
+app.config['MAIL_USE_TLS'] = True  # Use TLS instead of SSL
+app.config['MAIL_USERNAME'] = 's6404062663223@email.kmutnb.ac.th'  # Update with your email username
+# app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASSWORD')  # use this command in terminal => set EMAIL_PASSWORD='your_email_password'
+app.config['MAIL_PASSWORD'] = ''  # use this command in terminal => set EMAIL_PASSWORD='your_email_password'
+
+
+mail = Mail(app)
 CORS(app, supports_credentials=True)
 # CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})  # Update the origin
 
 
 ## FOR DEV ENV ###
-# mydb = mysql.connector.connect(host="localhost",user="root",password="",db="deepface",connect_timeout=100)
+mydb = mysql.connector.connect(host="localhost",user="root",password="",db="deepface",connect_timeout=100)
 ### FOR Docker ###
 #mydb = mysql.connector.connect(host="db",user="admin",password="admin",db="deepface",connect_timeout=10000)
 ### FOR NETWORK
 # mydb = mysql.connector.connect(host="192.168.1.53",user="zen",password="zen",db="deepface",connect_timeout=100)
-mydb = mysql.connector.connect(host="192.168.1.33",user="zen",password="admin",db="deepface",connect_timeout=100)
+# mydb = mysql.connector.connect(host="192.168.1.33",user="zen",password="admin",db="deepface",connect_timeout=100)
 mycursor = mydb.cursor(dictionary=True)
 
 @app.route("/")
 def index():
     return "Server"
+@app.route("/send_email", methods=["POST"])
+def send_email():
+    try:
+        # Get recipient and message data from request
+        recipient_email = request.form.get("recipient_email")
+        subject = request.form.get("subject")
+        message_body = request.form.get("message_body")
+        image_data_uri = request.form.get("image")
+        print(recipient_email)
+        print(subject)
+        print(message_body)
+        if image_data_uri:
+            image_data = image_data_uri.split(',')[1]
+            image_bytes = base64.b64decode(image_data)
+        # print(os.environ.get('EMAIL_PASSWORD'))
+        # Create a message
+        msg = Message(subject, sender=app.config['MAIL_USERNAME'], recipients=[recipient_email])
+        msg.body = message_body
+        if image_data_uri:
+            msg.attach("image.png", "image/png", image_bytes)
+        # Send the email
+        mail.send(msg)
+        return jsonify({"message": "Email sent successfully"}), 200
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)}), 500
 #database
 @app.route('/register', methods=['POST'])
 def Register():
@@ -223,6 +259,33 @@ def image_to_base64(file_path):
     except Exception as e:
         print(f"Error reading file {file_path}: {e}")
         return None
+@app.route('/DashBoardGender', methods=['POST'])
+def DashBoardGender():
+    try:
+        data = request.json
+        pickdate = data.get('pickdate')
+        date_object = datetime.strptime(pickdate, '%Y-%m-%d')
+        formatted_date = date_object.strftime('%Y-%m-%d')
+        # print(formatted_date)
+        # Fetch member details
+        mycursor.execute('''
+            SELECT 
+                Gender, 
+                DATE_FORMAT(DateTime, '%Y-%m-%d %H:00:00') AS HourlyDateTime,
+                COUNT(DateTime) AS Count 
+            FROM 
+                data_info 
+            WHERE 
+                DATE(DateTime) = %s 
+            GROUP BY 
+                DATE_FORMAT(DateTime, '%Y-%m-%d %H:00:00'), Gender;
+        ''', (formatted_date,))
+        data = mycursor.fetchall()
+        return jsonify(data), 200
+
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)}), 500
 @app.route('/Map', methods=['POST'])
 def Map():
     try:
@@ -277,6 +340,34 @@ def Memberdetail():
         print(f"Error: {str(e)}")
         return jsonify({'error': str(e)}), 500
     
+@app.route('/emotion_data',methods=['POST'])
+def get_emotion_data():
+    try:
+        data = request.json
+        pickdate = data.get('pickdate')
+        date_object = datetime.strptime(pickdate, '%Y-%m-%d')
+        formatted_date = date_object.strftime('%Y-%m-%d')
+        # print(formatted_date)
+        mycursor.execute("SELECT emotion_data.emotion_data, COUNT(data_info.emotion_id) AS count FROM emotion_data LEFT JOIN data_info ON emotion_data.emotion_id = data_info.emotion_id WHERE DATE(DateTime) = %s GROUP BY emotion_data.emotion_data;",(formatted_date,))
+        emotion_data = mycursor.fetchall()
+        return jsonify(emotion_data)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)})
+@app.route('/CountMembers',methods=['POST'])
+def get_CountMembers():
+    try:
+        data = request.json
+        pickdate = data.get('pickdate')
+        date_object = datetime.strptime(pickdate, '%Y-%m-%d')
+        formatted_date = date_object.strftime('%Y-%m-%d')
+        
+        mycursor.execute("SELECT CASE WHEN Name = 'unknown' THEN 'unknown' ELSE 'member' END AS Name, COUNT(*) AS Count FROM data_info WHERE DATE(DateTime) = %s GROUP BY CASE WHEN Name = 'unknown' THEN 'unknown' ELSE 'member' END;",(formatted_date,))
+        CountMembers = mycursor.fetchall()
+        return jsonify(CountMembers)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)})
 @app.route('/getMember', methods=['GET'])
 def getMember():
     try:
