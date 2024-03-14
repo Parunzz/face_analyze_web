@@ -2,14 +2,21 @@ import { useState, useEffect } from 'react';
 import vdoBg from '../assets/video/Kiosk.mp4'
 import UseAuth from './UseAuth';
 import Cookies from 'js-cookie';
-
+import { useNavigate } from 'react-router-dom';
 
 function Menu() {
+  const status = Cookies.get('status');
+  const navigate = useNavigate();
+  
+  if(status != 'true'){
+    navigate('/SignIn');
+  }
+  
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
   const [showIntroduce, setShowIntroduce] = useState(false);
   const handleLogout = () => {
-  Cookies.remove('token');
+  Cookies.remove('status');
   }
   useEffect(() => {
 
