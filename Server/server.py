@@ -36,7 +36,7 @@ CORS(app, supports_credentials=True)
 
 
 ## FOR DEV ENV ###
-mydb = mysql.connector.connect(host="localhost",user="root",password="",db="deepface",connect_timeout=100)
+# mydb = mysql.connector.connect(host="localhost",user="root",password="",db="deepface",connect_timeout=100)
 ### FOR Docker ###
 #mydb = mysql.connector.connect(host="db",user="admin",password="admin",db="deepface",connect_timeout=10000)
 ### FOR NETWORK
