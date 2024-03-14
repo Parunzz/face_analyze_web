@@ -2,19 +2,54 @@ import { useState, useEffect } from 'react';
 import Member from './Member'
 import UseAuth from './UseAuth';
 import Cookies from 'js-cookie';;
-import { SteppedLineTo  } from 'react-lineto';
+import { SteppedLineTo } from 'react-lineto';
 import LineTo from 'react-lineto';
 import '../css/Map.css'
-
-
+import { useParams } from 'react-router-dom';
+import dayjs from 'dayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 function Members() {
-
+  const { pid } = useParams();
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
+  const [responseData, setresponseData] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(dayjs());
   const handleLogout = () => {
     Cookies.remove('token');
   }
+  const handleDateChange = (newDate) => {
+    setSelectedDate(newDate);
+  };
+  const fetchMemberDetail = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/Map', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // cross cross-origin requests.
+        credentials: 'include',
+        body: JSON.stringify({ pid: pid, pickdate: selectedDate.format('YYYY-MM-DD') }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data)
+        setresponseData(data)
+      }
+      else {
+        console.log("Response Error")
+      }
+
+    } catch (error) {
+      console.error('Error fetching member detail:', error);
+    }
+  };
+  useEffect(() => {
+    fetchMemberDetail();
+  }, [pid, selectedDate]);
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
@@ -36,6 +71,36 @@ function Members() {
     // Cleanup function to clear the interval when component unmounts
     return () => clearInterval(intervalId);
   }, []);
+  const linesData = [
+    { from: '1floor_main', to: '1floor_back' },
+    { from: '1floor_back', to: '6floor_back' },
+    { from: '1floor_main', to: '6floor_main' },
+    { from: '6floor_main', to: '6floor_back' }
+  ];
+
+  const renderLineToComponents = () => {
+    if (responseData && responseData.length > 0) {
+      return linesData.map((line, index) => {
+        const { from, to } = line;
+        let borderWidth = '2px'; // Default border width
+        let borderColor = 'red'
+        // Check if responseData contains the place for this line and increase border if found
+        const places = responseData.map(item => item.place);
+        if (places.includes(from) && places.includes(to)) {
+          borderWidth = '10px';
+          borderColor = 'green';
+        }
+
+        return <LineTo key={index} from={from} to={to} delay="0" borderWidth={borderWidth} borderColor={borderColor} />;
+      });
+    } else {
+      return linesData.map((line, index) => {
+        const { from, to } = line;
+        return <LineTo key={index} from={from} to={to} delay="0" borderWidth="2px" borderColor="red" />;
+      });
+    }
+  };
+
 
 
   return (
@@ -43,12 +108,12 @@ function Members() {
       <div className='container'>
         <div className='left-menu'>
           <div className='logo'>
-            <a href="./">
+            <a href="/">
               <img src='/img/logo_analyze.png' className='icon'></img>
             </a>
           </div>
           <div className='menu'>
-            <a href='./' className='home'>
+            <a href='/' className='home'>
               <li className='Home' >
                 <div className='menu-item' href='./'>
                   <img src='/img/home.gif' className='menu-icon'></img>
@@ -56,7 +121,7 @@ function Members() {
                 </div>
               </li>
             </a>
-            <a href='./Camera' className='cctv'>
+            <a href='/Camera' className='cctv'>
               <li className='CCTV'>
                 <div className='menu-item'>
                   <img src='/img/camera.gif' className='menu-icon'></img>
@@ -64,14 +129,14 @@ function Members() {
                 </div>
               </li>
             </a>
-            <a href='./History' className='history'>
+            <a href='/History' className='history'>
               <li className='History'>
                 <div className='menu-item'>
                   <img src='/img/history.gif' className='menu-icon'></img>ประวัติ
                 </div>
               </li>
             </a>
-            <a href='./Members' className='member'>
+            <a href='/Members' className='member'>
               <li className='Member'>
                 <div className='menu-item'>
                   <img src='/img/profile.gif' className='menu-icon'></img>
@@ -79,7 +144,7 @@ function Members() {
                 </div>
               </li>
             </a>
-            <a href='./Dashboard' className='dashboard'>
+            <a href='/Dashboard' className='dashboard'>
               <li className='Dashboard'>
                 <div className='menu-item'>
                   <img src='/img/presentation.gif' className='menu-icon'></img>
@@ -102,23 +167,30 @@ function Members() {
           </div>
           <div className='info-homes'>
             <img src='/img/map-bg.png ' className='bg'></img>
-          <div className='map'>
-            <div >
-                <div style={{display:'inline', paddingBottom: '5%'}} className="1">1 FLOOR</div>
-                <div style={{display:'inline',marginLeft:'50%', paddingBottom: '5%'}} className="6">6 FLOOR</div><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />ควย<br /><br /><br /><br />
-                <div style={{display:'inline', paddingTop: '5%'}} className="2">2 FLOOR</div>
-                <div style={{display:'inline',marginLeft:'50%', paddingTop: '5%'}} className="3">3 FLOOR</div>
+            <div className='map'>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  value={selectedDate}
+                  onChange={handleDateChange}
+                  name="mydate"
+                  id="mydate"
+                  label="Map Date"
+                  disableFuture
+                  sx={{ width: 400 }}
+                />
+              </LocalizationProvider>
+              <div >
+                <div style={{ display: 'inline' }} className="1floor_main">1 floor main</div>
+                <div style={{ display: 'inline', marginLeft: '50%' }} className="1floor_back">1 floor back</div><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                <div style={{ display: 'inline' }} className="6floor_main">6 FLOOR main</div>
+                <div style={{ display: 'inline', marginLeft: '50%' }} className="6floor_back">6 FLOOR back</div>
+              </div>
+              {/* <LineTo from="1floor_main" to="1floor_back" delay="0" />
+              <LineTo from="1floor_back" to="6floor_back" delay="0" />
+              <LineTo from="1floor_main" to="6floor_main" delay="0" />
+              <LineTo from="6floor_main" to="6floor_back" delay="0" /> */}
+              {renderLineToComponents()}
             </div>
-            <LineTo  from="1" to="2" delay="0" borderWidth="10px"/>
-            <LineTo  from="1" to="3" delay="0"/>
-            <LineTo  from="1" to="6" delay="0"/>
-            <LineTo  from="2" to="6" delay="0"/>
-            <LineTo  from="2" to="3" delay="0"/>
-            <LineTo  from="3" to="6" delay="0"/>
-        </div>
-        <div style={{marginLeft: '17.4%', marginTop: '-33%', position: 'fixed', width: '200px', height: '200px'}}>
-          <img src="/img/location2.gif" alt="" />
-        </div>
           </div>
         </div>
       </div>
