@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function Copyright(props) {
   return (
@@ -32,6 +33,8 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function Register() {
+  const navigate = useNavigate();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -42,31 +45,18 @@ export default function Register() {
       lastName: data.get('lastName'),
     });
     const jsonData = {};
-  data.forEach((value, key) => {
-    jsonData[key] = value;
-  });
-  console.log(jsonData)
-  try {
-    const response = await axios.post('http://localhost:3001/register', jsonData, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
+    data.forEach((value, key) => {
+      jsonData[key] = value;
     });
-    if (response.status === 200) {
-      console.log('User registered successfully');
-      window.alert(`Register complete`);
-    //   navigate('/signin');
-      // Handle success, e.g., redirect to a different page
-    } else {
-      console.error('Failed to register user:', response.status, response.statusText);
-      window.alert(`Failed to register user: ${response.data.error}`);
-      // Handle error
-    }
-  } catch (error) {
-    console.error('Error during registration:', error.message);
-    window.alert('Error during registration. Please try again.');
-    // Handle error
-  }
+    console.log(jsonData)
+    axios.post('http://localhost:3001/register', jsonData)
+      .then(function (response) {
+        // console.log(response.status);
+        navigate('/signin');
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   return (
