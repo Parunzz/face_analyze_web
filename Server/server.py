@@ -16,27 +16,63 @@ from datetime import timedelta
 import jwt
 from datetime import datetime
 import io
+from flask_mail import Mail, Message
 
 
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
+app.config['MAIL_SERVER'] = 'smtp.googlemail.com'  # Update with your SMTP server
+app.config['MAIL_PORT'] = 587  # Update with your SMTP port
+app.config['MAIL_USE_TLS'] = True  # Use TLS instead of SSL
+app.config['MAIL_USERNAME'] = 's6404062663223@email.kmutnb.ac.th'  # Update with your email username
+# app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASSWORD')  # use this command in terminal => set EMAIL_PASSWORD='your_email_password'
+app.config['MAIL_PASSWORD'] = ''  # use this command in terminal => set EMAIL_PASSWORD='your_email_password'
+
+
+mail = Mail(app)
 CORS(app, supports_credentials=True)
 # CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})  # Update the origin
 
 
 ## FOR DEV ENV ###
-# mydb = mysql.connector.connect(host="localhost",user="root",password="",db="deepface",connect_timeout=100)
+mydb = mysql.connector.connect(host="localhost",user="root",password="",db="deepface",connect_timeout=100)
 ### FOR Docker ###
-# mydb = mysql.connector.connect(host="db",user="admin",password="admin",db="deepface",connect_timeout=10000)
+#mydb = mysql.connector.connect(host="db",user="admin",password="admin",db="deepface",connect_timeout=10000)
 ### FOR NETWORK
-mydb = mysql.connector.connect(host="192.168.1.53",user="zen",password="zen",db="deepface",connect_timeout=100)
-mydb = mysql.connector.connect(host="192.168.1.33",user="zen",password="admin",db="deepface",connect_timeout=100)
+# mydb = mysql.connector.connect(host="192.168.1.53",user="zen",password="zen",db="deepface",connect_timeout=100)
+# mydb = mysql.connector.connect(host="192.168.1.33",user="zen",password="admin",db="deepface",connect_timeout=100)
 mycursor = mydb.cursor(dictionary=True)
 
 @app.route("/")
 def index():
     return "Server"
+@app.route("/send_email", methods=["POST"])
+def send_email():
+    try:
+        # Get recipient and message data from request
+        recipient_email = request.form.get("recipient_email")
+        subject = request.form.get("subject")
+        message_body = request.form.get("message_body")
+        image_data_uri = request.form.get("image")
+        print(recipient_email)
+        print(subject)
+        print(message_body)
+        if image_data_uri:
+            image_data = image_data_uri.split(',')[1]
+            image_bytes = base64.b64decode(image_data)
+        # print(os.environ.get('EMAIL_PASSWORD'))
+        # Create a message
+        msg = Message(subject, sender=app.config['MAIL_USERNAME'], recipients=[recipient_email])
+        msg.body = message_body
+        if image_data_uri:
+            msg.attach("image.png", "image/png", image_bytes)
+        # Send the email
+        mail.send(msg)
+        return jsonify({"message": "Email sent successfully"}), 200
+    except Exception as e:
+        print(e)
+        return jsonify({"error": str(e)}), 500
 #database
 @app.route('/register', methods=['POST'])
 def Register():
@@ -82,7 +118,7 @@ def AddMember():
         image_data = data.get('imgUpload')
 
         # Check if the user already exists
-        mycursor.execute("SELECT * FROM person_info WHERE FirstName = %s AND LastName = %s", (AddfirstName, AddlastName))
+        mycursor.execute("SELECT * FROM person_info WHERE FirstName = %s AND LastName = %s;", (AddfirstName, AddlastName))
         existing_user = mycursor.fetchone()
 
         if existing_user:
@@ -117,7 +153,7 @@ def AddMember():
   
         DeepFace.find(img_path=member_path, db_path='./database/member/', enforce_detection=False, detector_backend='ssd', distance_metric='euclidean_l2',model_name="SFace")
         # Insert the new user into the database
-        mycursor.execute("INSERT INTO person_info (FirstName, LastName , gender , DateOfBirth, img_path) VALUES (%s, %s, %s, %s, %s)", (AddfirstName, AddlastName , Addgender ,formatted_date, folder_path))
+        mycursor.execute("INSERT INTO person_info (FirstName, LastName , gender , DateOfBirth, img_path) VALUES (%s, %s, %s, %s, %s);", (AddfirstName, AddlastName , Addgender ,formatted_date, folder_path))
         mydb.commit()
 
         return make_response(jsonify({'message': 'Add Member successfully'}), 200)
@@ -140,7 +176,7 @@ def UpdateMember():
         date_object = datetime.strptime(Addmydate, '%m/%d/%Y')
         formatted_date = date_object.strftime('%Y-%m-%d')
 
-        mycursor.execute("SELECT FirstName FROM person_info WHERE pid = %s", (pid,))
+        mycursor.execute("SELECT FirstName FROM person_info WHERE pid = %s;", (pid,))
 
         FirstName = mycursor.fetchone()
 
@@ -178,7 +214,7 @@ def UpdateMember():
             DeepFace.find(img_path=member_path, db_path='./database/member/', enforce_detection=False, detector_backend='ssd', distance_metric='euclidean_l2',model_name="SFace")
         
         # Insert the new user into the database
-        mycursor.execute("UPDATE person_info SET FirstName = %s, LastName = %s, gender = %s, DateOfBirth = %s, img_path = %s WHERE pid = %s", (AddfirstName, AddlastName, Addgender, formatted_date, new_folder_path, pid))
+        mycursor.execute("UPDATE person_info SET FirstName = %s, LastName = %s, gender = %s, DateOfBirth = %s, img_path = %s WHERE pid = %s;", (AddfirstName, AddlastName, Addgender, formatted_date, new_folder_path, pid))
         mydb.commit()
         
 
@@ -199,7 +235,7 @@ def signin():
     password = data.get('password')
 
     # mycursor.execute('SELECT Username, Password FROM user WHERE Username=%s AND Password=%s', (username, password))
-    mycursor.execute('SELECT Username, Password FROM user WHERE Username=%s AND Password=%s', (username, password))
+    mycursor.execute('SELECT Username, Password FROM user WHERE Username=%s AND Password=%s;', (username, password))
 
     user = mycursor.fetchone()
 
@@ -223,18 +259,48 @@ def image_to_base64(file_path):
     except Exception as e:
         print(f"Error reading file {file_path}: {e}")
         return None
+@app.route('/DashBoardGender', methods=['POST'])
+def DashBoardGender():
+    try:
+        data = request.json
+        pickdate = data.get('pickdate')
+        date_object = datetime.strptime(pickdate, '%Y-%m-%d')
+        formatted_date = date_object.strftime('%Y-%m-%d')
+        # print(formatted_date)
+        # Fetch member details
+        mycursor.execute('''
+            SELECT 
+                Gender, 
+                DATE_FORMAT(DateTime, '%Y-%m-%d %H:00:00') AS HourlyDateTime,
+                COUNT(DateTime) AS Count 
+            FROM 
+                data_info 
+            WHERE 
+                DATE(DateTime) = %s 
+            GROUP BY 
+                DATE_FORMAT(DateTime, '%Y-%m-%d %H:00:00'), Gender;
+        ''', (formatted_date,))
+        data = mycursor.fetchall()
+        return jsonify(data), 200
+
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)}), 500
 @app.route('/Map', methods=['POST'])
 def Map():
     try:
         data = request.json
         pid = int(data.get('pid'))
-        
+        pickdate = data.get('pickdate')
+        date_object = datetime.strptime(pickdate, '%Y-%m-%d')
+        formatted_date = date_object.strftime('%Y-%m-%d')
+        print(formatted_date)
         # Fetch member details
-        mycursor.execute('SELECT place FROM data_info WHERE pid = %s', (pid,))
+        mycursor.execute('SELECT place FROM data_info WHERE pid = %s AND DATE(DateTime) = %s;', (pid, formatted_date))
         place = mycursor.fetchall()
-        print(place)
 
-        return make_response(jsonify(place), 200)
+        print(place)
+        return jsonify(place), 200
 
     except Exception as e:
         print(f"Error: {str(e)}")
@@ -247,7 +313,7 @@ def Memberdetail():
         pid = int(data.get('pid'))
         
         # Fetch member details
-        mycursor.execute('SELECT * FROM person_info WHERE pid = %s', (pid,))
+        mycursor.execute('SELECT * FROM person_info WHERE pid = (%s);', (pid,))
         member_info = mycursor.fetchall()
 
         if not member_info:
@@ -274,10 +340,38 @@ def Memberdetail():
         print(f"Error: {str(e)}")
         return jsonify({'error': str(e)}), 500
     
+@app.route('/emotion_data',methods=['POST'])
+def get_emotion_data():
+    try:
+        data = request.json
+        pickdate = data.get('pickdate')
+        date_object = datetime.strptime(pickdate, '%Y-%m-%d')
+        formatted_date = date_object.strftime('%Y-%m-%d')
+        # print(formatted_date)
+        mycursor.execute("SELECT emotion_data.emotion_data, COUNT(data_info.emotion_id) AS count FROM emotion_data LEFT JOIN data_info ON emotion_data.emotion_id = data_info.emotion_id WHERE DATE(DateTime) = %s GROUP BY emotion_data.emotion_data;",(formatted_date,))
+        emotion_data = mycursor.fetchall()
+        return jsonify(emotion_data)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)})
+@app.route('/CountMembers',methods=['POST'])
+def get_CountMembers():
+    try:
+        data = request.json
+        pickdate = data.get('pickdate')
+        date_object = datetime.strptime(pickdate, '%Y-%m-%d')
+        formatted_date = date_object.strftime('%Y-%m-%d')
+        
+        mycursor.execute("SELECT CASE WHEN Name = 'unknown' THEN 'unknown' ELSE 'member' END AS Name, COUNT(*) AS Count FROM data_info WHERE DATE(DateTime) = %s GROUP BY CASE WHEN Name = 'unknown' THEN 'unknown' ELSE 'member' END;",(formatted_date,))
+        CountMembers = mycursor.fetchall()
+        return jsonify(CountMembers)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)})
 @app.route('/getMember', methods=['GET'])
 def getMember():
     try:
-        mycursor.execute('SELECT FirstName,LastName,pid FROM person_info')
+        mycursor.execute('SELECT FirstName,LastName,pid FROM person_info;')
         data = mycursor.fetchall()
         return make_response(jsonify({'Member': data }), 200)
     except Exception as e:
@@ -308,7 +402,7 @@ def removeMember():
         pid = data.get('pid')
 
         # Check if the person with the given PID exists before deleting
-        mycursor.execute('SELECT * FROM person_info WHERE pid = %s', (pid,))
+        mycursor.execute('SELECT * FROM person_info WHERE pid = %s;', (pid,))
         person = mycursor.fetchone()
 
         if not person:
@@ -318,7 +412,7 @@ def removeMember():
         image_filename = person['img_path'] 
         folder_path = f'./database/member/{person["FirstName"]}/'
         # Perform deletion from the database
-        mycursor.execute('DELETE FROM person_info WHERE `person_info`.`pid` = %s', (pid,))
+        mycursor.execute('DELETE FROM person_info WHERE `person_info`.`pid` = %s;', (pid,))
         mydb.commit()
         # Remove the associated image file from the server file system
         if os.path.exists(image_filename):
@@ -627,7 +721,7 @@ def save_img():
                 if not person_name_result[0].empty:
                     person_name = person_name_result[0]['identity'][0].split('/')[3]
                     # print("Name : ",person_name)
-                    mycursor.execute('SELECT FirstName,gender,DateOfBirth, pid FROM person_info WHERE FirstName = %s', (person_name,))
+                    mycursor.execute('SELECT FirstName,gender,DateOfBirth, pid FROM person_info WHERE FirstName = %s;', (person_name,))
                     person_info = mycursor.fetchone()
                     if person_info:
                         person_name = person_info['FirstName']
@@ -654,7 +748,7 @@ def save_img():
                     person_gender = None
                     person_age = None
                 # print(person_name)
-                mycursor.execute('SELECT IMG_Emotion, emotion_data.emotion_id,emotion_data.emotion_data,response_text.response_text FROM `emotion_data` JOIN response_text ON emotion_data.emotion_id = response_text.emotion_id WHERE emotion_data.emotion_data = %s', (dominant_emotion,))
+                mycursor.execute('SELECT IMG_Emotion, emotion_data.emotion_id,emotion_data.emotion_data,response_text.response_text FROM `emotion_data` JOIN response_text ON emotion_data.emotion_id = response_text.emotion_id WHERE emotion_data.emotion_data = %s;', (dominant_emotion,))
                 emotion_data_result = mycursor.fetchone()
                 response_text = emotion_data_result['response_text']
                 # print(response_text)
@@ -666,7 +760,7 @@ def save_img():
                 # print(img_emotion_base64)
                 current_datetime = datetime.now()
                 date_mysql_format = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
-                mycursor.execute("INSERT INTO data_info (Name, Gender, Age, pid, emotion_id, DateTime, Full_path, Cut_path, place) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                mycursor.execute("INSERT INTO data_info (Name, Gender, Age, pid, emotion_id, DateTime, Full_path, Cut_path, place) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);",
                                 (person_name, person_gender, person_age ,person_pid, emotion_id, date_mysql_format, FullImg_save_path, faceImg_save_path, place))
                 mydb.commit()
 
