@@ -1,15 +1,18 @@
-import { useState, useEffect } from 'react';
-import vdoBg from '../assets/video/Kiosk.mp4'
+import React, { useState, useEffect } from 'react';
+import vdoBg from '../assets/video/Kiosk.mp4';
 import UseAuth from './UseAuth';
 import Cookies from 'js-cookie';
-import '../css/History.css'
+import '../css/History.css';
 import Transaction from './Transaction';
+
 function History() {
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
+
   const handleLogout = () => {
     Cookies.remove('token');
-  }
+  };
+
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
@@ -33,75 +36,81 @@ function History() {
   }, []);
 
   return (
-    <>
-      <div className='container'>
-        <div className='left-menu'>
-          <div className='logo'>
-            <a href="./">
-              <img src='/img/logo_analyze.png' className='icon'></img>
-            </a>
-          </div>
-          <div className='menu'>
-            <a href='./' className='home'>
-              <li className='Home' >
-                <div className='menu-item' href='./'>
-                  <img src='/img/home.gif' className='menu-icon'></img>
-                  หน้าหลัก
-                </div>
-              </li>
-            </a>
-            <a href='./Camera' className='cctv'>
-              <li className='CCTV'>
-                <div className='menu-item'>
-                  <img src='/img/camera.gif' className='menu-icon'></img>
-                  กล้องวงจรปิด
-                </div>
-              </li>
-            </a>
-            <a href='./History' className='history'>
-              <li className='History'>
-                <div className='menu-item'>
-                  <img src='/img/history.gif' className='menu-icon'></img>ประวัติ
-                </div>
-              </li>
-            </a>
-            <a href='./Members' className='member'>
-              <li className='Member'>
-                <div className='menu-item'>
-                  <img src='/img/profile.gif' className='menu-icon'></img>
-                  สมาชิก
-                </div>
-              </li>
-            </a>
-            <a href='./Dashboard' className='dashboard'>
-              <li className='Dashboard'>
-                <div className='menu-item'>
-                  <img src='/img/presentation.gif' className='menu-icon'></img>
-                  สถิติ
-                </div>
-              </li>
-            </a>
-          </div>
-          <div className='setting'>
-            <div className='admin_name'>สวัสดี [User] </div>
-            <a href='/Signin' onClick={handleLogout}>ออกจากระบบ</a>
-          </div>
+    <div className='container'>
+      <div className='top-menu'>
+        <div className='data'>
+          <div className='date text-white'>{currentDate}</div>
+          <div className='time text-white'>{currentTime}</div>
         </div>
-        <div className='right-responsive'>
-          <div className='top-menu'>
-            <div className='data'>
-              <div className='date text-white'>{currentDate}</div>
-              <div className='time text-white'>{currentTime}</div>
-            </div>
-          </div>
-          <div className='info'>
-            <h3 className='text-3xl font-bold'>ประวัติ</h3>
-            <Transaction />
-
-          </div>
+        <div className='setting'>
+          <div className='admin_name'>สวัสดี [User]</div>
+          <a href='/Signin' onClick={handleLogout}>ออกจากระบบ</a>
         </div>
       </div>
-    </>
+      <div className='left-menu'>
+        <div className='logo'>
+          <a href="./">
+            <img src='/img/logo_analyze.png' className='icon' alt='logo' />
+          </a>
+        </div>
+        <div className='menu'>
+          <a href='./' className='home'>
+            <li className='Home'>
+              <div className='menu-item'>
+                <img src='/img/home.gif' className='menu-icon' alt='home' />
+                <div className='menu-title'>
+                  <h3>หน้าหลัก</h3>
+                </div>
+              </div>
+            </li>
+          </a>
+          <a href='./Camera' className='cctv'>
+            <li className='CCTV'>
+              <div className='menu-item'>
+                <img src='/img/camera.gif' className='menu-icon' alt='cctv' />
+                <div className='menu-title'>
+                  <h3>กล้องวงจรปิด</h3>
+                </div>
+              </div>
+            </li>
+          </a>
+          <a href='./History' className='history'>
+            <li className='History'>
+              <div className='menu-item'>
+                <img src='/img/history.gif' className='menu-icon' alt='history' />
+                <div className='menu-title'>
+                  <h3>ประวัติ</h3>
+                </div>
+              </div>
+            </li>
+          </a>
+          <a href='./Members' className='member'>
+            <li className='Member'>
+              <div className='menu-item'>
+                <img src='/img/profile.gif' className='menu-icon' alt='profile' />
+                <div className='menu-title'>
+                  <h3>สมาชิก</h3>
+                </div>
+              </div>
+            </li>
+          </a>
+          <a href='./Dashboard' className='dashboard'>
+            <li className='Dashboard'>
+              <div className='menu-item'>
+                <img src='/img/presentation.gif' className='menu-icon' alt='dashboard' />
+                <div className='menu-title'>
+                  <h3>สถิติ</h3>
+                </div>
+              </div>
+            </li>
+          </a>
+        </div>
+      </div>
+      <div className='info'>
+        <h3 className='text-3xl font-bold'>ประวัติ</h3>
+        <Transaction />
+      </div>
+    </div>
   );
 }
 

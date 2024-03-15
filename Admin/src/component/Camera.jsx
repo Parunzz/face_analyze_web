@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import vdoBg from '../assets/video/Kiosk.mp4'
+import React, { useState, useEffect } from 'react';
+import vdoBg from '../assets/video/Kiosk.mp4';
 import UseAuth from './UseAuth';
 import Cookies from 'js-cookie';
 import '../css/Camera.css';
@@ -7,9 +7,11 @@ import '../css/Camera.css';
 function Camera() {
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
+
   const handleLogout = () => {
     Cookies.remove('token');
-  }
+  };
+
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
@@ -33,94 +35,99 @@ function Camera() {
   }, []);
 
   return (
-    <>
-      <div className='container'>
-        <div className='left-menu'>
-          <div className='logo'>
-            <a href="./">
-              <img src='/img/logo_analyze.png' className='icon'></img>
-            </a>
-          </div>
-          <div className='menu'>
-            <a href='./' className='home'>
-              <li className='Home' >
-                <div className='menu-item' href='./'>
-                  <img src='/img/home.gif' className='menu-icon'></img>
-                  หน้าหลัก
-                </div>
-              </li>
-            </a>
-            <a href='./Camera' className='cctv'>
-              <li className='CCTV'>
-                <div className='menu-item'>
-                  <img src='/img/camera.gif' className='menu-icon'></img>
-                  กล้องวงจรปิด
-                </div>
-              </li>
-            </a>
-            <a href='./History' className='history'>
-              <li className='History'>
-                <div className='menu-item'>
-                  <img src='/img/history.gif' className='menu-icon'></img>ประวัติ
-                </div>
-              </li>
-            </a>
-            <a href='./Members' className='member'>
-              <li className='Member'>
-                <div className='menu-item'>
-                  <img src='/img/profile.gif' className='menu-icon'></img>
-                  สมาชิก
-                </div>
-              </li>
-            </a>
-            <a href='./Dashboard' className='dashboard'>
-              <li className='Dashboard'>
-                <div className='menu-item'>
-                  <img src='/img/presentation.gif' className='menu-icon'></img>
-                  สถิติ
-                </div>
-              </li>
-            </a>
-          </div>
-          <div className='setting'>
-            <div className='admin_name'>สวัสดี [User] </div>
-            <a href='/Signin' onClick={handleLogout}>ออกจากระบบ</a>
-          </div>
+    <div className='container'>
+      <div className='top-menu'>
+        <div className='data'>
+          <div className='date text-white'>{currentDate}</div>
+          <div className='time text-white'>{currentTime}</div>
         </div>
-
-        <div className='right-responsive'>
-          <div className='top-menu'>
-            <div className='data'>
-              <div className='date text-white'>{currentDate}</div>
-              <div className='time text-white'>{currentTime}</div>
-            </div>
-          </div>
-
-          <div className='info'>
-            <h1 className='text-3xl font-bold' style={{ paddingBottom: '2%'}}>กล้องวงจรปิด</h1>
-            {/* <a href="Kiosks" >Kiosk</a> */}
-            <div className='camera-section'>
-              <a href="Kiosks" className='Kiosk' >
-                <img src='/img/Kiosk.png' className='Kiosk-img'></img>
-                <img src='/img/Kiosk-bg.png' className='Kiosk-img-1'></img>
-                <h3 className='Kiosk-text'>Kiosk</h3>
-              </a>
-              <a href="Kiosks" className='Kiosk' >
-                {/* <img src='/img/cctv.png' className='Kiosk-img'></img> */}
-                <img src='/img/cctv-bg.png' className='Kiosk-img-1'></img>
-                <h3 className='Kiosk-text'>Camera</h3>
-              </a>
-            </div>
-            <img src="" alt="" />
-          </div>
-          <a href='' className='add-button'>
-            <div className="add">
-              <h1 className='add-text'> + </h1>
-            </div>
+        <div className='setting'>
+          <div className='admin_name'>สวัสดี [User] </div>
+          <a href='/Signin' onClick={handleLogout}>ออกจากระบบ</a>
+        </div>
+      </div>
+      <div className='left-menu'>
+        <div className='logo'>
+          <a href="./">
+            <img src='/img/logo_analyze.png' className='icon' alt='logo'></img>
+          </a>
+        </div>
+        <div className='menu'>
+          <a href='./' className='home'>
+            <li className='Home'>
+              <div className='menu-item'>
+                <img src='/img/home.gif' className='menu-icon' alt='home'></img>
+                <div className='menu-title'>
+                  <h3>หน้าหลัก</h3>
+                </div>
+              </div>
+            </li>
+          </a>
+          <a href='./Camera' className='cctv'>
+            <li className='CCTV'>
+              <div className='menu-item'>
+                <img src='/img/camera.gif' className='menu-icon' alt='cctv'></img>
+                <div className='menu-title'>
+                  <h3>กล้องวงจรปิด</h3>
+                </div>
+              </div>
+            </li>
+          </a>
+          <a href='./History' className='history'>
+            <li className='History'>
+              <div className='menu-item'>
+                <img src='/img/history.gif' className='menu-icon' alt='history'></img>
+                <div className='menu-title'>
+                  <h3>ประวัติ</h3>
+                </div>
+              </div>
+            </li>
+          </a>
+          <a href='./Members' className='member'>
+            <li className='Member'>
+              <div className='menu-item'>
+                <img src='/img/profile.gif' className='menu-icon' alt='profile'></img>
+                <div className='menu-title'>
+                  <h3>สมาชิก</h3>
+                </div>
+              </div>
+            </li>
+          </a>
+          <a href='./Dashboard' className='dashboard'>
+            <li className='Dashboard'>
+              <div className='menu-item'>
+                <img src='/img/presentation.gif' className='menu-icon' alt='dashboard'></img>
+                <div className='menu-title'>
+                  <h3>สถิติ</h3>
+                </div>
+              </div>
+            </li>
           </a>
         </div>
       </div>
-    </>
+      <div className='right-responsive'>
+        <div className='info'>
+          <h1 className='text-3xl font-bold' style={{ paddingBottom: '2%' }}>กล้องวงจรปิด</h1>
+          <div className='camera-section'>
+            <a href="Kiosks" className='Kiosk'>
+              <img src='/img/Kiosk.png' className='Kiosk-img' alt='kiosk'></img>
+              <img src='/img/Kiosk-bg.png' className='Kiosk-img-1' alt='kiosk background'></img>
+              <h3 className='Kiosk-text'>Kiosk</h3>
+            </a>
+            <a href="Kiosks" className='Kiosk'>
+              <img src='/img/cctv-bg.png' className='Kiosk-img-1' alt='cctv background'></img>
+              <h3 className='Kiosk-text'>Camera</h3>
+            </a>
+          </div>
+          <img src={vdoBg} alt="background video" />
+        </div>
+        <a href='' className='add-button'>
+          <div className="add">
+            <h1 className='add-text'> + </h1>
+          </div>
+        </a>
+      </div>
+    </div>
   );
 }
 

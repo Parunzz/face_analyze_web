@@ -62,6 +62,12 @@ function Menu() {
   return (
 
     <>
+    <div className='top-menu'>
+          <div className='data'>
+            <div className='date text-white'>{currentDate}</div>
+            <div className='time text-white'>{currentTime}</div>
+          </div>
+        </div>
     <div className='container'>
       <div className='left-menu'>
       <div className='logo'>
@@ -74,7 +80,9 @@ function Menu() {
               <li className='Home' >
                 <div className='menu-item' href='./'>
                     <img src='/img/home.gif' className='menu-icon'></img>
-                    หน้าหลัก
+                    <div  className='menu-title'>
+                      <h3  >หน้าหลัก</h3>
+                    </div>
                 </div>
               </li>
             </a>
@@ -82,14 +90,19 @@ function Menu() {
               <li className='CCTV'>
                 <div className='menu-item'>
                     <img src='/img/camera.gif' className='menu-icon'></img>
-                    กล้องวงจรปิด
+                    <div  className='menu-title'>
+                      <h3  >กล้องวงจรปิด</h3>
+                    </div>
                 </div>
               </li> 
             </a>
             <a href='./History' className='history'>
                     <li className='History'>
                     <div className='menu-item'>
-                    <img src='/img/history.gif' className='menu-icon'></img>ประวัติ
+                    <img src='/img/history.gif' className='menu-icon'></img>
+                    <div  className='menu-title'>
+                      <h3  >ประวัติ</h3>
+                    </div>
                 </div>
             </li>
             </a>
@@ -97,7 +110,9 @@ function Menu() {
             <li className='Member'>
                 <div className='menu-item'>
                     <img src='/img/profile.gif' className='menu-icon'></img>
-                    สมาชิก
+                    <div  className='menu-title'>
+                      <h3  >สมาชิก</h3>
+                    </div>
                 </div>
             </li>
             </a>
@@ -105,7 +120,9 @@ function Menu() {
                 <li className='Dashboard'>
                   <div className='menu-item'>
                     <img src='/img/presentation.gif' className='menu-icon'></img>
-                  สถิติ
+                    <div  className='menu-title'>
+                      <h3  >สถิติ</h3>
+                    </div>
                   </div>
               </li>
             </a>
@@ -116,12 +133,7 @@ function Menu() {
           </div>
       </div>
       <div className='right-responsive'>
-        <div className='top-menu'>
-          <div className='data'>
-            <div className='date text-white'>{currentDate}</div>
-            <div className='time text-white'>{currentTime}</div>
-          </div>
-        </div>
+        
         <div className='info-home'>   
           <div className='video-section'>
             <div className='video'>

@@ -12,17 +12,29 @@ body
     max-width: 100%;
     width: 100%;
     height: 100vh;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
-.left-menu
-{
+.left-menu {
+  
+    flex-direction: column; /* Arrange items vertically */
+    align-items: center; /* Center items horizontally */
+    justify-content: center; /* Center items vertically */
     background-color: rgb(255, 255, 255);
-    /* flex: 0 0 18rem; */
-    /* overflow-y: auto; */
-    width: 15%;
+    width: 7%;
     position: fixed;
     height: 100vh;
-    z-index: 999;
+    z-index: 999; /* Ensure the left menu stays on top of other elements */
+    transition: width 0.7s ease; /* Add transition for smooth adjustment */
+}
+
+.left-menu:hover .menu-title {
+    opacity: 1; /* Show the menu titles when left-menu is hovered */
+    /* left: 120%; Move the menu titles back to their original position */
+}
+
+.left-menu:hover {
+    width: 15%;
 }
 
 .icon{
@@ -31,28 +43,36 @@ body
     margin: 50px auto;
 }
 
-.right-responsive
-{
-    width: 85%;
+.right-responsive {
+    width: 100%;
     display: block;
     position: relative;
-    margin-left: 15%;
+    margin-left: 4%; /* Initial margin */
+    transition: margin-left 0.7s ease; /* Add transition for smooth movement */
 }
 
-.top-menu
-{
+.left-menu:hover + .right-responsive {
+    margin-left: 15%; /* Adjusted margin when left menu expands */
+}
+
+.left-menu:hover + .top-menu {
+    /* width: 85%; Adjusted width when left menu expands */
+}
+
+.top-menu {
     background-color: rgba(19, 19, 19, 0.849);
     backdrop-filter: blur(2px);
     height: 70px;
     align-items: center;
-    display: flex;
+    /* display: flex; */
     justify-content: right;
     padding-right: 50px;
     top: 0;
     position: fixed;
-    width: 85%;
-    padding-inline: 50px;
-    z-index: 998;
+    width: 100%; /* Adjust width to leave space for left menu */
+    padding-inline: 0; /* Remove padding on the sides */
+    z-index: 994; /* Ensure the top menu stays on top of other elements */
+    /* transition: width 0.7s ease; Add transition for smooth adjustment */
 }
 
 .data
@@ -98,12 +118,17 @@ body
     padding-right: 50px; */
     /* padding-left: 2rem; */
     padding-inline: 2rem;
-
+    /* opacity: 0; */
     font-size: large;
+    width: 100%;
+    
 }
-.menu > div
+
+
+
+.menu:hover
 {
-  
+    opacity: 1;
 }
 
 .menu-item
@@ -119,16 +144,54 @@ body
 
 .menu-item:hover
 {
+    /* width: 950px; */
     background-color: rgb(180, 180, 180);
     border-color: rgba(0, 0, 0, 0.781);
     border-radius: 5px;
-    transform: scale(1.08);
+    /* transform: scale(1.08); */
+    /* left: 30px; */
+}
+
+.menu-item:hover .menu-title {
+    opacity: 1; /* Show the menu titles on hover */
+    /* left: 30%; Move the menu titles back to their original position */
 }
 
 .menu-item img
 {
     padding-right: 13px;
 }
+
+.menu-title {
+     /* Position the menu titles absolutely */
+     /* Move the menu titles outside the container */
+    /* transform: translateY(-50%); Adjust vertical alignment */
+    opacity: 0; /* Initially hide the menu titles */
+    transition: opacity 1.5s ease-in,opacity 0.3s ease-out, transform 0.8s; /* Add transition for smooth animation */
+    transform: scale(20px);
+    /* transform: opacity(0)3s; */
+    position: absolute;
+    left: 120px;
+    /* padding-bottom: 20px; */
+}
+
+.left-menu:hover .menu-icon
+{
+    /* transform: translateX(-20px); */
+    transform: scale(50px);
+    margin-left: 3%;
+}
+
+.left-menu:hover .menu
+{
+
+}
+
+.left-menu:hover .menu-title {
+    transform: translateX(20px); /* Move the menu title to the right when left-menu is hovered */
+    opacity: 1;
+}
+
 
 .setting
 {
@@ -138,10 +201,19 @@ body
     padding-top: 160px;
 }
 
-.menu-icon
-{
-    width: 43px;
+.menu-icon {
+    width: 50px; /* Set the initial size of the menu icon */
+    height: auto; /* Maintain aspect ratio */
+    transition: width 0.3s ease; /* Add transition for smooth animation */
+    margin-left: 30%;
+    position: relative;
+    transition: margin-left 0.6s ease;
 }
+
+.left-menu:not(:hover) .menu-icon {
+    width: 50px; /* Increase the size of the menu icon when left-menu is not being hovered over */
+}
+
 
 li
 {
@@ -241,3 +313,13 @@ video
     align-items: center;
     justify-content: center;
 }
+
+.logo
+{
+    width: 100%;
+    /* padding-left: ; */
+    position: relative;
+    /* margin-left: 23.5px; */
+    display: block;
+}
+
