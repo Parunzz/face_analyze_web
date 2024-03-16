@@ -78,6 +78,8 @@ function Members() {
     { from: '6floor_main', to: '6floor_back' }
   ];
 
+  
+
   const renderLineToComponents = () => {
     if (responseData && responseData.length > 0) {
       return linesData.map((line, index) => {
@@ -176,14 +178,14 @@ function Members() {
                   id="mydate"
                   label="Map Date"
                   disableFuture
-                  sx={{ width: 400 }}
+                  sx={{ width: 400, left: '15%'}}
                 />
               </LocalizationProvider>
-              <div >
-                <div style={{ display: 'inline' }} className="1floor_main">1 floor main</div>
-                <div style={{ display: 'inline', marginLeft: '50%' }} className="1floor_back">1 floor back</div><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-                <div style={{ display: 'inline' }} className="6floor_main">6 FLOOR main</div>
-                <div style={{ display: 'inline', marginLeft: '50%' }} className="6floor_back">6 FLOOR back</div>
+              <div style={{ margin: '5% 0 0 -10%' }}>
+                <div style={{ display: 'inline', paddingBottom: '1%', position: 'fixed' }} className="1floor_main">1 FLOOR main</div>
+                <div style={{ display: 'inline', marginLeft: '50%', paddingBottom: '1%', position: 'fixed' }} className="1floor_back">1 FLOOR back</div><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                <div style={{ display: 'inline', paddingTop: '1%', position: 'fixed' }} className="6floor_main">6 FLOOR main</div>
+                <div style={{ display: 'inline', marginLeft: '50%', paddingTop: '1%', position: 'fixed' }} className="6floor_back">6 FLOOR back</div>
               </div>
               {/* <LineTo from="1floor_main" to="1floor_back" delay="0" />
               <LineTo from="1floor_back" to="6floor_back" delay="0" />
@@ -193,6 +195,9 @@ function Members() {
             </div>
           </div>
         </div>
+        {/* <div style={{marginLeft: '28%', marginTop: '-38%', position: 'fixed', maxWidth: '200px', maxHeight: '200px' }}>
+          <img src="../../img/location2.gif" alt="" />
+        </div> */}
       </div>
     </>
   );
