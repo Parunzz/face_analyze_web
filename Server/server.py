@@ -48,9 +48,9 @@ CORS(app, supports_credentials=True)
 # start only kiosk docker-compose up -d flask-server kiosk
 dbconfig = {
     # "host": "localhost",
-    # "host": "db",
-    "host": "192.168.1.33",
-    "port":"9906",
+    "host": "db",
+    # "host": "192.168.1.33",
+    # "port":"9906",
     "user": "admin",
     "password": "admin",
     "database": "deepface",

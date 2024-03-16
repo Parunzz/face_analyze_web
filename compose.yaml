@@ -21,6 +21,8 @@ services:
       - "3001:3001"
     # depends_on:
     #   - db
+    environment:
+      - TZ=Asia/Bangkok
   db:
     container_name: db
     image: mysql:latest
