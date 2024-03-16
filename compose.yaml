@@ -34,6 +34,12 @@ services:
       - "9906:3306"
     volumes:
       - "./DB:/docker-entrypoint-initdb.d"
+    deploy:
+      # Set resource limits
+      resources:
+        limits:
+          cpus: '0.8'
+          memory: '8GB'
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin
