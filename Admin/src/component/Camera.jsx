@@ -3,7 +3,7 @@ import vdoBg from '../assets/video/Kiosk.mp4';
 import UseAuth from './UseAuth';
 import Cookies from 'js-cookie';
 import '../css/Camera.css';
-
+import Emotion from './Emotion';
 function Camera() {
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');

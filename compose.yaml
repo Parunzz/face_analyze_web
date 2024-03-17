@@ -13,14 +13,16 @@ services:
       - "5173:5173"
     depends_on:
       - flask-server
-      - db
+      # - db
   flask-server:
     build: ./Server
     restart: always
     ports:
       - "3001:3001"
-    depends_on:
-      - db
+    # depends_on:
+    #   - db
+    environment:
+      - TZ=Asia/Bangkok
   db:
     container_name: db
     image: mysql:latest
@@ -34,6 +36,12 @@ services:
       - "9906:3306"
     volumes:
       - "./DB:/docker-entrypoint-initdb.d"
+    deploy:
+      # Set resource limits
+      resources:
+        limits:
+          cpus: '0.8'
+          memory: '8GB'
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin
