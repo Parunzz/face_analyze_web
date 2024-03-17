@@ -12,6 +12,7 @@ import Menu from './component/Menu.jsx'
 import Kiosks from './component/Kiosks.jsx'
 import TransactionDetail from './component/TransactionDetail.jsx';
 import Map from './component/Map.jsx';
+import Emotion_Detail from './component/Emotion_Detail.jsx';
 function App() {
 
   
@@ -22,6 +23,7 @@ function App() {
           <Route path='/SignIn' element={<SignIn />} />
           <Route path='/SignUp' element={<SignUp />} />
           <Route path='/Camera' element={<Camera />} />
+          <Route path='/Camera/:emotion_id' element={<Emotion_Detail />} />
           <Route path='/Members' element={<Members />} />
           <Route path='/member/:pid' element={<MemberDetail />} />
           <Route path='/AddMember' element={<AddMember />} />
