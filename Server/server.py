@@ -44,12 +44,29 @@ CORS(app, supports_credentials=True)
 # conn = mysql.connector.connect(host="192.168.1.33",user="zen",password="admin",db="deepface",connect_timeout=100)
 # cursor = conn.cursor(dictionary=True)
 
-# MySQL connection pool configuration
+# MySQL connection pool 
+# start only kiosk docker-compose up -d flask-server kiosk
+# dbconfig = {
+#     "host": "db",
+#     "user": "admin",
+#     "password": "admin",
+#     "database": "deepface",
+#     "connect_timeout": 10
+# } 
+#network docker db
+# dbconfig = {
+#     "host": "192.168.1.33",
+#     "port":"9906",
+#     "user": "admin",
+#     "password": "admin",
+#     "database": "deepface",
+#     "connect_timeout": 10
+# }
+#local
 dbconfig = {
-    # "host": "localhost",
-    "host": "db",
-    "user": "admin",
-    "password": "admin",
+    "host": "localhost",
+    "user": "root",
+    "password": "",
     "database": "deepface",
     "connect_timeout": 10
 }
@@ -557,7 +574,72 @@ def Transaction():
         return jsonify({'error': str(e)}),500
     finally:
         close_mysql_connection(conn, cursor)
+#get emotion text
+@app.route('/api/GetEmotion', methods=['GET'])
+def GetEmotion():
+    try:
+        conn = get_mysql_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        cursor.execute('SELECT emotion_data,emotion_id FROM `emotion_data` ;')
+        data = cursor.fetchall()
+        
+        return make_response(jsonify(data), 200)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)}),500
+    finally:
+        close_mysql_connection(conn, cursor)
+        
+@app.route('/api/ResponseText', methods=['POST'])
+def ResponseText():
+    try:
+        conn = get_mysql_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        emotion_id = request.form.get('emotion_id')
+        cursor.execute('SELECT response_text.response_text, emotion_data.emotion_data, response_text_id FROM `response_text` JOIN emotion_data ON response_text.emotion_id = emotion_data.emotion_id WHERE response_text.emotion_id = %s;',(emotion_id,))
+        data = cursor.fetchall()
+        return make_response(jsonify(data), 200)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)}),500
+    finally:
+        close_mysql_connection(conn, cursor)
+        
+@app.route('/api/SetResponseText', methods=['POST'])
+def SetResponseText():
+    try:
+        conn = get_mysql_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        request_data = request.json
+        response_text = request_data.get('ResponseText')
+        emotion_id = int(request_data.get('emotion_id'))
+    
+        cursor.execute('INSERT INTO response_text (emotion_id, response_text) VALUES (%s, %s)', (emotion_id, response_text,))
+        conn.commit()  # Commit changes to the database
+        return make_response(jsonify({'message': 'Data inserted successfully'}), 200)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)}),500
+    finally:
+        close_mysql_connection(conn, cursor)
 
+@app.route('/api/removeResponseText/<int:response_text_id>', methods=['DELETE'])
+def delete_response_text(response_text_id):
+    try:
+        conn = get_mysql_connection()
+        cursor = conn.cursor(dictionary=True)
+        
+        cursor.execute("DELETE FROM response_text WHERE response_text_id = %s", (response_text_id,))
+        conn.commit()
+        return jsonify({'message': 'Response text deleted successfully'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        close_mysql_connection(conn, cursor)
+    
 @app.route('/api/TransactionDetail',methods=['POST'])
 def TransactionDetail():
     try:
@@ -846,7 +928,15 @@ def save_img():
                     person_gender = None
                     person_age = None
                 # print(person_name)
-                cursor.execute('SELECT IMG_Emotion, emotion_data.emotion_id,emotion_data.emotion_data,response_text.response_text FROM `emotion_data` JOIN response_text ON emotion_data.emotion_id = response_text.emotion_id WHERE emotion_data.emotion_data = %s;', (dominant_emotion,))
+                cursor.execute(
+                    '''
+                        SELECT IMG_Emotion, emotion_data.emotion_id, emotion_data.emotion_data, response_text.response_text
+                        FROM emotion_data
+                        JOIN response_text ON emotion_data.emotion_id = response_text.emotion_id
+                        WHERE emotion_data.emotion_data = %s
+                        ORDER BY RAND()
+                        LIMIT 1;
+                    ''', (dominant_emotion,))
                 emotion_data_result = cursor.fetchone()
                 response_text = emotion_data_result['response_text']
                 # print(response_text)
