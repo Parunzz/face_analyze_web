@@ -928,7 +928,15 @@ def save_img():
                     person_gender = None
                     person_age = None
                 # print(person_name)
-                cursor.execute('SELECT IMG_Emotion, emotion_data.emotion_id,emotion_data.emotion_data,response_text.response_text FROM `emotion_data` JOIN response_text ON emotion_data.emotion_id = response_text.emotion_id WHERE emotion_data.emotion_data = %s;', (dominant_emotion,))
+                cursor.execute(
+                    '''
+                        SELECT IMG_Emotion, emotion_data.emotion_id, emotion_data.emotion_data, response_text.response_text
+                        FROM emotion_data
+                        JOIN response_text ON emotion_data.emotion_id = response_text.emotion_id
+                        WHERE emotion_data.emotion_data = %s
+                        ORDER BY RAND()
+                        LIMIT 1;
+                    ''', (dominant_emotion,))
                 emotion_data_result = cursor.fetchone()
                 response_text = emotion_data_result['response_text']
                 # print(response_text)
