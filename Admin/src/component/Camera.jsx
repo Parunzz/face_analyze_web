@@ -97,7 +97,7 @@ function Camera() {
           </div>
 
           <div className='info'>
-            <h1 className='text-3xl font-bold' style={{ paddingBottom: '2%'}}>กล้องวงจรปิด</h1>
+            <h1 className='text-3xl font-bold' style={{ paddingBottom: '2%'}}>ตั้งค่า กล้องวงจรปิด</h1>
               <Emotion />
           </div>
         </div>
