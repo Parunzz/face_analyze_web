@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import '../css/Camera.css';
 import { useNavigate } from 'react-router-dom';
 
+import Emotion from './Emotion';
 function Camera() {
   const status = Cookies.get('status');
   const navigate = useNavigate();
@@ -108,22 +109,9 @@ function Camera() {
           </div>
 
           <div className='info'>
-            <h1 className='text-3xl font-bold' style={{ paddingBottom: '2%'}}>กล้องวงจรปิด</h1>
-            {/* <a href="Kiosks" >Kiosk</a> */}
-
-            <a href="Kiosks" className='Kiosk' >
-              <img src='/img/Kiosk.png' className='Kiosk-img'></img>
-              <img src='/img/Kiosk-bg.png' className='Kiosk-img-1'></img>
-              <h3 className='Kiosk-text'>Kiosk</h3>
-
-            </a>
-            <img src="" alt="" />
+            <h1 className='text-3xl font-bold' style={{ paddingBottom: '2%'}}>ตั้งค่า กล้องวงจรปิด</h1>
+              <Emotion />
           </div>
-          <a href='' className='add-button'>
-            <div className="add">
-              <h1 className='add-text'> + </h1>
-            </div>
-          </a>
         </div>
       </div>
     </>

@@ -72,8 +72,8 @@ function Camera() {
             const place = document.getElementById('place').value;
             console.log(responseData);
             // const screenshot = getScreenshot(video, videoWidth, videoHeight);
-            // const response = await fetch('http://192.168.1.40:3001/api/save_img', {
-            const response = await fetch('http://localhost:3001/api/save_img', {
+            const response = await fetch('http://192.168.1.33:3001/api/save_img', {
+            // const response = await fetch('http://localhost:3001/api/save_img', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
