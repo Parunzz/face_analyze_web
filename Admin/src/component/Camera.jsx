@@ -3,13 +3,22 @@ import vdoBg from '../assets/video/Kiosk.mp4'
 import UseAuth from './UseAuth';
 import Cookies from 'js-cookie';
 import '../css/Camera.css';
+import { useNavigate } from 'react-router-dom';
 
 function Camera() {
+  const status = Cookies.get('status');
+  const navigate = useNavigate();
+  
+  if(status != 'true'){
+    navigate('/SignIn');
+  }
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
   const handleLogout = () => {
     Cookies.remove('token');
+    
   }
+
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
@@ -19,10 +28,12 @@ function Camera() {
       const month = now.toLocaleString('default', { month: 'long' }); // Get full month name
       const date = now.getDate();
       const year = now.getFullYear();
+      
 
       setCurrentTime(`${hours}:${minutes}:${seconds}`);
       setCurrentDate(`${date} ${month} ${year}`);
     };
+    
 
     // Update time and date initially and then every second
     updateTime();
