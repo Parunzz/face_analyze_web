@@ -1,15 +1,20 @@
 import { useState, useEffect } from 'react';
 import Member from './Member'
 import UseAuth from './UseAuth';
-import Cookies from 'js-cookie';;
-
+import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 
 function Members() {
-
+  const status = Cookies.get('status');
+  const navigate = useNavigate();
+  
+  if(status != 'true'){
+    navigate('/SignIn');
+  }
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
   const handleLogout = () => {
-    Cookies.remove('token');
+    Cookies.remove('status');
   }
   useEffect(() => {
     const updateTime = () => {

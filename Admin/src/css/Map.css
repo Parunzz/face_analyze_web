@@ -13,5 +13,9 @@
 
 .map
 {
-    padding: 200px;
+    /* padding: 200px; */
+    padding-top: 15%;
+    padding-left: 25%;
+    font-weight: 900
 }
+

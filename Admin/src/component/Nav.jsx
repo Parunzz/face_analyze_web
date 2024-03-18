@@ -8,7 +8,7 @@ function Nav() {
 
   //------------logout------------------
   const handleLogout = () => {
-    Cookies.remove('token');
+    Cookies.remove('status');
     // Redirect or perform other actions upon logout
   };
   //------------logout------------------

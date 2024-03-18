@@ -12,6 +12,9 @@ import Menu from './component/Menu.jsx'
 import Kiosks from './component/Kiosks.jsx'
 import TransactionDetail from './component/TransactionDetail.jsx';
 import Map from './component/Map.jsx';
+import Table_Folk from './component/Table_Folk.jsx';
+import Register from './component/Register.jsx';
+
 import Emotion_Detail from './component/Emotion_Detail.jsx';
 function App() {
 
@@ -32,6 +35,8 @@ function App() {
           <Route path='/Kiosks' element={<Kiosks />} />
           <Route path='/Dashboard' element={<Dashboard />}/>
           <Route path='/Map/:pid' element={<Map />}/>
+          <Route path='/Table_Folk' element={<Table_Folk />}/>
+          <Route path='/Register' element={<Register />}/>
       </Routes>
     </BrowserRouter>
   )

@@ -297,13 +297,13 @@ def signin():
         user = cursor.fetchone()
 
         if user:
-            token = jwt.encode({'username': username}, SECRET_KEY, algorithm='HS256')
-            print(token)
-            return jsonify({'token': token}), 200
+            # token = jwt.encode({'username': username}, SECRET_KEY, algorithm='HS256')
+            # print(token)
+            return jsonify({'Status': 'true'}), 200
         else:
             # Authentication failed
             return jsonify({'error': 'Invalid credentials'}), 401
-
+   
     except Exception as e:
         error_message = str(e)
         return make_response(jsonify({'error': error_message}), 500)

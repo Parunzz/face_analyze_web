@@ -59,11 +59,12 @@ export default function SignIn() {
       if (response.ok) {
         console.log('Login successful');
         const data = await response.json();
-        console.log(data)
-        const token = data.token;
+        console.log(data.Status)
+        const status = data.Status;
 
         // Set the cookie with HttpOnly, Secure, and SameSite attributes
-        Cookies.set('token', token, { expires: 7, path: '' })
+        Cookies.set('status', status, { expires: 1, path: '' })
+        Cookies.set('username', username, { expires: 1, path: '' })
 
         navigate('/');
         // Redirect or perform other actions upon successful login

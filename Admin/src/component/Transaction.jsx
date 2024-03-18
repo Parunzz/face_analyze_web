@@ -9,6 +9,8 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { Link } from 'react-router-dom';
 
+
+
 const columns = [
     // { id: 'Cut_path',label: 'Small-pic'},
     // { id: 'Full_path',label: 'Full-pic'},
