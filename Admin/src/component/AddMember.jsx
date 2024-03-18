@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -16,6 +16,7 @@ import MyDatePicker from './MyDatePicker';
 import ImageUpload from './ImageUpload';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
+import Cookies from 'js-cookie';
 
 function Copyright(props) {
     return (
@@ -30,11 +31,14 @@ function Copyright(props) {
     );
 }
 
+
 // TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
 
 export default function AddMember() {
+
+    const status = Cookies.get('status');
     const navigate = useNavigate();
 
     const readFileAsBase64 = (file) => {
@@ -105,8 +109,14 @@ export default function AddMember() {
 
         }
         //---------------------------------api -------------------------------------------
+
     };
 
+    useEffect(() => {
+        if (status != 'true') {
+            navigate('/SignIn');
+        }
+    }, []);
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">

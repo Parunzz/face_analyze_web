@@ -10,8 +10,15 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { axisClasses } from '@mui/x-charts';
 import html2canvas from 'html2canvas';
+import { useNavigate } from 'react-router-dom';
 
 function Dashboard() {
+  const status = Cookies.get('status');
+  const navigate = useNavigate();
+  
+  if(status != 'true'){
+    navigate('/SignIn');
+  }
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
   const [Emotion, setEmotion] = useState([]);

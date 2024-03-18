@@ -5,8 +5,15 @@ import Cookies from 'js-cookie';
 import '../css/Camera.css';
 import Webcam from "react-webcam";
 import { drawRect } from "./utilities";
+import { useNavigate } from 'react-router-dom';
 
 function Camera() {
+    const status = Cookies.get('status');
+  const navigate = useNavigate();
+  
+  if(status != 'true'){
+    navigate('/SignIn');
+  }
     const webcamRef = useRef(null);
     const canvasRef = useRef(null);
     const [isCameraOn, setIsCameraOn] = useState(true);

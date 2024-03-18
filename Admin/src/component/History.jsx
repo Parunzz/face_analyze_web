@@ -4,7 +4,15 @@ import UseAuth from './UseAuth';
 import Cookies from 'js-cookie';
 import '../css/History.css'
 import Transaction from './Transaction';
+import { useNavigate } from 'react-router-dom';
+
 function History() {
+  const status = Cookies.get('status');
+  const navigate = useNavigate();
+  
+  if(status != 'true'){
+    navigate('/SignIn');
+  }
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
   const handleLogout = () => {
