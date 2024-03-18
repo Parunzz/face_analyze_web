@@ -16,7 +16,7 @@ function Camera() {
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
   const handleLogout = () => {
-    Cookies.remove('token');
+    Cookies.remove('status');
     
   }
 

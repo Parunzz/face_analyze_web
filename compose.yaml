@@ -10,7 +10,7 @@ services:
   kiosk:
     build: ./Kiosk
     ports:
-      - "2112:2112"
+      - "5173:5173"
     depends_on:
       - flask-server
       # - db

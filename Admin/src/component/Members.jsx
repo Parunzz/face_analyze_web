@@ -14,7 +14,7 @@ function Members() {
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
   const handleLogout = () => {
-    Cookies.remove('token');
+    Cookies.remove('status');
   }
   useEffect(() => {
     const updateTime = () => {

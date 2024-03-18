@@ -27,7 +27,7 @@ function Camera() {
     const [currentDate, setCurrentDate] = useState('');
     const aspectRatio = 9 / 16;
     const handleLogout = () => {
-        Cookies.remove('token');
+        Cookies.remove('status');
     }
     // const getScreenshot = (video, width, height) => {
     //     const canvas = document.createElement('canvas');

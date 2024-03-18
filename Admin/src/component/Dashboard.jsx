@@ -169,7 +169,7 @@ function Dashboard() {
     fetchGender();
   }, [selectedDate]);
   const handleLogout = () => {
-    Cookies.remove('token');
+    Cookies.remove('status');
   }
   useEffect(() => {
     const updateTime = () => {

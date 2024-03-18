@@ -18,7 +18,7 @@ function Members() {
   const [responseData, setresponseData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const handleLogout = () => {
-    Cookies.remove('token');
+    Cookies.remove('status');
   }
   const handleDateChange = (newDate) => {
     setSelectedDate(newDate);

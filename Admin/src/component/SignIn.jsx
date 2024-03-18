@@ -64,6 +64,7 @@ export default function SignIn() {
 
         // Set the cookie with HttpOnly, Secure, and SameSite attributes
         Cookies.set('status', status, { expires: 1, path: '' })
+        Cookies.set('username', username, { expires: 1, path: '' })
 
         navigate('/');
         // Redirect or perform other actions upon successful login
