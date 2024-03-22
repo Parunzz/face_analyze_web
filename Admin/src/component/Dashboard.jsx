@@ -70,7 +70,7 @@ function Dashboard() {
 
   const fetchEmotions = async () => {
     try {
-      const response = await fetch('http://localhost:3001/emotion_data', {
+      const response = await fetch('http://192.168.15.227:3001/emotion_data', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -98,7 +98,7 @@ function Dashboard() {
   };
   const fetchCountMembers = async () => {
     try {
-      const response = await fetch('http://localhost:3001/CountMembers', {
+      const response = await fetch('http://192.168.15.227:3001/CountMembers', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ function Dashboard() {
   };
   const fetchGender = async () => {
     try {
-      const response = await fetch('http://localhost:3001/DashBoardGender', {
+      const response = await fetch('http://192.168.15.227:3001/DashBoardGender', {
         method: 'Post',
         headers: {
           'Content-Type': 'application/json',
@@ -218,7 +218,7 @@ function Dashboard() {
       }
   
       // Send API request
-      const response = await fetch('http://localhost:3001/send_email', {
+      const response = await fetch('http://192.168.15.227:3001/send_email', {
         method: 'POST',
         body: formData,
       });
