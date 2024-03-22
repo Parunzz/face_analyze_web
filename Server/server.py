@@ -46,13 +46,13 @@ CORS(app, supports_credentials=True)
 
 # MySQL connection pool 
 # start only kiosk docker-compose up -d flask-server kiosk
-# dbconfig = {
-#     "host": "db",
-#     "user": "admin",
-#     "password": "admin",
-#     "database": "deepface",
-#     "connect_timeout": 10
-# } 
+dbconfig = {
+    "host": "database",
+    "user": "admin",
+    "password": "admin",
+    "database": "deepface",
+    "connect_timeout": 10
+} 
 #network docker db
 # dbconfig = {
 #     "host": "192.168.1.33",
@@ -63,13 +63,13 @@ CORS(app, supports_credentials=True)
 #     "connect_timeout": 10
 # }
 #local
-dbconfig = {
-    "host": "localhost",
-    "user": "root",
-    "password": "",
-    "database": "deepface",
-    "connect_timeout": 10
-}
+# dbconfig = {
+#     "host": "localhost",
+#     "user": "root",
+#     "password": "",
+#     "database": "deepface",
+#     "connect_timeout": 10
+# }
 # Create a connection pool
 connection_pool = mysql.connector.pooling.MySQLConnectionPool(pool_name="mypool", pool_size=5, **dbconfig)
 
