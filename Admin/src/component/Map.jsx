@@ -25,7 +25,7 @@ function Members() {
   };
   const fetchMemberDetail = async () => {
     try {
-      const response = await fetch('http://localhost:3001/Map', {
+      const response = await fetch('http://192.168.15.227:3001/Map', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

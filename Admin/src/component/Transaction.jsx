@@ -45,7 +45,7 @@ const Transaction = () => {
             // Make API request
             console.log("api")
             // const response = await fetch(`/api/transaction`);
-            const response = await fetch(`http://localhost:3001/api/transaction?page=${page}&rowsPerPage=${rowsPerPage}`, {
+            const response = await fetch(`http://192.168.15.227:3001/api/transaction?page=${page}&rowsPerPage=${rowsPerPage}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

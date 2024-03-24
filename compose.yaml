@@ -6,7 +6,7 @@ services:
       - "2112:2112"
     depends_on:
       - flask-server
-      - db
+      - database
   kiosk:
     build: ./Kiosk
     ports:
@@ -23,8 +23,8 @@ services:
     #   - db
     environment:
       - TZ=Asia/Bangkok
-  db:
-    container_name: db
+  database:
+    container_name: database
     image: mysql:latest
     restart: always
     environment:
@@ -33,7 +33,7 @@ services:
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin
     ports:
-      - "9906:3306"
+      - "9907:3307"
     volumes:
       - "./DB:/docker-entrypoint-initdb.d"
     deploy:
@@ -47,9 +47,9 @@ services:
     container_name: phpmyadmin
     restart: always
     environment:
-      PMA_HOST: db
+      PMA_HOST: database
       MYSQL_ROOT_PASSWORD: root
     ports:
       - "8080:80"
     depends_on:
-      - db
+      - database
