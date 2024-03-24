@@ -63,13 +63,13 @@ CORS(app, supports_credentials=True)
 #     "connect_timeout": 10
 # }
 #local
-dbconfig = {
-    "host": "localhost",
-    "user": "root",
-    "password": "",
-    "database": "deepface",
-    "connect_timeout": 10
-}
+# dbconfig = {
+#     "host": "localhost",
+#     "user": "root",
+#     "password": "",
+#     "database": "deepface",
+#     "connect_timeout": 10
+# }
 # Create a connection pool
 connection_pool = mysql.connector.pooling.MySQLConnectionPool(pool_name="mypool", pool_size=5, **dbconfig)
 
