@@ -13,6 +13,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 function Members() {
   const { pid } = useParams();
+  const username = Cookies.get('username');
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
   const [responseData, setresponseData] = useState([]);
@@ -78,7 +79,7 @@ function Members() {
     { from: '6floor_main', to: '6floor_back' }
   ];
 
-
+  
 
   const renderLineToComponents = () => {
     if (responseData && responseData.length > 0) {
@@ -156,7 +157,7 @@ function Members() {
             </a>
           </div>
           <div className='setting'>
-            <div className='admin_name'>สวัสดี [User] </div>
+            <div className='admin_name'>สวัสดี {username} </div>
             <a href='/Signin' onClick={handleLogout}>ออกจากระบบ</a>
           </div>
         </div>
@@ -178,17 +179,14 @@ function Members() {
                   id="mydate"
                   label="Map Date"
                   disableFuture
-                  sx={{ width: 400, left: '15%' }}
+                  sx={{ width: 400, left: '15%'}}
                 />
               </LocalizationProvider>
               <div style={{ margin: '5% 0 0 -10%' }}>
-                <div style={{marginTop: '-8%', position: 'fixed', maxWidth: '200px', maxHeight: '200px' }}>
-                  <img src="../../img/location2.gif" alt="" />
-                <div style={{ display: 'inline', paddingBottom: '1%', position: 'fixed' }} className="1floor_main">ทางเข้าด้านหน้าชั้น 1</div>
-                </div>
-                <div style={{ display: 'inline', marginLeft: '50%', paddingBottom: '1%', position: 'fixed' }} className="1floor_back">ทางเข้าด้านหลังชั้น 1</div><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-                <div style={{ display: 'inline', paddingTop: '1.5%', position: 'fixed' }} className="6floor_main">ทางเข้าด้านหน้าชั้น 6</div>
-                <div style={{ display: 'inline', marginLeft: '50%', paddingTop: '1.5%', position: 'fixed' }} className="6floor_back">ทางเข้าด้านหลังชั้น 1</div>
+                <div style={{ display: 'inline', paddingBottom: '1%', position: 'fixed' }} className="1floor_main">1 FLOOR main</div>
+                <div style={{ display: 'inline', marginLeft: '50%', paddingBottom: '1%', position: 'fixed' }} className="1floor_back">1 FLOOR back</div><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                <div style={{ display: 'inline', paddingTop: '1%', position: 'fixed' }} className="6floor_main">6 FLOOR main</div>
+                <div style={{ display: 'inline', marginLeft: '50%', paddingTop: '1%', position: 'fixed' }} className="6floor_back">6 FLOOR back</div>
               </div>
               {/* <LineTo from="1floor_main" to="1floor_back" delay="0" />
               <LineTo from="1floor_back" to="6floor_back" delay="0" />
@@ -198,7 +196,9 @@ function Members() {
             </div>
           </div>
         </div>
-
+        {/* <div style={{marginLeft: '28%', marginTop: '-38%', position: 'fixed', maxWidth: '200px', maxHeight: '200px' }}>
+          <img src="../../img/location2.gif" alt="" />
+        </div> */}
       </div>
     </>
   );

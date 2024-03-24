@@ -49,7 +49,7 @@ export default function Register() {
       jsonData[key] = value;
     });
     console.log(jsonData)
-    axios.post('http://localhost:3001/register', jsonData)
+    axios.post('http://192.168.15.227:3001/register', jsonData)
       .then(function (response) {
         // console.log(response.status);
         navigate('/signin');

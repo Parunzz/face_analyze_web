@@ -8,13 +8,15 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import qs from 'qs';
 import TextField from '@mui/material/TextField';
+
 
 function Emotion_Detail() {
   const [ResponseEmotion, setResponseEmotion] = useState([]);
   const { emotion_id } = useParams();
+  const navigate = useNavigate();
   async function getResponseText() {
     let url = 'http://192.168.15.227:3001/api/ResponseText';
     try {
@@ -71,6 +73,9 @@ function Emotion_Detail() {
   const handleRemove = (response_text_id) => {
     removeResponseText(response_text_id);
   };
+  const handleBack = () => {
+    navigate('/Camera')
+  };
   useEffect(() => {
     //Runs only on the first render
     getResponseText();
@@ -80,14 +85,15 @@ function Emotion_Detail() {
       <Container maxWidth="lg">
         <form onSubmit={handleSubmit} id="htmlForm">
           {ResponseEmotion && ResponseEmotion.length > 0 ? (
-            <h1>EMOTION : {ResponseEmotion[0].emotion_data}</h1>
+            <h1 style={{paddingTop: '2%'}}>EMOTION : {ResponseEmotion[0].emotion_data}</h1>
           ) : (
             <h1>EMOTION : </h1>
           )}
           <TextField name="ResponseText" label="Add Response Text" variant="standard" />
-          <Button type="submit" variant="contained">ADD TEXT</Button>
-
+          <Button style={{marginTop: '0.9%', marginLeft: '2%'}} type="submit" variant="contained">ADD TEXT</Button>
+          <Button style={{marginTop: '0.9%', marginLeft: '1%', backgroundColor: 'red'}} onClick={handleBack} variant="contained">Back</Button>
         </form>
+        
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
@@ -108,7 +114,7 @@ function Emotion_Detail() {
                       style={{ textDecoration: 'underline', cursor: 'pointer' }}
                       onClick={() => handleRemove(ResponseEmotion.response_text_id)}
                     >
-                      Remove {ResponseEmotion.response_text_id}
+                      Remove
                     </span>                  </TableCell>
                 </TableRow>
               ))}
