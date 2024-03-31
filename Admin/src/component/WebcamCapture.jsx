@@ -40,7 +40,7 @@ export default function WebcamCapture() {
         if (imageSrc) {
           setCapturedImage(imageSrc); // Update state to display the captured image
 
-          const response = await fetch('http://192.168.15.227:3001/api/save_fullImg', {
+          const response = await fetch(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/save_fullImg`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

@@ -78,7 +78,7 @@ export default function AddMember() {
             jsonData[key] = value;
         });
         try {
-            const response = await fetch('http://192.168.15.227:3001/AddMember', {
+            const response = await fetch(`http://${import.meta.env.VITE_SERVER_IP}:3001/AddMember`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

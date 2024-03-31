@@ -72,14 +72,15 @@ function Camera() {
             const place = document.getElementById('place').value;
             console.log(responseData);
             // const screenshot = getScreenshot(video, videoWidth, videoHeight);
-            const response = await fetch('http://192.168.15.227:3001/api/save_img', {
-            // const response = await fetch('http://192.168.15.227:3001/api/save_img', {
+            const ipAddress = import.meta.env.VITE_SERVER_IP;
+            const response = await fetch(`http://${ipAddress}:3001/api/save_img`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({'responseData':responseData,'place':place}),
+                body: JSON.stringify({ 'responseData': responseData, 'place': place }),
             });
+
 
             // Handle the API response as needed
             const responseInfo = await response.json();
@@ -102,7 +103,8 @@ function Camera() {
             formData.append('image', screenshot, 'screenshot.jpg');
 
             // Make the API request
-            const response = await fetch('http://192.168.15.227:3001/api/Detect_face', {
+            const ipAddress = import.meta.env.VITE_SERVER_IP;
+            const response = await fetch(`http://${ipAddress}:3001/api/Detect_face`, {
                 method: 'POST',
                 body: formData,
             });

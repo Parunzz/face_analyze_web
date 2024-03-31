@@ -17,18 +17,18 @@ import jwt
 from datetime import datetime
 import io
 from flask_mail import Mail, Message
+from dotenv import load_dotenv
 
 
-
+load_dotenv()
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 app.config['MAIL_SERVER'] = 'smtp.googlemail.com'  # Update with your SMTP server
 app.config['MAIL_PORT'] = 587  # Update with your SMTP port
 app.config['MAIL_USE_TLS'] = True  # Use TLS instead of SSL
-app.config['MAIL_USERNAME'] = 's6404062663223@email.kmutnb.ac.th'  # Update with your email username
-# app.config['MAIL_PASSWORD'] = os.environ.get('EMAIL_PASSWORD')  # use this command in terminal => set EMAIL_PASSWORD='your_email_password'
-app.config['MAIL_PASSWORD'] = ''  # use this command in terminal => set EMAIL_PASSWORD='your_email_password'
-
+app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")  # Update with your email username
+app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")  # use this command in terminal => set EMAIL_PASSWORD='your_email_password'
+# app.config['MAIL_PASSWORD'] = ''  # use this command in terminal => set EMAIL_PASSWORD='your_email_password'
 
 mail = Mail(app)
 CORS(app, supports_credentials=True)
@@ -47,12 +47,20 @@ CORS(app, supports_credentials=True)
 # MySQL connection pool 
 # start only kiosk docker-compose up -d flask-server kiosk
 dbconfig = {
-    "host": "database",
-    "user": "admin",
-    "password": "admin",
-    "database": "deepface",
+    "host": os.getenv("DATABASE_HOST"),
+    # "port": os.getenv("DATABASE_PORT"),
+    "user": os.getenv("DATABASE_USER"),
+    "password": os.getenv("DATABASE_PASSWORD"),
+    "database": os.getenv("DATABASE_NAME"),
     "connect_timeout": 10
 } 
+# dbconfig = {
+#     "host": "database",
+#     "user": "admin",
+#     "password": "admin",
+#     "database": "deepface",
+#     "connect_timeout": 10
+# } 
 #network docker db
 # dbconfig = {
 #     "host": "192.168.1.33",
