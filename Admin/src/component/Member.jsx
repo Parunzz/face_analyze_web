@@ -17,7 +17,7 @@ function Member() {
     const [responseData, setResponseData] = useState([]);
     const fetchData = async () => {
       try {
-        const response = await fetch('http://192.168.15.227:3001/getMember', {
+        const response = await fetch(`http://${import.meta.env.VITE_SERVER_IP}:3001/getMember`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

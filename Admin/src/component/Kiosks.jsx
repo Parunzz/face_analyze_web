@@ -70,7 +70,7 @@ function Camera() {
         try {
             // console.log(responseData);
             // const screenshot = getScreenshot(video, videoWidth, videoHeight);
-            const response = await fetch('http://192.168.15.227:3001/api/save_img', {
+            const response = await fetch(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/save_img`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -97,7 +97,7 @@ function Camera() {
             // Append the image data to FormData
             formData.append('image', screenshot, 'screenshot.jpg');
             console.log(formData)
-            const response = await fetch('http://192.168.15.227:3001/api/Detect_face', {
+            const response = await fetch(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/Detect_face`, {
                 method: 'POST',
                 body: formData,
             });

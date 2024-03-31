@@ -16,7 +16,7 @@ function Emotion_Detail() {
   const [ResponseEmotion, setResponseEmotion] = useState([]);
   const { emotion_id } = useParams();
   async function getResponseText() {
-    let url = 'http://192.168.15.227:3001/api/ResponseText';
+    let url = `http://${import.meta.env.VITE_SERVER_IP}:3001/api/ResponseText`;
     try {
       const data = { 'emotion_id': emotion_id };
       const options = {
@@ -35,7 +35,7 @@ function Emotion_Detail() {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    let url = 'http://192.168.15.227:3001/api/SetResponseText';
+    let url = `http://${import.meta.env.VITE_SERVER_IP}:3001/api/SetResponseText`;
     try {
       const formData = new FormData(event.currentTarget);
       const jsonData = {};
@@ -57,7 +57,7 @@ function Emotion_Detail() {
     }
   }
   async function removeResponseText(response_text_id) {
-    const url = `http://192.168.15.227:3001/api/removeResponseText/${response_text_id}`;
+    const url = `http://${import.meta.env.VITE_SERVER_IP}:3001/api/removeResponseText/${response_text_id}`;
     try {
       const response = await axios.delete(url);
       console.log(response.data);

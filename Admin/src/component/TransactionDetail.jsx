@@ -37,7 +37,7 @@ export default function TransactionDetail() {
     };
     const fetchDetail = async () => {
         try {
-            const response = await fetch('http://192.168.15.227:3001/api/TransactionDetail', {
+            const response = await fetch(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/TransactionDetail`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ export default function TransactionDetail() {
     }
     const FindPerson = async () => {
         try {
-            const response = await fetch('http://192.168.15.227:3001/api/FindPerson', {
+            const response = await fetch(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/FindPerson`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -84,7 +84,7 @@ export default function TransactionDetail() {
     }
     const Update = async () => {
         try {
-            const response = await fetch('http://192.168.15.227:3001/api/Update', {
+            const response = await fetch(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/Update`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
