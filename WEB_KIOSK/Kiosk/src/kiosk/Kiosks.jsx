@@ -103,7 +103,7 @@ function Camera() {
             formData.append('image', screenshot, 'screenshot.jpg');
 
             // Make the API request
-            const ipAddress = import.meta.env.VITE_SERVER_IP;
+            const ipAddress = import.meta.env.VITE_LOCAL_IP;
             const response = await fetch(`http://${ipAddress}/api/Detect_face`, {
                 method: 'POST',
                 body: formData,

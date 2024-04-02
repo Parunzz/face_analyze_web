@@ -7,13 +7,6 @@ services:
     depends_on:
       - flask-server
       - database
-  kiosk:
-    build: ./Kiosk
-    ports:
-      - "5173:5173"
-    depends_on:
-      - flask-server
-      # - database
   flask-server:
     build: ./Server
     restart: always
