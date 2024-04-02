@@ -1,0 +1,13 @@
+version: '3'
+services:
+  kiosk:
+    build: ./Kiosk
+    ports:
+      - "2113:2113"
+    depends_on:
+      - flask-server
+  flask-server:
+    build: ./Server
+    restart: always
+    ports:
+      - "3002:3002"

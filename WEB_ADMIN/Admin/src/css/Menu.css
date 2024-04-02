@@ -1,0 +1,262 @@
+body
+{
+  padding: 0;
+  margin: 0;
+  box-sizing: content-box;
+  background-color: rgb(235, 232, 232);
+  background-size:cover;
+  font-family: 'Noto Sans Thai', sans-serif;
+}
+
+.container {
+    max-width: 100%;
+    width: 100%;
+    height: 100vh;
+}
+
+/* .left-menu
+{
+    background-color: rgb(255, 255, 255);
+    width: 15%;
+    position: fixed;
+    height: 100vh;
+    z-index: 999;
+} */
+
+.icon{
+    width: 100px;
+    margin: auto;
+    margin: 60px auto;
+}
+
+.right-responsive
+{
+    width: 85%;
+    display: block;
+    position: relative;
+    margin-left: 15%;
+}
+
+.top-menu
+{
+    background-color: rgba(19, 19, 19, 0.849);
+    backdrop-filter: blur(2px);
+    height: 70px;
+    align-items: center;
+    display: flex;
+    justify-content: right;
+    padding-right: 50px;
+    top: 0;
+    position: fixed;
+    width: 85%;
+    padding-inline: 50px;
+}
+
+
+
+.data
+{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    text-align: center;
+    justify-content: flex-end;
+}
+
+.info
+{
+    background-color: rgb(233, 233, 233);
+    display: block;
+    padding-top: 160px;
+    height: 2000px;
+}
+
+.info-home
+{
+    height: 100%;
+}
+
+.data-info
+{
+    display: block;
+    /* padding-top: 170px; */
+    padding-inline: 60px;
+}
+
+.date
+{
+    padding-right: 30px;
+}
+
+.menu
+{
+    align-items: center;
+    display: block;
+    padding-top: 2px;
+    /* padding-left: 50px;
+    padding-right: 50px; */
+    /* padding-left: 2rem; */
+    padding-inline: 2rem;
+
+    font-size: large;
+}
+
+
+
+@media screen and (max-width: 768px) {
+    .left-menu {
+        width: 100%;
+        position:static; /* ปรับเป็น position relative เพื่อให้เห็นเนื้อหาทั้งหมด */
+        height: auto; /* ปรับความสูงให้พอดีกับเนื้อหา */
+    }
+
+    .right-responsive {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .top-menu {
+        width: 100%;
+        padding-right: 2%;
+    }
+
+    .Introduce-section {
+        padding-top: 100px;
+        padding: 2%;
+    }
+
+    .img-section {
+        padding-top: 20px;
+    }
+
+    .img-1 {
+        width: 100%; /* ปรับขนาดภาพให้กว้างกว่าบนจอเล็ก */
+    }
+}
+
+.menu-item
+{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 5px;
+    margin-bottom: 45px;
+    padding: 10px;
+    transition: transform 0.3s ease;
+}
+
+.menu-item:hover
+{
+    background-color: rgb(180, 180, 180);
+    border-color: rgba(0, 0, 0, 0.781);
+    border-radius: 5px;
+    transform: scale(1.08);
+}
+
+.menu-item img
+{
+    padding-right: 13px;
+}
+
+.setting
+{
+    text-align: center;
+    bottom: 20px;
+    align-items: center;
+    padding-top: 160px;
+}
+
+.menu-icon
+{
+    width: 43px;
+}
+
+li
+{
+    list-style-type: none;
+}
+
+.video-section
+{
+    width: 100%;
+    height: 100vh;
+    background-color: black;
+    
+}
+
+.video
+{
+    width: 100%;
+    position: absolute;
+    z-index: 800;
+    height: 100vh;
+}
+
+video
+{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.shadow
+{
+    width: 100%;
+    background-color: rgba(39, 39, 39, 0.644);
+    height: 100%;
+    z-index: 999;
+    position: absolute;
+}
+
+
+
+.Introduce-section.introduce-visible {
+    opacity: 1;
+    transform: translateY(0); /* Move back to original position */
+}
+
+/* .Introduce-section
+{
+    padding-top: 150px;
+    padding: 200px;
+    transform: translateY(50px); Initially move down by 50px
+    transition: opacity 0.5s ease, transform 0.5s ease; Added transitions for smooth effect
+} */
+
+.img-section
+{
+
+    width: 100%;
+    height: 30px;
+    padding-top: 80px;
+    
+}
+
+.img-1
+{
+  
+}
+
+.img-1:hover
+{
+    
+}
+
+.send-email-button {
+    background-color: #4CAF50; /* สีพื้นหลังของปุ่ม */
+    border: none;
+    color: white; /* สีของตัวอักษร */
+    padding: 10px 32px; /* ขนาดของ padding บนและด้านข้างของปุ่ม */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px; /* ขนาดของตัวอักษร */
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px; /* การปรับรูปร่างของปุ่มเป็นวงกลม */
+    transition: background-color 0.3s; /* การเพิ่ม transition เมื่อ hover */
+  }
+  
+  .send-email-button:hover {
+    background-color: #45a049; /* สีพื้นหลังของปุ่มเมื่อ hover */
+  }
