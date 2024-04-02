@@ -14,8 +14,10 @@ import TransactionDetail from './component/TransactionDetail.jsx';
 import Map from './component/Map.jsx';
 import Table_Folk from './component/Table_Folk.jsx';
 import Register from './component/Register.jsx';
-
 import Emotion_Detail from './component/Emotion_Detail.jsx';
+import TableVolk from './component/TableVolk.jsx';
+import RegisterVolk from './component/RegisterVolk.jsx';
+
 function App() {
 
   
@@ -37,6 +39,8 @@ function App() {
           <Route path='/Map/:pid' element={<Map />}/>
           <Route path='/Table_Folk' element={<Table_Folk />}/>
           <Route path='/Register' element={<Register />}/>
+          <Route path='/TableVolk' element={<TableVolk />}/>
+          <Route path='/RegisterVolk' element={<RegisterVolk />}/>
       </Routes>
     </BrowserRouter>
   )
