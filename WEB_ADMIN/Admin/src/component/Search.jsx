@@ -8,7 +8,7 @@ export default function Search({ setSelectedUser }) {
   const [allUsers, setAllUsers] = useState([]);
 
   useEffect(() => {
-    axios.get('http://192.168.15.227:3001/getMember')
+    axios.get(`http://${import.meta.env.VITE_SERVER_IP}/getMember`)
       .then(response => {
         setAllUsers(response.data.Member);
       })
