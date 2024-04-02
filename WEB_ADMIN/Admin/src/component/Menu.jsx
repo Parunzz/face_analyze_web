@@ -145,10 +145,11 @@ function Menu() {
                 โดดเด่นและมีประสิทธิภาพสูง บริษัท Analyze ได้เป็นส่วนสำคัญในการสร้างความสะดวกสบายให้แก่คนทั่วโลกผ่านการปรับใช้ 
                 AI ในหลากหลายด้านด้วยความคิดสร้างสรรค์และการพัฒนาที่ไม่หยุดยั้ง
               </p>
-              <div className='img-section' style={{paddingLeft: '24%'}}>
-                <img src ='/public/img/1.png' className='img-1'></img>
-                <img src='/public/img/1.png' className='img-1'></img>
+              <div className='img-section' style={{paddingLeft: '24%', position: ''}}>
+                <img src ='/public/img/1.png' className='img-1'></img><hr />
+                <img src='https://cdn.mos.cms.futurecdn.net/a5GXwzNyk9SRPNWmtey2dd.jpg' className='img-1'></img>
               </div>
+              <div></div>
           </div>
         </div>
       </div>

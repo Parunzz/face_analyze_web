@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 
 function Dashboard() {
   const status = Cookies.get('status');
+  const username = Cookies.get('username');
   const navigate = useNavigate();
   
   if(status != 'true'){
@@ -294,7 +295,7 @@ function Dashboard() {
             </a>
           </div>
           <div className='setting'>
-            <div className='admin_name'>สวัสดี [User] </div>
+            <div className='admin_name'>สวัสดี {username} </div>
             <a href='/Signin' onClick={handleLogout}>ออกจากระบบ</a>
           </div>
         </div>
@@ -437,7 +438,7 @@ function Dashboard() {
                     required
                   ></textarea>
                   <br />
-                  <button type="submit">Send Email</button>
+                  <button className="send-email-button" type="submit" >Send Email</button>
                 </form>
               </div>
             </div>

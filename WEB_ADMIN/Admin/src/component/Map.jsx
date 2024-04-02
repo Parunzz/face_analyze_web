@@ -13,6 +13,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 function Members() {
   const { pid } = useParams();
+  const username = Cookies.get('username');
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
   const [responseData, setresponseData] = useState([]);
@@ -156,7 +157,7 @@ function Members() {
             </a>
           </div>
           <div className='setting'>
-            <div className='admin_name'>สวัสดี [User] </div>
+            <div className='admin_name'>สวัสดี {username} </div>
             <a href='/Signin' onClick={handleLogout}>ออกจากระบบ</a>
           </div>
         </div>

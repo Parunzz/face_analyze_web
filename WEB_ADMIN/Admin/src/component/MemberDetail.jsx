@@ -272,7 +272,7 @@ const MemberDetail = () => {
                                                                 Image {index + 1}
                                                             </Typography>
                                                             <img width={500} src={`data:image/jpeg;base64,${memberImages[imgPath]}`} alt={`Image ${index + 1}`} />
-                                                            <Button onClick={() => RemoveImg(imgPath)} variant="outlined" color="error">
+                                                            <Button style={{marginTop: '5%', marginBottom: '5%'}} onClick={() => RemoveImg(imgPath)} variant="outlined" color="error">
                                                                 Delete Image
                                                             </Button>
                                                         </div>

@@ -37,7 +37,7 @@ export default function Table_Folk() {
     useEffect(() => {
         axios({
             method: 'get',
-            url: 'http://localhost:3001/api/transaction',
+            url: 'http://192.168.15.227:3001/api/transaction',
             // responseType: 'stream'
         })
             .then(function (response) {

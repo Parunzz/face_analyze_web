@@ -14,21 +14,19 @@ body
     height: 100vh;
 }
 
-.left-menu
+/* .left-menu
 {
     background-color: rgb(255, 255, 255);
-    /* flex: 0 0 18rem; */
-    /* overflow-y: auto; */
     width: 15%;
     position: fixed;
     height: 100vh;
     z-index: 999;
-}
+} */
 
 .icon{
     width: 100px;
     margin: auto;
-    margin: 50px auto;
+    margin: 60px auto;
 }
 
 .right-responsive
@@ -52,8 +50,9 @@ body
     position: fixed;
     width: 85%;
     padding-inline: 50px;
-    z-index: 998;
 }
+
+
 
 .data
 {
@@ -74,7 +73,7 @@ body
 
 .info-home
 {
-    height: 2000px;
+    height: 100%;
 }
 
 .data-info
@@ -101,9 +100,38 @@ body
 
     font-size: large;
 }
-.menu > div
-{
-  
+
+
+
+@media screen and (max-width: 768px) {
+    .left-menu {
+        width: 100%;
+        position:static; /* ปรับเป็น position relative เพื่อให้เห็นเนื้อหาทั้งหมด */
+        height: auto; /* ปรับความสูงให้พอดีกับเนื้อหา */
+    }
+
+    .right-responsive {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .top-menu {
+        width: 100%;
+        padding-right: 2%;
+    }
+
+    .Introduce-section {
+        padding-top: 100px;
+        padding: 2%;
+    }
+
+    .img-section {
+        padding-top: 20px;
+    }
+
+    .img-1 {
+        width: 100%; /* ปรับขนาดภาพให้กว้างกว่าบนจอเล็ก */
+    }
 }
 
 .menu-item
@@ -153,6 +181,7 @@ li
     width: 100%;
     height: 100vh;
     background-color: black;
+    
 }
 
 .video
@@ -179,23 +208,20 @@ video
     position: absolute;
 }
 
-.title
-{
-    padding-bottom: 50px;
-}
+
 
 .Introduce-section.introduce-visible {
     opacity: 1;
     transform: translateY(0); /* Move back to original position */
 }
 
-.Introduce-section
+/* .Introduce-section
 {
     padding-top: 150px;
     padding: 200px;
-    transform: translateY(50px); /* Initially move down by 50px */
-    transition: opacity 0.5s ease, transform 0.5s ease; /* Added transitions for smooth effect */
-}
+    transform: translateY(50px); Initially move down by 50px
+    transition: opacity 0.5s ease, transform 0.5s ease; Added transitions for smooth effect
+} */
 
 .img-section
 {
@@ -203,17 +229,34 @@ video
     width: 100%;
     height: 30px;
     padding-top: 80px;
+    
 }
 
 .img-1
 {
-    padding-right: 50px;
-    width: 600px;
-    display: inline-block;
-    border-radius: 10px 10px 10px 10px;
+  
 }
 
 .img-1:hover
 {
     
 }
+
+.send-email-button {
+    background-color: #4CAF50; /* สีพื้นหลังของปุ่ม */
+    border: none;
+    color: white; /* สีของตัวอักษร */
+    padding: 10px 32px; /* ขนาดของ padding บนและด้านข้างของปุ่ม */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px; /* ขนาดของตัวอักษร */
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px; /* การปรับรูปร่างของปุ่มเป็นวงกลม */
+    transition: background-color 0.3s; /* การเพิ่ม transition เมื่อ hover */
+  }
+  
+  .send-email-button:hover {
+    background-color: #45a049; /* สีพื้นหลังของปุ่มเมื่อ hover */
+  }
