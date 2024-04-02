@@ -25,7 +25,7 @@ function Members() {
   };
   const fetchMemberDetail = async () => {
     try {
-      const response = await fetch(`http://${import.meta.env.VITE_SERVER_IP}:3001/Map`, {
+      const response = await fetch(`http://${import.meta.env.VITE_SERVER_IP}/Map`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

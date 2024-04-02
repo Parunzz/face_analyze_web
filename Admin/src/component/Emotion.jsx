@@ -17,7 +17,7 @@ function Emotion() {
   const [ResponseEmotion, setResponseEmotion] = useState([]);
   async function getUser() {
     try {
-      const response = await axios.get(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/GetEmotion`);
+      const response = await axios.get(`http://${import.meta.env.VITE_SERVER_IP}/api/GetEmotion`);
       console.log(response.data);
       setResponseEmotion(response.data)
     } catch (error) {

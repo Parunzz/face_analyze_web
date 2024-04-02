@@ -50,7 +50,7 @@ export default function SignUp() {
             jsonData[key] = value;
         });
         try {
-            const response = await fetch(`http://${import.meta.env.VITE_SERVER_IP}:3001/register`, {
+            const response = await fetch(`http://${import.meta.env.VITE_SERVER_IP}/register`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

@@ -35,7 +35,7 @@ const MemberDetail = () => {
     };
     const fetchMemberDetail = async () => {
         try {
-            const response = await fetch(`http://${import.meta.env.VITE_SERVER_IP}:3001/Memberdetail`, {
+            const response = await fetch(`http://${import.meta.env.VITE_SERVER_IP}/Memberdetail`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ const MemberDetail = () => {
     };
     const RemoveMember = async () => {
         try {
-            const response = await fetch(`http://${import.meta.env.VITE_SERVER_IP}:3001/removeMember`, {
+            const response = await fetch(`http://${import.meta.env.VITE_SERVER_IP}/removeMember`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ const MemberDetail = () => {
     const RemoveImg = async (imgPath) => {
         try {
             console.log(imgPath)
-            const response = await fetch(`http://${import.meta.env.VITE_SERVER_IP}:3001/removeImg`, {
+            const response = await fetch(`http://${import.meta.env.VITE_SERVER_IP}/removeImg`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -142,7 +142,7 @@ const MemberDetail = () => {
             jsonData[key] = value;
         });
         try {
-            const response = await fetch(`http://${import.meta.env.VITE_SERVER_IP}:3001/UpdateMember`, {
+            const response = await fetch(`http://${import.meta.env.VITE_SERVER_IP}/UpdateMember`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

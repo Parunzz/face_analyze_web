@@ -46,7 +46,7 @@ export default function SignIn() {
 
 //--------------------------api------------------------------
     try {
-      const response = await fetch(`http://${import.meta.env.VITE_SERVER_IP}:3001/login`, {
+      const response = await fetch(`http://${import.meta.env.VITE_SERVER_IP}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

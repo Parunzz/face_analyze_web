@@ -73,7 +73,7 @@ function Camera() {
             console.log(responseData);
             // const screenshot = getScreenshot(video, videoWidth, videoHeight);
             const ipAddress = import.meta.env.VITE_SERVER_IP;
-            const response = await fetch(`http://${ipAddress}:3001/api/save_img`, {
+            const response = await fetch(`http://${ipAddress}/api/save_img`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -104,7 +104,7 @@ function Camera() {
 
             // Make the API request
             const ipAddress = import.meta.env.VITE_SERVER_IP;
-            const response = await fetch(`http://${ipAddress}:3001/api/Detect_face`, {
+            const response = await fetch(`http://${ipAddress}/api/Detect_face`, {
                 method: 'POST',
                 body: formData,
             });

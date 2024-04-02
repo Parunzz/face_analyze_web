@@ -45,7 +45,7 @@ const Transaction = () => {
             // Make API request
             console.log("api")
             // const response = await fetch(`/api/transaction`);
-            const response = await fetch(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/transaction?page=${page}&rowsPerPage=${rowsPerPage}`, {
+            const response = await fetch(`http://${import.meta.env.VITE_SERVER_IP}/api/transaction?page=${page}&rowsPerPage=${rowsPerPage}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
