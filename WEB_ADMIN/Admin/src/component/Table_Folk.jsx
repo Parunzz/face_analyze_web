@@ -37,14 +37,14 @@ export default function Table_Folk() {
     useEffect(() => {
         axios({
             method: 'get',
-            url: 'http://192.168.15.227:3001/api/transaction',
+            url: `http://${import.meta.env.VITE_SERVER_IP}/api/transaction`,
             // responseType: 'stream'
         })
             .then(function (response) {
                 setresponseData(response.data)
             });
     }, []);
-    // console.log(responseData)
+    console.log(responseData)
 
     return (
         <TableContainer component={Paper}>

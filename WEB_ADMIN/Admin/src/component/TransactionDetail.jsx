@@ -13,6 +13,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { Link } from 'react-router-dom';
+import '../css/Camera.css';
 
 const columns = [
     // { id: 'Cut_path',label: 'Small-pic'},
@@ -114,11 +115,11 @@ export default function TransactionDetail() {
     return (
         <div class="mybackground">
             <div class="historypicture">
-                <h1>Transaction Detail</h1>
-                <Button style={{ display: 'flex', alignItems: 'center' }} variant="contained" size="large" onClick={FindPerson}>
+                <h1 style={{translate: '0 -50%'}}>Transaction Detail</h1>
+                <Button style={{ display: 'flex', alignItems: 'center', marginBottom: '1%', marginLeft: '2%' }} variant="contained" size="large" onClick={FindPerson}>
                     FIND
                 </Button>
-                <Button style={{ display: 'flex', alignItems: 'center' }} variant="contained" size="large" onClick={Update}>
+                <Button style={{ display: 'flex', alignItems: 'center', marginLeft: '2%' }} variant="contained" size="large" onClick={Update}>
                     Update
                 </Button>
                 <div class="img1">

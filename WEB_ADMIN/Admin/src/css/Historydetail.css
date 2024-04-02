@@ -21,7 +21,7 @@
 .img1{
     width: 300px;
     height: 300px;
-    margin: 100px 70px;
+    margin: 40px 70px;
     position: relative;
     
     /* display: flex;
@@ -36,7 +36,7 @@
 .img2{
     width: 500px;
     height: 500px;
-    margin: -350px 450px;
+    margin: -300px 450px;
     position: relative;
     /* background-color: red; */
     /* display: flex;

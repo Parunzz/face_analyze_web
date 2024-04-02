@@ -244,7 +244,7 @@ function Camera() {
                                     <li key={index}>
                                         <div className='box1'>
                                             <img src={result.base64_image} className='emoji' alt={`Emoji ${index}`} />
-                                            <img src={`data:image/jpeg;base64,${result.BLOB}`} className='emoji' alt={`Emoji ${index}`} />
+                                            {/* <img src={`data:image/jpeg;base64,${result.BLOB}`} className='emoji' alt={`Emoji ${index}`} /> */}
                                             <h3 className='Name'>{result.person_name}</h3>
                                             <h4 className='Text'>{result.response_text}</h4>
 
